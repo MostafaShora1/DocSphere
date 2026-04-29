@@ -35,16 +35,23 @@
 
       <div class="form-group">
         <label>Date</label>
-        <input class="form-control" type="date" [(ngModel)]="selectedDate">
+        <select class="form-control" [(ngModel)]="selectedDate" (change)="onDateChange()" [disabled]="!selectedDoctorId">
+          <option value="">Choose a date</option>
+          <option *ngFor="let date of availableDates" [value]="date">{{ date }}</option>
+        </select>
       </div>
 
       <div class="form-group">
         <label>Time</label>
-        <select class="form-control" [(ngModel)]="selectedTime" [disabled]="!selectedServiceId">
+        <select class="form-control" [(ngModel)]="selectedTime" [disabled]="!selectedDate || !selectedServiceId">
           <option value="">Choose a time</option>
           <option *ngFor="let time of availableTimes" [value]="time">{{ time }}</option>
         </select>
       </div>
+
+      <p class="helper-note" *ngIf="selectedDoctorId && availableDates.length === 0">
+        This doctor has not added any available schedule yet.
+      </p>
 
       <div class="form-group">
         <label>Notes</label>

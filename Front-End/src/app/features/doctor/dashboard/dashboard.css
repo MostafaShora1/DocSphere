@@ -164,6 +164,123 @@
   color: #0f8a61;
 }
 
+.status-chip.rejected {
+  background: rgba(239, 68, 68, 0.14);
+  color: #dc2626;
+}
+
+.appointment-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-confirm,
+.btn-reject,
+.btn-cancel {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: 0.2s;
+}
+
+.btn-confirm {
+  background: var(--success);
+  color: white;
+}
+
+.btn-confirm:hover {
+  background: #059669;
+}
+
+.btn-reject {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.btn-reject:hover {
+  background: #fecaca;
+}
+
+.btn-cancel {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.btn-cancel:hover {
+  background: #d1d5db;
+}
+
+.appointment-time,
+.appointment-reason {
+  font-size: 13px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 90%;
+}
+
+.modal-content h4 {
+  color: var(--primary);
+  margin-bottom: 12px;
+}
+
+.modal-content p {
+  color: #6b7280;
+  margin-bottom: 16px;
+}
+
+.modal-content textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.modal-content textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+}
+
 .profile-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -188,6 +305,95 @@
   padding: 12px 0;
 }
 
+.schedule-form,
+.slot-list {
+  display: grid;
+  gap: 16px;
+}
+
+.slot-row,
+.schedule-card {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid #edf1f0;
+}
+
+.schedule-card:last-child {
+  border-bottom: none;
+}
+
+.form-group label {
+  display: block;
+  color: #4f5d5a;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.form-group input {
+  width: 100%;
+  min-width: 0;
+  padding: 12px 14px;
+  border: 1px solid #d7e1df;
+  border-radius: 10px;
+}
+
+.slot-row .form-group {
+  flex: 1;
+}
+
+.form-actions,
+.security-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.ghost-btn {
+  border: 1px solid #d7e1df;
+  background: transparent;
+  color: var(--primary);
+  border-radius: 10px;
+  padding: 11px 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.danger-btn {
+  color: #b42318;
+  border-color: rgba(180, 35, 24, 0.25);
+}
+
+.schedule-slots {
+  color: #64706d;
+  margin-top: 6px;
+}
+
+.message {
+  margin-bottom: 14px;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 14px;
+}
+
+.error-message {
+  background: rgba(220, 38, 38, 0.08);
+  color: #b42318;
+}
+
+.success-message {
+  background: rgba(16, 185, 129, 0.12);
+  color: #0f766e;
+}
+
+.error-inline {
+  color: #b42318;
+  font-size: 13px;
+}
+
 @media (max-width: 900px) {
   .app-container {
     flex-direction: column;
@@ -201,6 +407,12 @@
 
   .nav-item.logout {
     margin-top: 0;
+  }
+
+  .slot-row,
+  .schedule-card {
+    align-items: stretch;
+    flex-direction: column;
   }
 }
 
@@ -216,5 +428,14 @@
 
   .profile-grid {
     grid-template-columns: 1fr;
+  }
+
+  .form-actions,
+  .security-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .status-chip {
+    min-width: 100px;
   }
 }

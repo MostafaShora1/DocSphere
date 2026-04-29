@@ -58,9 +58,11 @@ export class AuthService {
       this.http.post(`${this.baseUrl}/auth/login`, { email, password })
     );
 
-    const token = response.accessToken || response.token;
+    // Backend returns 'token', frontend was looking for 'accessToken'
+    const token = response.token || response.accessToken || response;
 
-    if (!token) {
+    if (!token || typeof token !== 'string') {
+      console.error('Invalid login response:', response);
       return null;
     }
 
@@ -119,6 +121,27 @@ export class AuthService {
   async resetPassword(token: string, newPassword: string) {
     return await firstValueFrom(
       this.http.post(`${this.baseUrl}/auth/reset-password/${token}`, {
+        password: newPassword
+      })
+    );
+  }
+
+  async verifyResetToken(token: string): Promise<{ valid: boolean; message?: string } | null> {
+    try {
+      return await firstValueFrom(
+        this.http.get<{ valid: boolean; message?: string }>(
+          `${this.baseUrl}/auth/verify-reset-token/${token}`
+        )
+      );
+    } catch {
+      return null;
+    }
+  }
+
+  async updatePassword(currentPassword: string, newPassword: string) {
+    return await firstValueFrom(
+      this.http.put(`${this.baseUrl}/auth/update-password`, {
+        currentPassword,
         newPassword
       })
     );

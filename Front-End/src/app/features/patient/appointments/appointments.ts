@@ -9,6 +9,18 @@ import { Doctor } from '../../../shared/models/doctor.model';
 import { Service } from '../../../shared/models/service.model';
 import { forkJoin } from 'rxjs';
 
+
+interface DoctorSchedule {
+  _id: string;
+  doctor: string | { _id?: string; id?: string };
+  date: string;
+  timeSlots: Array<{
+    startTime: string;
+    endTime: string;
+    isAvailable?: boolean;
+  }>;
+}
+
 @Component({
   selector: 'app-appointments',
   templateUrl: './appointments.html',
@@ -23,6 +35,9 @@ export class AppointmentsComponent implements OnInit {
   allServices: Service[] = [];
   services: Service[] = [];
   appointments: any[] = [];
+  schedules: DoctorSchedule[] = [];
+  doctorSchedules: DoctorSchedule[] = [];
+  availableDates: string[] = [];
 
   selectedDoctorId = '';
   selectedServiceId = '';
@@ -42,7 +57,7 @@ export class AppointmentsComponent implements OnInit {
     private appointmentService: AppointmentService,
     private route: ActivatedRoute,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
@@ -68,11 +83,13 @@ export class AppointmentsComponent implements OnInit {
 
     forkJoin({
       doctors: this.apiService.getDoctors(),
-      services: this.apiService.getServices()
+      services: this.apiService.getServices(),
+      schedules: this.apiService.getSchedules()
     }).subscribe({
-      next: ({ doctors, services }) => {
+      next: ({ doctors, services, schedules }) => {
         this.doctors = doctors;
         this.allServices = services;
+        this.schedules = schedules;
 
         const preselectedServiceId = this.route.snapshot.queryParamMap.get('serviceId');
         if (preselectedServiceId) {
@@ -86,6 +103,15 @@ export class AppointmentsComponent implements OnInit {
         }
 
         this.loading = false;
+
+        // 👇 ضيف دول تحتها مباشرة
+        if (this.selectedDoctorId) {
+          this.onDoctorChange(false);
+        }
+
+        if (this.selectedDate) {
+          this.onDateChange();
+        }
       },
       error: () => {
         this.loading = false;
@@ -96,11 +122,16 @@ export class AppointmentsComponent implements OnInit {
 
   onDoctorChange(resetService = true) {
     this.services = this.allServices.filter(service => service.doctorId === this.selectedDoctorId);
+    this.doctorSchedules = this.schedules
+      .filter(schedule => this.resolveDoctorId(schedule.doctor) === this.selectedDoctorId)
+      .sort((a, b) => +new Date(a.date) - +new Date(b.date));
+    this.availableDates = this.doctorSchedules.map(schedule => this.toDateInputValue(schedule.date));
 
     if (resetService) {
       this.selectedServiceId = '';
     }
 
+    this.selectedDate = '';
     this.selectedTime = '';
     this.availableTimes = [];
     this.message = '';
@@ -108,10 +139,21 @@ export class AppointmentsComponent implements OnInit {
   }
 
   onServiceChange() {
-    this.availableTimes = this.selectedService?.availableTimes || [];
     this.selectedTime = '';
+    this.availableTimes = [];
     this.message = '';
     this.errorMsg = '';
+  }
+
+  onDateChange() {
+    const selectedSchedule = this.doctorSchedules.find(
+      schedule => this.toDateInputValue(schedule.date) === this.selectedDate
+    );
+
+    this.availableTimes = (selectedSchedule?.timeSlots || [])
+      .filter(slot => slot.isAvailable === true)
+      .map(slot => slot.startTime);
+    this.selectedTime = '';
   }
 
   confirmBooking() {
@@ -126,22 +168,48 @@ export class AppointmentsComponent implements OnInit {
     const appointmentDate = new Date(`${this.selectedDate}T${this.selectedTime}`);
     const endDate = new Date(appointmentDate.getTime() + 30 * 60 * 1000);
 
-    this.appointmentService.createAppointment({
+    const appointmentData: any = {
       doctor: this.selectedDoctorId,
       date: appointmentDate.toISOString(),
       startTime: this.toTimeString(appointmentDate),
       endTime: this.toTimeString(endDate),
       reason: this.notes || this.selectedService.name
-    }).subscribe({
+    };
+
+    // Include service ID if selected from services page
+    if (this.selectedServiceId) {
+      appointmentData.service = this.selectedServiceId;
+    }
+
+    this.appointmentService.createAppointment(appointmentData).subscribe({
       next: () => {
         this.booking = false;
         this.message = 'Appointment booked successfully.';
+        const savedDoctor = this.selectedDoctorId;
+        const savedDate = this.selectedDate;
+
         this.resetForm();
+
+        this.selectedDoctorId = savedDoctor;
+
+        // 👇 مهم جدًا
+        this.onDoctorChange(false);
+
+        this.selectedDate = savedDate;
+
+        // 👇 أهم سطر
+        this.onDateChange();
+
         this.loadMyAppointments();
+        this.loadData();
       },
       error: error => {
         this.booking = false;
         this.errorMsg = error?.error?.message || 'Booking failed.';
+
+        if (this.errorMsg.toLowerCase().includes('time slot')) {
+          this.loadData();
+        }
       }
     });
   }
@@ -157,10 +225,25 @@ export class AppointmentsComponent implements OnInit {
             serviceName: appointment.reason || 'Consultation',
             day: appointment.date ? new Date(appointment.date).toLocaleDateString() : 'N/A',
             time: appointment.startTime || 'N/A',
-            status: appointment.status || 'pending'
+            status: appointment.status || 'pending',
+            rejectionReason: appointment.rejectionReason || null
           }));
       }
     });
+  }
+
+  // Re-book after doctor rejected
+  rebookAppointment(appointment: any) {
+    // Pre-fill the form with the rejected appointment's details
+    if (appointment.doctorName) {
+      const doctor = this.doctors.find(d => d.name === appointment.doctorName);
+      if (doctor) {
+        this.selectedDoctorId = doctor.id;
+        this.onDoctorChange(false);
+      }
+    }
+    this.notes = appointment.serviceName;
+    this.message = 'Please select a new date and time for your appointment.';
   }
 
   cancelAppointment(id: string) {
@@ -179,6 +262,18 @@ export class AppointmentsComponent implements OnInit {
     this.notes = '';
     this.services = [];
     this.availableTimes = [];
+  }
+
+  private resolveDoctorId(doctor: DoctorSchedule['doctor']): string {
+    if (typeof doctor === 'string') {
+      return doctor;
+    }
+
+    return doctor?._id || doctor?.id || '';
+  }
+
+  private toDateInputValue(date: string): string {
+    return new Date(date).toISOString().split('T')[0];
   }
 
   private toTimeString(date: Date): string {

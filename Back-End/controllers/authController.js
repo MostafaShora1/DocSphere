@@ -127,7 +127,9 @@ exports.forgotPassword = async (req, res, next) => {
     user.resetPasswordExpire = Date.now() + 60 * 60 * 1000; // 1 hour
     await user.save();
 
-    const resetUrl = `http://localhost:3000/reset-password/${resetToken}`;
+    // Use frontend URL from environment or default to Angular dev server
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:4200';
+    const resetUrl = `${frontendUrl}/reset-password/${resetToken}`;
     await sendResetPasswordEmail(user.email, user.name, resetUrl);
 
     res.status(200).json({ message: 'Password reset link has been sent if the account exists.' });
@@ -162,6 +164,26 @@ exports.resetPassword = async (req, res, next) => {
     await user.save();
 
     res.status(200).json({ message: 'Password has been reset successfully.' });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.verifyResetToken = async (req, res, next) => {
+  try {
+    const resetToken = req.params.token;
+    const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+
+    const user = await User.findOne({
+      resetPasswordToken: hashedToken,
+      resetPasswordExpire: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid or expired password reset token.' });
+    }
+
+    return res.status(200).json({ valid: true, message: 'Reset token is valid.' });
   } catch (error) {
     next(error);
   }
@@ -220,4 +242,3 @@ exports.updatePassword = async (req, res, next) => {
 exports.logout = (req, res, next) => {
   res.status(200).json({ message: 'Logout successful.' });
 };
-

@@ -8,12 +8,13 @@ import {
   ReactiveFormsModule
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.html',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, RouterLink],
   styleUrls: ['./login.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })

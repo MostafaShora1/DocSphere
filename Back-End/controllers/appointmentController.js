@@ -2,8 +2,7 @@ const { validationResult } = require('express-validator');
 const Appointment = require('../models/Appointment');
 const Doctor = require('../models/Doctor');
 const Patient = require('../models/Patient');
-const Payment = require('../models/Payment');
-const { createPaymentIntent } = require('../services/paymentService');
+const Schedule = require('../models/Schedule');
 
 exports.getAppointments = async (req, res, next) => {
   try {
@@ -129,8 +128,21 @@ exports.createAppointment = async (req, res, next) => {
       status: { $ne: 'cancelled' }
     });
 
+    const patientDuplicate = await Appointment.findOne({
+      doctor: doctorProfile._id,
+      patient: patientProfile._id,
+      date: req.body.date,
+      startTime: req.body.startTime,
+      endTime: req.body.endTime,
+      status: { $in: ['pending', 'confirmed'] }
+    });
+
     if (conflictingAppointment) {
-      return res.status(400).json({ message: 'Time slot is already booked' });
+      return res.status(400).json({ message: 'Time slot is already booked by another patient' });
+    }
+
+    if (patientDuplicate) {
+      return res.status(400).json({ message: 'You already have an appointment at this exact time with this doctor' });
     }
 
     const appointment = await Appointment.create({
@@ -139,32 +151,49 @@ exports.createAppointment = async (req, res, next) => {
       date: req.body.date,
       startTime: req.body.startTime,
       endTime: req.body.endTime,
-      reason: req.body.reason
+      reason: req.body.reason,
+      service: req.body.service || null
     });
 
-    const paymentIntent = await createPaymentIntent(doctorProfile.consultationFee);
 
-    const payment = await Payment.create({
-      appointment: appointment._id,
-      patient: patientProfile._id,
+
+    const selectedDate = new Date(req.body.date);
+
+    const startOfDay = new Date(selectedDate);
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const endOfDay = new Date(selectedDate);
+    endOfDay.setHours(23, 59, 59, 999);
+
+    const schedule = await Schedule.findOne({
       doctor: doctorProfile._id,
-      amount: doctorProfile.consultationFee,
-      currency: 'usd',
-      status: 'pending',
-      stripePaymentIntentId: paymentIntent.id
+      date: {
+        $gte: startOfDay,
+        $lte: endOfDay
+      }
     });
 
-    appointment.payment = payment._id;
-    await appointment.save();
+    if (schedule) {
+      const slot = schedule.timeSlots.find(
+        s => s.startTime.slice(0, 5) === req.body.startTime.slice(0, 5)
+      );
 
+      if (slot) {
+        slot.isAvailable = false;
+        await schedule.save();
+      } else {
+        console.log('❌ SLOT NOT FOUND');
+      }
+    } else {
+      console.log('❌ SCHEDULE NOT FOUND');
+    }
+
+    // NOTE:
+    // Don’t create Stripe PaymentIntent/Payment at booking time.
+    // We create payment only when the appointment becomes confirmed (patient payment step).
     res.status(201).json({
       success: true,
-      data: appointment,
-      paymentIntent: {
-        clientSecret: paymentIntent.client_secret,
-        amount: paymentIntent.amount,
-        currency: paymentIntent.currency
-      }
+      data: appointment
     });
   } catch (error) {
     next(error);
@@ -193,16 +222,73 @@ exports.updateAppointment = async (req, res, next) => {
     }
 
     const updates = {};
-    ['status', 'notes'].forEach((field) => {
+    ['status', 'notes', 'rejectionReason'].forEach((field) => {
       if (req.body[field] !== undefined) updates[field] = req.body[field];
     });
+
+    let proposedAppointment = null;
+
+    // Doctor rejects: either reject completely OR propose a new slot to the same patient
+    if (
+      req.user.role === 'doctor' &&
+      updates.status === 'rejected' &&
+      req.body.proposedDate &&
+      req.body.proposedStartTime &&
+      req.body.proposedEndTime
+    ) {
+      proposedAppointment = await Appointment.create({
+        doctor: appointment.doctor,
+        patient: appointment.patient,
+        service: appointment.service || null,
+        date: req.body.proposedDate,
+        startTime: req.body.proposedStartTime,
+        endTime: req.body.proposedEndTime,
+        reason: req.body.proposedReason || appointment.reason,
+        status: 'pending',
+        rejectionReason: null,
+        notes: null,
+        isRescheduleProposal: true,
+        originalAppointment: appointment._id
+      });
+    }
 
     const updatedAppointment = await Appointment.findByIdAndUpdate(req.params.id, updates, {
       new: true,
       runValidators: true
     });
 
-    res.status(200).json({ success: true, data: updatedAppointment });
+    // Send notification email to patient when doctor confirms/rejects
+    if (req.user.role === 'doctor' && (updates.status === 'confirmed' || updates.status === 'rejected')) {
+      const patient = await Patient.findById(appointment.patient).populate('user');
+      const doctor = await Doctor.findById(appointment.doctor);
+
+      if (patient?.user?.email) {
+        const { sendAppointmentStatusEmail } = require('../services/emailService');
+
+        if (updates.status === 'confirmed') {
+          await sendAppointmentStatusEmail(
+            patient.user.email,
+            patient.user.name,
+            doctor.name,
+            appointment.date,
+            appointment.startTime,
+            'confirmed'
+          );
+        } else if (updates.status === 'rejected') {
+          await sendAppointmentStatusEmail(
+            patient.user.email,
+            patient.user.name,
+            doctor.name,
+            appointment.date,
+            appointment.startTime,
+            'rejected',
+            updates.rejectionReason
+          );
+        }
+      }
+    }
+
+    res.status(200).json({ success: true, data: updatedAppointment, proposedAppointment });
   } catch (error) {
     next(error);
   }
@@ -229,8 +315,33 @@ exports.deleteAppointment = async (req, res, next) => {
       }
     }
 
+    // رجّع المعاد متاح تاني
+    // Fix date range bug (same issue as create)
+    const appointmentDate = new Date(appointment.date);
+    const startOfDay = new Date(appointmentDate.getFullYear(), appointmentDate.getMonth(), appointmentDate.getDate(), 0, 0, 0, 0);
+    const endOfDay = new Date(appointmentDate.getFullYear(), appointmentDate.getMonth(), appointmentDate.getDate(), 23, 59, 59, 999);
+
+    const schedule = await Schedule.findOne({
+      doctor: appointment.doctor,
+      date: {
+        $gte: startOfDay,
+        $lte: endOfDay
+      }
+    });
+
+    if (schedule) {
+      const slot = schedule.timeSlots.find(
+        s => s.startTime.slice(0, 5) === appointment.startTime.slice(0, 5) &&
+          s.endTime.slice(0, 5) === appointment.endTime.slice(0, 5)
+      );
+
+      if (slot) {
+        slot.isAvailable = true;
+        await schedule.save();
+      }
+    }
+
     await appointment.deleteOne();
-    res.status(200).json({ success: true, data: {} });
   } catch (error) {
     next(error);
   }

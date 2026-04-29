@@ -11,8 +11,16 @@
       <span *ngIf="pendingCount > 0" class="badge">{{ pendingCount }}</span>
     </button>
 
+    <button class="nav-item" [class.active]="activeSection === 'schedule'" [disabled]="!isApproved" (click)="setSection('schedule')">
+      <span>Schedule</span>
+    </button>
+
     <button class="nav-item" [class.active]="activeSection === 'profile'" (click)="setSection('profile')">
       <span>Profile</span>
+    </button>
+
+    <button class="nav-item" [class.active]="activeSection === 'security'" (click)="setSection('security')">
+      <span>Security</span>
     </button>
 
     <button class="nav-item logout" (click)="logout()">
@@ -68,10 +76,97 @@
         <div>
           <p class="appointment-title">{{ appointment.patientName }}</p>
           <p>{{ appointment.appointmentDate ? (appointment.appointmentDate | date: 'medium') : 'No date yet' }}</p>
+          <p *ngIf="appointment.startTime" class="appointment-time">
+            {{ appointment.startTime }} - {{ appointment.endTime }}
+          </p>
+          <p *ngIf="appointment.reason" class="appointment-reason">
+            Reason: {{ appointment.reason }}
+          </p>
         </div>
-        <span class="status-chip" [class.approved]="appointment.status === 'confirmed'" [class.pending]="appointment.status !== 'confirmed'">
-          {{ appointment.status }}
-        </span>
+        <div class="appointment-actions">
+          <span class="status-chip" [class.approved]="appointment.status === 'confirmed'" [class.pending]="appointment.status === 'pending'" [class.rejected]="appointment.status === 'rejected'">
+            {{ appointment.status }}
+          </span>
+          <div *ngIf="appointment.status === 'pending'" class="action-buttons">
+            <button type="button" class="btn-confirm" (click)="confirmAppointment(appointment.id)">
+              Confirm
+            </button>
+            <button type="button" class="btn-reject" (click)="showRejectDialog(appointment)">
+              Reject
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reject Dialog -->
+      <div *ngIf="showRejectModal" class="modal-overlay" (click)="closeRejectDialog()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+          <h4>Reject Appointment</h4>
+          <p>Please provide a reason for rejecting this appointment:</p>
+          <textarea [(ngModel)]="rejectReason" placeholder="Enter rejection reason..." rows="4"></textarea>
+          <div class="modal-actions">
+            <button type="button" class="btn-cancel" (click)="closeRejectDialog()">Cancel</button>
+            <button type="button" class="btn-reject" (click)="submitReject()">Reject</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" *ngIf="activeSection === 'schedule'">
+      <h3>Manage Schedule</h3>
+
+      <div class="message error-message" *ngIf="scheduleError">{{ scheduleError }}</div>
+      <div class="message success-message" *ngIf="scheduleSuccess">{{ scheduleSuccess }}</div>
+
+      <form class="schedule-form" [formGroup]="scheduleForm" (ngSubmit)="saveSchedule()">
+        <div class="form-group">
+          <label for="scheduleDate">Date</label>
+          <input id="scheduleDate" type="date" formControlName="date">
+        </div>
+
+        <div class="slot-list" formArrayName="timeSlots">
+          <div class="slot-row" *ngFor="let slot of timeSlots.controls; let i = index; trackBy: trackByIndex" [formGroupName]="i">
+            <div class="form-group">
+              <label [for]="'startTime' + i">Start</label>
+              <input [id]="'startTime' + i" type="time" formControlName="startTime">
+            </div>
+
+            <div class="form-group">
+              <label [for]="'endTime' + i">End</label>
+              <input [id]="'endTime' + i" type="time" formControlName="endTime">
+            </div>
+
+            <button type="button" class="ghost-btn danger-btn" (click)="removeTimeSlot(i)">
+              Remove
+            </button>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="ghost-btn" (click)="addTimeSlot()">Add Time Slot</button>
+          <button type="submit" [disabled]="scheduleSaving">
+            {{ scheduleSaving ? 'Saving...' : 'Save Schedule' }}
+          </button>
+        </div>
+      </form>
+
+      <div class="empty-state" *ngIf="!scheduleLoading && schedules.length === 0">
+        No schedule added yet.
+      </div>
+
+      <div class="schedule-card" *ngFor="let schedule of schedules">
+        <div>
+          <p class="appointment-title">{{ formatScheduleDate(schedule.date) }}</p>
+          <p class="schedule-slots">
+            <span *ngFor="let slot of schedule.timeSlots; let last = last">
+              {{ slot.startTime }} - {{ slot.endTime }}<span *ngIf="!last">, </span>
+            </span>
+          </p>
+        </div>
+
+        <button type="button" class="ghost-btn danger-btn" (click)="deleteSchedule(schedule._id)">
+          Delete
+        </button>
       </div>
     </section>
 
@@ -104,6 +199,40 @@
       <ng-template #noProfile>
         <div class="empty-state">Doctor profile is not available yet.</div>
       </ng-template>
+    </section>
+
+    <section class="card" *ngIf="activeSection === 'security'">
+      <h3>Change Password</h3>
+
+      <div class="message error-message" *ngIf="passwordError">{{ passwordError }}</div>
+      <div class="message success-message" *ngIf="passwordSuccess">{{ passwordSuccess }}</div>
+
+      <form class="schedule-form" [formGroup]="passwordForm" (ngSubmit)="updatePassword()">
+        <div class="form-group">
+          <label for="doctorCurrentPassword">Current Password</label>
+          <input id="doctorCurrentPassword" type="password" formControlName="currentPassword">
+        </div>
+
+        <div class="security-grid">
+          <div class="form-group">
+            <label for="doctorNewPassword">New Password</label>
+            <input id="doctorNewPassword" type="password" formControlName="newPassword">
+          </div>
+
+          <div class="form-group">
+            <label for="doctorConfirmPassword">Confirm New Password</label>
+            <input id="doctorConfirmPassword" type="password" formControlName="confirmPassword">
+          </div>
+        </div>
+
+        <div class="error-inline" *ngIf="passwordForm.errors?.['passwordMismatch'] && passwordForm.get('confirmPassword')?.touched">
+          Password confirmation does not match.
+        </div>
+
+        <button type="submit" [disabled]="passwordLoading">
+          {{ passwordLoading ? 'Updating...' : 'Update Password' }}
+        </button>
+      </form>
     </section>
   </main>
 </div>

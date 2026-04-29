@@ -1,108 +1,161 @@
-/* container */
+/* Patient Dashboard Styles */
 .wrap {
-    max-width: 950px;
-    margin: 40px auto;
-    padding: 0 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.card h2 {
+  margin-bottom: 20px;
+  color: var(--dark-blue, #2c3e50);
 }
 
 .table-wrap {
-    overflow-x: auto;
+  overflow-x: auto;
 }
 
-/* cards */
-.card {
-    background: white;
-    padding: 25px;
-    border-radius: 15px;
-    margin-bottom: 25px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-}
-
-/* titles */
-h2 {
-    color: #145245;
-    margin-bottom: 15px;
-    border-bottom: 2px solid #145245;
-    padding-bottom: 5px;
-}
-
-/* table */
 table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 12px 8px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
 }
 
 th {
-    background-color: #145245;
-    color: white;
-    padding: 12px;
+  background: #f8f9fa;
+  font-weight: 600;
+  color: #666;
 }
 
-td {
-    padding: 10px;
-    text-align: center;
-    border-bottom: 1px solid #ddd;
-}
+.status-confirmed { color: #27ae60; font-weight: bold; }
+.status-pending { color: #f39c12; font-weight: bold; }
+.status-rejected { color: #e74c3c; font-weight: bold; }
 
-/* buttons */
 button {
-    background-color: #f79674;
-    border: none;
-    padding: 8px 14px;
-    cursor: pointer;
-    border-radius: 5px;
-    font-weight: bold;
-    transition: background-color 0.2s;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
 }
 
-button:hover {
-    background-color: #e3755d;
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
-/* empty state */
-.card p {
-    text-align: center;
-    margin-top: 20px;
+.btn-cash { background: #27ae60; color: white; }
+.btn-stripe { background: #6772e5; color: white; margin-left: 8px; }
+.btn-accept { background: #27ae60; color: white; }
+.btn-cancel { background: #e74c3c; color: white; margin-left: 8px; }
+
+.password-form {
+  max-width: 400px;
 }
 
-/* Book button spacing */
-.card p button {
-    margin-left: 10px;
+.form-group {
+  margin-bottom: 16px;
 }
 
-tr:hover {
-    background-color: #fff2f0;
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.error-message, .error {
+  color: #e74c3c;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.success-message {
+  color: #27ae60;
+  background: #d4edda;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.stripe-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.stripe-modal {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.stripe-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.stripe-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #999;
+}
+
+.card-element {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: white;
+  margin-bottom: 16px;
 }
 
 @media (max-width: 768px) {
-    .wrap {
-        margin: 24px auto;
-        padding: 0 14px;
-    }
-
-    .card {
-        padding: 20px 16px;
-    }
-
-    table {
-        min-width: 620px;
-    }
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .wrap {
+    padding: 12px;
+  }
 }
 
-@media (max-width: 480px) {
-    .card p button,
-    button {
-        width: 100%;
-        margin-top: 10px;
-    }
-
-    .card p button {
-        margin-left: 0;
-    }
-}

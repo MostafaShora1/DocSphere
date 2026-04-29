@@ -37,8 +37,13 @@ exports.createPaymentIntent = async (req, res, next) => {
       });
 
     if (!appointment) {
-      return res.status(404).json({
-        message: 'Appointment not found'
+      return res.status(404).json({ message: 'Appointment not found' });
+    }
+
+    // Only allow Stripe payment when appointment is confirmed
+    if (appointment.status !== 'confirmed') {
+      return res.status(400).json({
+        message: 'Payment is only available after the appointment is confirmed.'
       });
     }
 
@@ -119,9 +124,7 @@ exports.createPaymentIntent = async (req, res, next) => {
       {
         payment: payment._id
       },
-      {
-        new: true
-      }
+      { new: true }
     );
 
     if (!updatedAppointment) {
@@ -143,9 +146,7 @@ exports.createPaymentIntent = async (req, res, next) => {
         status: payment.status
       }
     });
-
   } catch (error) {
-
     if (
       error.code === 11000 &&
       error.keyValue &&
@@ -156,6 +157,120 @@ exports.createPaymentIntent = async (req, res, next) => {
       });
     }
 
+    next(error);
+  }
+};
+
+exports.createCashPayment = async (req, res, next) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const appointment = await Appointment.findById(req.body.appointment)
+      .populate({ path: 'doctor', select: 'consultationFee' })
+      .populate({
+        path: 'patient',
+        populate: { path: 'user', select: '_id' }
+      });
+
+    if (!appointment) {
+      return res.status(404).json({ message: 'Appointment not found' });
+    }
+
+    // Only allow cash payment when appointment is confirmed
+    if (appointment.status !== 'confirmed') {
+      return res.status(400).json({
+        message: 'Cash payment is only available after the appointment is confirmed.'
+      });
+    }
+
+    if (
+      !appointment.patient ||
+      !appointment.patient.user ||
+      !isOwner(req.user._id, appointment.patient.user)
+    ) {
+      return res.status(403).json({
+        message: 'Not authorized to pay for this appointment'
+      });
+    }
+
+    if (appointment.payment) {
+      return res.status(400).json({
+        message: 'Payment already exists for this appointment'
+      });
+    }
+
+    if (
+      !appointment.doctor ||
+      typeof appointment.doctor.consultationFee !== 'number'
+    ) {
+      return res.status(400).json({
+        message: 'Unable to determine appointment amount'
+      });
+    }
+
+    const amount = appointment.doctor.consultationFee;
+    const currency = req.body.currency || 'usd';
+
+    const payment = await Payment.create({
+      appointment: appointment._id,
+      patient: appointment.patient._id,
+      doctor: appointment.doctor._id,
+      amount,
+      currency,
+      status: 'paid',
+      paymentMethod: 'cash'
+    });
+
+    const updatedAppointment = await Appointment.findOneAndUpdate(
+      {
+        _id: appointment._id,
+        $or: [
+          { payment: { $exists: false } },
+          { payment: null }
+        ]
+      },
+      { payment: payment._id },
+      { new: true }
+    );
+
+    if (!updatedAppointment) {
+      await Payment.findByIdAndDelete(payment._id);
+
+      return res.status(409).json({
+        message: 'Payment already exists for this appointment'
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        paymentId: payment._id,
+        status: payment.status,
+        paymentMethod: payment.paymentMethod
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getStripePublicKey = async (_req, res, next) => {
+  try {
+    const publicKey =
+      process.env.STRIPE_PUBLIC_KEY ||
+      process.env.Publishable_key ||
+      process.env.STRIPE_PUBLIC ||
+      null;
+
+    if (!publicKey) {
+      return res.status(500).json({ message: 'Stripe public key is not configured.' });
+    }
+
+    return res.status(200).json({ publishableKey: publicKey });
+  } catch (error) {
     next(error);
   }
 };

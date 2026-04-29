@@ -34,11 +34,16 @@ export class AppointmentService {
     startTime: string;
     endTime: string;
     reason: string;
+    service?: string;
   }): Observable<any> {
     return this.http.post(`${this.baseUrl}`, appointment);
   }
 
   cancelAppointment(id: string): Observable<any> {
+    return this.http.patch(`${this.baseUrl}/${id}`, { status: 'cancelled' });
+  }
+
+  deleteAppointment(id: string): Observable<any> {
     return this.http.delete(`${this.baseUrl}/${id}`);
   }
 
@@ -59,5 +64,17 @@ export class AppointmentService {
 
   updateAppointmentStatus(id: string, status: string): Observable<any> {
     return this.http.put(`${this.baseUrl}/${id}`, { status });
+  }
+
+  updateAppointment(id: string, data: {
+    date?: string;
+    startTime?: string;
+    endTime?: string;
+    reason?: string;
+    status?: string;
+    notes?: string;
+    rejectionReason?: string;
+  }): Observable<any> {
+    return this.http.put(`${this.baseUrl}/${id}`, data);
   }
 }

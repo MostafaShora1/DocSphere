@@ -12,6 +12,11 @@ const appointmentSchema = new mongoose.Schema(
       ref: 'Patient',
       required: true
     },
+    service: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Service',
+      default: null
+    },
     date: {
       type: Date,
       required: [true, 'Appointment date is required']
@@ -26,7 +31,7 @@ const appointmentSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['pending', 'confirmed', 'completed', 'cancelled'],
+      enum: ['pending', 'confirmed', 'completed', 'cancelled', 'rejected'],
       default: 'pending'
     },
     reason: {
@@ -34,6 +39,22 @@ const appointmentSchema = new mongoose.Schema(
       required: [true, 'Appointment reason is required']
     },
     notes: String,
+    rejectionReason: {
+      type: String,
+      default: null
+    },
+
+    // Doctor can reject + propose a new slot for the same patient
+    isRescheduleProposal: {
+      type: Boolean,
+      default: false
+    },
+    originalAppointment: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Appointment',
+      default: null
+    },
+
     payment: {
       type: mongoose.Schema.ObjectId,
       ref: 'Payment'

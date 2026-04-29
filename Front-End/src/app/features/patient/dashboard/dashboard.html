@@ -30,7 +30,37 @@
             <td>{{ a.time }}</td>
             <td>{{ a.status }}</td>
             <td>
-              <button (click)="cancelApp(a.id)">X</button>
+              <!-- Reschedule proposal -->
+              <ng-container *ngIf="a.isRescheduleProposal && a.status === 'pending'; else regularActions">
+                <button (click)="acceptReschedule(a.id)">Accept</button>
+                <button (click)="cancelRescheduleProposal(a.id)" style="margin-left: 8px;">Cancel</button>
+              </ng-container>
+
+              <!-- Regular appointment actions -->
+              <ng-template #regularActions>
+                <!-- Confirmed -> Payment step -->
+                <ng-container *ngIf="a.status === 'confirmed'; else pendingActions">
+                  <ng-container *ngIf="a.paymentStatus === 'paid'; else paymentActions">
+                    Paid
+                    <span *ngIf="a.paymentMethod">({{ a.paymentMethod }})</span>
+                  </ng-container>
+
+                  <ng-template #paymentActions>
+                    <button (click)="payCash(a.id)" [disabled]="payBusyAppointmentId === a.id">
+                      {{ payBusyAppointmentId === a.id ? 'Paying...' : 'Cash' }}
+                    </button>
+
+                    <button (click)="openStripePayment(a.id)" style="margin-left: 8px;" [disabled]="payBusyAppointmentId === a.id">
+                      Stripe
+                    </button>
+                  </ng-template>
+                </ng-container>
+
+                <!-- Pending -> cancel -->
+                <ng-template #pendingActions>
+                  <button *ngIf="a.status === 'pending'" (click)="cancelApp(a.id)">X</button>
+                </ng-template>
+              </ng-template>
             </td>
           </tr>
         </tbody>
@@ -44,6 +74,66 @@
       </p>
     </div>
 
+  </div>
+
+  <div class="card">
+    <h2>Change Password</h2>
+
+    <div class="message error-message" *ngIf="passwordError">{{ passwordError }}</div>
+    <div class="message success-message" *ngIf="passwordSuccess">{{ passwordSuccess }}</div>
+
+    <form class="password-form" [formGroup]="passwordForm" (ngSubmit)="updatePassword()">
+      <div class="form-group">
+        <label for="currentPassword">Current Password</label>
+        <input id="currentPassword" type="password" formControlName="currentPassword">
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="newPassword">New Password</label>
+          <input id="newPassword" type="password" formControlName="newPassword">
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">Confirm New Password</label>
+          <input id="confirmPassword" type="password" formControlName="confirmPassword">
+        </div>
+      </div>
+
+      <div class="error" *ngIf="passwordForm.errors?.['passwordMismatch'] && passwordForm.get('confirmPassword')?.touched">
+        Password confirmation does not match.
+      </div>
+
+      <button type="submit" [disabled]="passwordLoading">
+        {{ passwordLoading ? 'Updating...' : 'Update Password' }}
+      </button>
+    </form>
+  </div>
+
+  <!-- Stripe Modal -->
+  <div class="stripe-modal-overlay" *ngIf="stripeModalOpen">
+    <div class="stripe-modal" (click)="$event.stopPropagation()">
+      <div class="stripe-modal-header">
+        <h3>Pay with Stripe</h3>
+        <button type="button" class="stripe-close" (click)="stripeModalOpen = false" [disabled]="stripeProcessing">
+          ✕
+        </button>
+      </div>
+
+      <div class="stripe-modal-body">
+        <div id="card-element" class="card-element"></div>
+
+        <div class="error-message" *ngIf="stripeError">
+          {{ stripeError }}
+        </div>
+
+        <div class="stripe-actions">
+          <button type="button" class="btn-primary" (click)="confirmStripePayment()" [disabled]="stripeProcessing">
+            {{ stripeProcessing ? 'Processing...' : 'Pay' }}
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 
 </div>

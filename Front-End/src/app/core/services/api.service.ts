@@ -130,6 +130,34 @@ export class ApiService {
       .pipe(map(response => response.data || []));
   }
 
+  getSchedules(): Observable<any[]> {
+    return this.http
+      .get<{ data: any[] }>(`${this.baseUrl}/schedules`)
+      .pipe(map(response => response.data || []));
+  }
+
+  createSchedule(payload: {
+    doctor: string;
+    date: string;
+    timeSlots: Array<{ startTime: string; endTime: string; isAvailable?: boolean }>;
+  }): Observable<any> {
+    return this.http.post(`${this.baseUrl}/schedules`, payload);
+  }
+
+  updateSchedule(
+    scheduleId: string,
+    payload: {
+      date?: string;
+      timeSlots?: Array<{ startTime: string; endTime: string; isAvailable?: boolean }>;
+    }
+  ): Observable<any> {
+    return this.http.put(`${this.baseUrl}/schedules/${scheduleId}`, payload);
+  }
+
+  deleteSchedule(scheduleId: string): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/schedules/${scheduleId}`);
+  }
+
   rejectDoctorLocally(doctorId: string): void {
     const ids = this.readIdSet(this.rejectedDoctorsKey);
     ids.add(doctorId);

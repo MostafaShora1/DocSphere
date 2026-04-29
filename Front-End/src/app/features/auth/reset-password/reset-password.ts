@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   AbstractControl,
@@ -31,11 +31,14 @@ const resetPasswordMatchValidator: ValidatorFn = (
   templateUrl: './reset-password.html',
   styleUrl: './reset-password.css'
 })
-export class ResetPasswordComponent {
-  private readonly passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+export class ResetPasswordComponent implements OnInit {
+  private readonly passwordPattern = /^.{6,}$/;
 
   readonly resetPasswordForm;
   private token: string = '';
+
+  tokenValid = false;
+  verifying = false;
 
   errorMsg = '';
   successMsg = '';
@@ -61,10 +64,54 @@ export class ResetPasswordComponent {
       { validators: resetPasswordMatchValidator }
     );
 
-    this.token = this.route.snapshot.queryParamMap.get('token') || '';
+    // Default: disable until token is verified
+    this.resetPasswordForm.disable();
+
+    this.token =
+      this.route.snapshot.paramMap.get('token') ||
+      this.route.snapshot.queryParamMap.get('token') ||
+      '';
+  }
+
+  async ngOnInit(): Promise<void> {
+    this.errorMsg = '';
+    this.successMsg = '';
+
+    if (!this.token) {
+      this.tokenValid = false;
+      this.errorMsg = 'Reset token is required.';
+      this.resetPasswordForm.disable();
+      return;
+    }
+
+    this.verifying = true;
+    try {
+      const result = await this.authService.verifyResetToken(this.token);
+
+      if (!result?.valid) {
+        this.tokenValid = false;
+        this.errorMsg = result?.message || 'Invalid or expired reset token.';
+        this.resetPasswordForm.disable();
+        return;
+      }
+
+      this.tokenValid = true;
+      this.resetPasswordForm.enable();
+    } catch {
+      this.tokenValid = false;
+      this.errorMsg = 'Invalid or expired reset token.';
+      this.resetPasswordForm.disable();
+    } finally {
+      this.verifying = false;
+    }
   }
 
   async resetPassword() {
+    if (!this.tokenValid) {
+      this.errorMsg = 'Invalid or expired reset token.';
+      return;
+    }
+
     if (this.resetPasswordForm.invalid) {
       this.resetPasswordForm.markAllAsTouched();
       this.errorMsg = 'Please fix the highlighted fields.';

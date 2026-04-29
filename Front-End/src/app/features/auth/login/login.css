@@ -116,6 +116,30 @@
     margin-top: 5px;
 }
 
+.form-meta {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.forgot-link,
+.auth-link a {
+    color: var(--teal);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.forgot-link:hover,
+.auth-link a:hover {
+    color: var(--coral-dark);
+}
+
+.auth-link {
+    margin-top: 18px;
+    color: #586665;
+    font-size: 14px;
+}
+
 /* Spinner */
 .spinner {
     display: inline-block;

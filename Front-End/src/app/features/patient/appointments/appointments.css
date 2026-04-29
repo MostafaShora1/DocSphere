@@ -201,6 +201,13 @@
   color: #1f7a43;
 }
 
+.helper-note {
+  color: #7a6a67;
+  font-size: 14px;
+  margin-top: -4px;
+  margin-bottom: 14px;
+}
+
 @media (max-width: 768px) {
   .appointments-section {
     padding: 20px 0 32px;
