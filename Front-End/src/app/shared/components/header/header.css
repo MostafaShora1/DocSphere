@@ -1,0 +1,251 @@
+.header {
+  background-color: var(--dark-bg);
+  padding: 18px 0;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+  transition: padding 0.3s, box-shadow 0.3s, background-color 0.3s;
+}
+
+.header.scrolled {
+  padding: 12px 0;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.logo {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo i {
+  color: var(--coral);
+}
+
+.nav-menu {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
+.nav-menu a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s;
+}
+
+.nav-menu a.active {
+  color: var(--coral);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.auth-btn,
+.profile-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 20px;
+  border-radius: 999px;
+  font-weight: 700;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+
+.auth-btn {
+  text-decoration: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.auth-btn-secondary {
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: transparent;
+  color: #fff;
+}
+
+.auth-btn-secondary:hover {
+  border-color: var(--coral);
+  color: var(--coral);
+}
+
+.auth-btn-primary,
+.profile-btn {
+  border: 1px solid transparent;
+  background: var(--coral);
+  color: #fff;
+}
+
+.auth-btn-primary:hover,
+.profile-btn:hover {
+  background: var(--coral-dark);
+  color: #fff;
+}
+
+.profile-btn {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.profile-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  background: var(--dark-bg);
+  border: 2px solid var(--coral);
+  gap: 4px;
+  position: relative;
+  z-index: 2001;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: background 0.2s, border 0.2s;
+}
+
+.hamburger:hover,
+.hamburger.active {
+  background: var(--coral);
+  border-color: var(--coral-dark);
+}
+
+.hamburger span {
+  width: 25px;
+  height: 3px;
+  background: white;
+  transition: all 0.3s;
+  transform-origin: center;
+}
+
+.hamburger.active span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -6px);
+}
+
+@media (min-width: 993px) {
+  .hamburger {
+    display: none !important;
+  }
+}
+
+@media (max-width: 992px) {
+  .nav-menu {
+    position: fixed;
+    top: 76px;
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 76px);
+    background: var(--dark-bg);
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top: 20px;
+    transform: translateY(-100%);
+    transition: transform 0.3s ease;
+    z-index: 999;
+    overflow-y: auto;
+    gap: 0;
+  }
+
+  .nav-menu.active {
+    transform: translateY(0);
+  }
+
+  .nav-menu a {
+    padding: 18px 25px;
+    font-size: 17px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    width: 100%;
+    text-align: center;
+  }
+
+  .nav-actions {
+    width: 100%;
+    flex-direction: column;
+    padding: 18px 20px;
+  }
+
+  .auth-btn,
+  .profile-btn {
+    width: 100%;
+  }
+
+  .hamburger {
+    display: flex;
+    min-width: 44px;
+    padding: 10px;
+    background: var(--dark-bg);
+    z-index: 2001;
+  }
+
+  .header {
+    padding: 15px 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-menu a {
+    padding: 16px 20px;
+    font-size: 16px;
+  }
+
+  .hamburger span {
+    width: 22px;
+    height: 2px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 12px 0;
+  }
+
+  .nav-menu a {
+    font-size: 15px;
+    padding: 14px 18px;
+  }
+
+  .hamburger {
+    padding: 8px;
+  }
+
+  .logo {
+    font-size: 1.4rem;
+  }
+}

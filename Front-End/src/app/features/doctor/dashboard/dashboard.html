@@ -1,0 +1,109 @@
+<div class="app-container">
+  <aside class="sidebar">
+    <h2>Doc<span>Sphere</span></h2>
+
+    <button class="nav-item" [class.active]="activeSection === 'overview'" (click)="setSection('overview')">
+      <span>Overview</span>
+    </button>
+
+    <button class="nav-item" [class.active]="activeSection === 'appointments'" [disabled]="!isApproved" (click)="setSection('appointments')">
+      <span>Appointments</span>
+      <span *ngIf="pendingCount > 0" class="badge">{{ pendingCount }}</span>
+    </button>
+
+    <button class="nav-item" [class.active]="activeSection === 'profile'" (click)="setSection('profile')">
+      <span>Profile</span>
+    </button>
+
+    <button class="nav-item logout" (click)="logout()">
+      <span>Logout</span>
+    </button>
+  </aside>
+
+  <main class="main-content">
+    <div class="top-bar">
+      <div>
+        <h2>Welcome, {{ doctor?.name || currentUser?.name || 'Doctor' }}</h2>
+        <p *ngIf="isApproved">Your dashboard is active and ready.</p>
+        <p *ngIf="!isApproved">{{ doctor?.moderationStatus === 'deactivated' ? 'Your account has been deactivated by admin.' : 'Your account is waiting for admin approval.' }}</p>
+      </div>
+      <span class="status-chip" [class.approved]="isApproved" [class.pending]="!isApproved">
+        {{ isApproved ? 'Approved' : (doctor?.moderationStatus === 'deactivated' ? 'Deactivated' : 'Pending Approval') }}
+      </span>
+    </div>
+
+    <section *ngIf="activeSection === 'overview'">
+      <div class="pending-banner" *ngIf="!isApproved">
+        {{ doctor?.moderationStatus === 'deactivated' ? 'Your doctor account is currently deactivated by admin.' : 'Your doctor account is created, but it will stay pending until an admin approves it.' }}
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="card">
+          <h3>Status</h3>
+          <p>{{ isApproved ? 'Approved' : (doctor?.moderationStatus === 'deactivated' ? 'Deactivated' : 'Pending Approval') }}</p>
+        </div>
+        <div class="card">
+          <h3>Pending Appointments</h3>
+          <p>{{ pendingCount }}</p>
+        </div>
+        <div class="card">
+          <h3>Confirmed Appointments</h3>
+          <p>{{ confirmedCount }}</p>
+        </div>
+        <div class="card">
+          <h3>Total Appointments</h3>
+          <p>{{ appointments.length }}</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" *ngIf="activeSection === 'appointments'">
+      <h3>My Appointments</h3>
+
+      <div class="empty-state" *ngIf="appointments.length === 0">
+        No appointments available yet.
+      </div>
+
+      <div *ngFor="let appointment of myAppointments" class="appointment-item">
+        <div>
+          <p class="appointment-title">{{ appointment.patientName }}</p>
+          <p>{{ appointment.appointmentDate ? (appointment.appointmentDate | date: 'medium') : 'No date yet' }}</p>
+        </div>
+        <span class="status-chip" [class.approved]="appointment.status === 'confirmed'" [class.pending]="appointment.status !== 'confirmed'">
+          {{ appointment.status }}
+        </span>
+      </div>
+    </section>
+
+    <section class="card profile-card" *ngIf="activeSection === 'profile'">
+      <h3>Doctor Profile</h3>
+
+      <div class="profile-grid" *ngIf="doctor; else noProfile">
+        <div>
+          <span class="profile-label">Name</span>
+          <p>{{ doctor.name }}</p>
+        </div>
+        <div>
+          <span class="profile-label">Specialty</span>
+          <p>{{ doctor.specialty }}</p>
+        </div>
+        <div>
+          <span class="profile-label">Email</span>
+          <p>{{ doctor.email || 'N/A' }}</p>
+        </div>
+        <div>
+          <span class="profile-label">Consultation Fee</span>
+          <p>{{ doctor.consultationFee || 0 }} EGP</p>
+        </div>
+        <div class="profile-bio">
+          <span class="profile-label">Bio</span>
+          <p>{{ doctor.bio || 'No bio provided yet.' }}</p>
+        </div>
+      </div>
+
+      <ng-template #noProfile>
+        <div class="empty-state">Doctor profile is not available yet.</div>
+      </ng-template>
+    </section>
+  </main>
+</div>

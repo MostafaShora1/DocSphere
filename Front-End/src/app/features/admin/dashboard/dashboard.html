@@ -1,0 +1,181 @@
+<section class="admin-section">
+  <div class="page-header">
+    <div>
+      <h1>Admin Dashboard</h1>
+      <p>Manage approvals, users, doctors, patients, and appointments.</p>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <h3>Approved Doctors</h3>
+      <p class="stat-number">{{ totalDoctors }}</p>
+    </div>
+
+    <div class="stat-card">
+      <h3>Patients</h3>
+      <p class="stat-number">{{ totalPatients }}</p>
+    </div>
+
+    <div class="stat-card">
+      <h3>Appointments</h3>
+      <p class="stat-number">{{ totalAppointments }}</p>
+    </div>
+
+    <div class="stat-card">
+      <h3>Pending Approvals</h3>
+      <p class="stat-number">{{ pendingApprovals }}</p>
+    </div>
+  </div>
+
+  <div class="admin-tabs">
+    <button class="tab-btn" [class.active]="activeTab === 'overview'" (click)="setTab('overview')">Overview</button>
+    <button class="tab-btn" [class.active]="activeTab === 'pending'" (click)="setTab('pending')">Pending Doctors</button>
+    <button class="tab-btn" [class.active]="activeTab === 'doctors'" (click)="setTab('doctors')">Doctors</button>
+    <button class="tab-btn" [class.active]="activeTab === 'patients'" (click)="setTab('patients')">Patients</button>
+    <button class="tab-btn" [class.active]="activeTab === 'appointments'" (click)="setTab('appointments')">Appointments</button>
+  </div>
+
+  <div class="panel" *ngIf="activeTab === 'overview'">
+    <div class="overview-grid">
+      <div class="overview-card">
+        <h3>Total Users</h3>
+        <p>{{ users.length }}</p>
+      </div>
+      <div class="overview-card">
+        <h3>Approved Doctors</h3>
+        <p>{{ totalDoctors }}</p>
+      </div>
+      <div class="overview-card">
+        <h3>Pending Doctors</h3>
+        <p>{{ pendingApprovals }}</p>
+      </div>
+      <div class="overview-card">
+        <h3>Patient Profiles</h3>
+        <p>{{ patients.length }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" *ngIf="activeTab === 'pending'">
+    <div class="empty-state" *ngIf="pendingDoctors.length === 0">
+      No pending doctor approvals right now.
+    </div>
+
+    <div class="list-grid" *ngIf="pendingDoctors.length > 0">
+      <article class="list-card" *ngFor="let doctor of pendingDoctors">
+        <div class="card-head">
+          <div>
+            <h3>{{ doctor.fullName || doctor.user?.name || 'Doctor' }}</h3>
+            <p>{{ doctor.specialty?.name || 'No specialty' }}</p>
+          </div>
+          <span class="status-chip pending">Pending</span>
+        </div>
+
+        <p><strong>Email:</strong> {{ doctor.user?.email || 'N/A' }}</p>
+        <p><strong>Fee:</strong> {{ doctor.consultationFee || 0 }} EGP</p>
+        <p><strong>Experience:</strong> {{ doctor.experience || 0 }} years</p>
+        <p><strong>Bio:</strong> {{ doctor.bio || 'No bio provided.' }}</p>
+
+        <button class="approve-btn" (click)="approveDoctor(doctor._id)" [disabled]="approvingDoctorId === doctor._id">
+          {{ approvingDoctorId === doctor._id ? 'Approving...' : 'Approve Doctor' }}
+        </button>
+        <button class="secondary-btn" (click)="rejectDoctor(doctor._id)">
+          Reject
+        </button>
+      </article>
+    </div>
+  </div>
+
+  <div class="panel" *ngIf="activeTab === 'doctors'">
+    <div class="data-table" *ngIf="doctors.length > 0; else noDoctors">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Specialty</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let doctor of doctors">
+            <td>{{ doctor.name }}</td>
+            <td>{{ doctor.specialty }}</td>
+            <td>{{ doctor.email || 'N/A' }}</td>
+            <td>
+              <span class="status-chip"
+                [class.approved]="doctor.moderationStatus === 'approved'"
+                [class.pending]="doctor.moderationStatus === 'pending'"
+                [class.deactivated]="doctor.moderationStatus === 'deactivated' || doctor.moderationStatus === 'rejected'">
+                {{ doctor.moderationStatus === 'deactivated' ? 'Deactivated' : (doctor.moderationStatus === 'rejected' ? 'Rejected' : (doctor.isApproved ? 'Approved' : 'Pending')) }}
+              </span>
+            </td>
+            <td>
+              <button class="table-btn" *ngIf="doctor.isApproved && doctor.isActive !== false" (click)="deactivateDoctor(doctor.id)">
+                Deactivate
+              </button>
+              <button class="table-btn" *ngIf="doctor.moderationStatus === 'deactivated'" (click)="reactivateDoctor(doctor.id)">
+                Reactivate
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <ng-template #noDoctors>
+      <div class="empty-state">No doctors found.</div>
+    </ng-template>
+  </div>
+
+  <div class="panel" *ngIf="activeTab === 'patients'">
+    <div class="data-table" *ngIf="patients.length > 0; else noPatients">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Date of Birth</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let patient of patients">
+            <td>{{ patient.firstName }} {{ patient.lastName }}</td>
+            <td>{{ patient.phone || 'N/A' }}</td>
+            <td>{{ patient.dateOfBirth ? (patient.dateOfBirth | date: 'mediumDate') : 'N/A' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <ng-template #noPatients>
+      <div class="empty-state">No patients found.</div>
+    </ng-template>
+  </div>
+
+  <div class="panel" *ngIf="activeTab === 'appointments'">
+    <div class="data-table" *ngIf="appointments.length > 0; else noAppointments">
+      <table>
+        <thead>
+          <tr>
+            <th>Doctor</th>
+            <th>Patient</th>
+            <th>Status</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let appointment of appointments">
+            <td>{{ appointment.doctor?.fullName || appointment.doctor?.user?.name || 'N/A' }}</td>
+            <td>{{ appointment.patient?.firstName ? (appointment.patient.firstName + ' ' + appointment.patient.lastName) : 'N/A' }}</td>
+            <td>{{ appointment.status || 'N/A' }}</td>
+            <td>{{ appointment.createdAt ? (appointment.createdAt | date: 'medium') : 'N/A' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <ng-template #noAppointments>
+      <div class="empty-state">No appointments found.</div>
+    </ng-template>
+  </div>
+</section>

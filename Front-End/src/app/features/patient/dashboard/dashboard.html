@@ -1,0 +1,49 @@
+<div class="wrap">
+
+  <!-- Patient Info -->
+  <div class="card">
+    <h2>Info</h2>
+    <p><strong>Name:</strong> {{ user?.name }}</p>
+    <p><strong>Email:</strong> {{ user?.email }}</p>
+  </div>
+
+  <!-- Appointments -->
+  <div class="card">
+    <h2>My Apps</h2>
+
+    <div class="table-wrap" *ngIf="appointments.length > 0">
+      <table>
+        <thead>
+          <tr>
+            <th>Doctor</th>
+            <th>Day</th>
+            <th>Time</th>
+            <th>Status</th>
+            <th>Cancel</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let a of appointments">
+            <td>{{ getDoctorName(a.doctorId) }}</td>
+            <td>{{ a.day }}</td>
+            <td>{{ a.time }}</td>
+            <td>{{ a.status }}</td>
+            <td>
+              <button (click)="cancelApp(a.id)">X</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="appointments.length === 0">
+      <p>
+        You have no appointments yet.
+        <button (click)="go()">Book Now</button>
+      </p>
+    </div>
+
+  </div>
+
+</div>

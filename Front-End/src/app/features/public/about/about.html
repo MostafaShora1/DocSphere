@@ -1,0 +1,169 @@
+<!-- HEADER -->
+<header class="top-header">
+  <div class="container">
+    <h1>Digital Medical Center</h1>
+    <p>The Region's First Smart Health System | Since 2010</p>
+  </div>
+</header>
+
+<!-- ABOUT -->
+<section class="container">
+  <h2 class="section-title">Who We Are</h2>
+
+  <div class="grid">
+
+    <div class="testimonial-card">
+      <h3>Our Mission</h3>
+      <p>
+        To create an intelligent care environment that respects human dignity
+      </p>
+    </div>
+
+    <div class="testimonial-card">
+      <h3>Our Values</h3>
+      <p>
+        We work with integrity, innovate with passion, and care with our hearts
+      </p>
+    </div>
+
+    <div class="testimonial-card">
+      <h3>Our Vision</h3>
+      <p>
+        To lead the digital health transformation in the region
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<!-- STAFF -->
+<section class="container">
+
+  <h2 class="section-title">Our Elite Medical Team</h2>
+
+  <div class="filter-buttons">
+
+    <button
+      class="tab-btn"
+      [class.active]="activeFilter === 'all'"
+      (click)="applyFilter('all')">
+      All
+    </button>
+
+    <button
+      class="tab-btn"
+      [class.active]="activeFilter === 'doctor'"
+      (click)="applyFilter('doctor')">
+      Doctors
+    </button>
+
+    <button
+      class="tab-btn"
+      [class.active]="activeFilter === 'nurse'"
+      (click)="applyFilter('nurse')">
+      Nursing
+    </button>
+
+    <button
+      class="tab-btn"
+      [class.active]="activeFilter === 'admin'"
+      (click)="applyFilter('admin')">
+      Administration
+    </button>
+
+  </div>
+
+  <div class="staff-grid">
+
+    <div
+      class="staff-card"
+      *ngFor="let person of filteredStaff">
+
+      <img [src]="person.image">
+
+      <div class="staff-info">
+        <h3>{{ person.name }}</h3>
+        <p>{{ person.specialty }}</p>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="container">
+
+  <h2 class="section-title">What Our Patients Say</h2>
+
+  <div class="grid">
+
+    <div
+      class="testimonial-card"
+      *ngFor="let t of testimonials; let i = index">
+
+      <div class="stars">
+        {{ getStars(t.rating) }}
+      </div>
+
+      <p class="testimonial-text">
+        {{ t.text }}
+      </p>
+
+      <div class="patient-info">
+
+        <div class="patient-avatar">
+          {{ t.name.charAt(0) }}
+        </div>
+
+        <div>
+          <h4>{{ t.name }}</h4>
+          <small>Center Patient</small>
+        </div>
+
+      </div>
+
+      <button
+        class="delete-btn"
+        (click)="deleteTestimonial(i)">
+        Delete
+      </button>
+
+    </div>
+
+    <!-- ADD FORM -->
+
+    <div class="testimonial-card add-form">
+
+      <h3>Add Your Review</h3>
+
+      <input
+        type="text"
+        placeholder="Your Name"
+        [(ngModel)]="newName">
+
+      <input
+        type="text"
+        placeholder="Your comment"
+        [(ngModel)]="newText">
+
+      <select [(ngModel)]="newRating">
+
+        <option [value]="5">⭐⭐⭐⭐⭐</option>
+        <option [value]="4">⭐⭐⭐⭐☆</option>
+        <option [value]="3">⭐⭐⭐☆☆</option>
+        <option [value]="2">⭐⭐☆☆☆</option>
+        <option [value]="1">⭐☆☆☆☆</option>
+
+      </select>
+
+      <button (click)="addTestimonial()">
+        Submit Review
+      </button>
+
+    </div>
+
+  </div>
+
+</section>

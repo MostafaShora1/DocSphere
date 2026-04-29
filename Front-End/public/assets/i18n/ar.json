@@ -1,0 +1,202 @@
+{
+  "NAV": {
+    "HOME": "الرئيسية",
+    "SERVICES": "الخدمات",
+    "DOCTORS": "الأطباء",
+    "CONTACT": "اتصل بنا",
+    "ABOUT": "من نحن",
+    "LOGIN": "تسجيل الدخول",
+    "BOOK_NOW": "احجز الآن"
+  },
+  "ACTIONS": {
+    "SWITCH_TO_DARK": "التبديل إلى الوضع الداكن",
+    "SWITCH_TO_LIGHT": "التبديل إلى الوضع الفاتح",
+    "SWITCH_LANGUAGE": "تبديل اللغة"
+  },
+  "COMMON": {
+    "CURRENCY": "جنيه",
+    "DOCTOR_PREFIX": "د.",
+    "DOCTOR_IMAGE_ALT": "طبيب",
+    "STAR": "★",
+    "LOADING": "جارٍ التحميل...",
+    "NETWORK_ERROR": "تعذر الوصول إلى الخادم. يرجى التحقق من اتصال الإنترنت والمحاولة مرة أخرى.",
+    "UNKNOWN": "غير معروف"
+  },
+  "HOME": {
+    "HERO": {
+      "TITLE": "أفضل مركز طبي",
+      "DESCRIPTION": "نقدم خدمات طبية متكاملة يقدمها نخبة من الأطباء المتخصصين بكل راحة وأمان.",
+      "CTA": "احجز موعدك الآن",
+      "STAT_DOCTORS": "أطباء متخصصون",
+      "STAT_PATIENTS": "مرضى سعداء",
+      "STAT_VISITS": "زيارات منزلية"
+    },
+    "STEPS": {
+      "TITLE": "كيف يعمل النظام؟",
+      "BOOK_TITLE": "احجز موعدك",
+      "BOOK_DESC": "اختر الوقت المناسب لك",
+      "SELECT_TITLE": "اختر طبيبك",
+      "SELECT_DESC": "من أفضل المتخصصين",
+      "REPORT_TITLE": "استلم تقريرك",
+      "REPORT_DESC": "تقرير طبي شامل"
+    },
+    "SERVICES": {
+      "TITLE": "خدماتنا المميزة"
+    },
+    "DOCTORS": {
+      "TITLE": "أطباؤنا المميزون"
+    },
+    "STATS": {
+      "TITLE": "إنجازاتنا بالأرقام",
+      "SPECIALTIES": "تخصصات طبية"
+    },
+    "REVIEWS": {
+      "TITLE": "آراء العملاء",
+      "REVIEW_1_TEXT": "\"خدمة ممتازة. كان الطبيب محترفًا ووصل في الوقت المحدد.\"",
+      "REVIEW_1_AUTHOR": "أحمد محمد",
+      "REVIEW_2_TEXT": "\"استشارة رائعة وتشخيص دقيق.\"",
+      "REVIEW_2_AUTHOR": "منى السيد",
+      "REVIEW_3_TEXT": "\"فريق محترف جدًا وخدمة سريعة ونظيفة.\"",
+      "REVIEW_3_AUTHOR": "خالد أحمد"
+    }
+  },
+  "DOCTORS": {
+    "TITLE": "ابحث عن طبيبك",
+    "SUBTITLE": "أطباء محترفون في جميع التخصصات",
+    "SEARCH_PLACEHOLDER": "ابحث بالاسم",
+    "ALL_SPECIALTIES": "كل التخصصات",
+    "AVAILABLE": "الأطباء المتاحون",
+    "VIEW_PROFILE": "عرض الملف الشخصي"
+  },
+  "SERVICES": {
+    "TITLE": "خدماتنا الطبية",
+    "SUBTITLE": "نقدم مجموعة متكاملة من الخدمات الطبية المتخصصة.",
+    "SEARCH_PLACEHOLDER": "ابحث عن خدمة...",
+    "ALL_SPECIALTIES": "جميع التخصصات",
+    "DURATION": "المدة:",
+    "BOOK_NOW": "احجز الآن",
+    "NO_RESULTS": "لا توجد خدمات مطابقة للبحث.",
+    "LOGIN_REQUIRED": "يرجى تسجيل الدخول لحجز موعد."
+  },
+  "SPECIALTIES": {
+    "DENTISTRY": "طب الأسنان",
+    "OPHTHALMOLOGY": "طب العيون",
+    "INTERNAL_MEDICINE": "الباطنة",
+    "PEDIATRICS": "طب الأطفال",
+    "DERMATOLOGY": "الجلدية",
+    "CARDIOLOGY": "القلب"
+  },
+  "AUTH": {
+    "COMMON": {
+      "EMAIL": "البريد الإلكتروني",
+      "EMAIL_PLACEHOLDER": "أدخل بريدك الإلكتروني",
+      "PASSWORD": "كلمة المرور",
+      "PASSWORD_PLACEHOLDER": "أدخل كلمة المرور",
+      "USERNAME": "اسم المستخدم",
+      "USERNAME_PLACEHOLDER": "أدخل اسم المستخدم"
+    },
+    "VALIDATION": {
+      "EMAIL_REQUIRED": "البريد الإلكتروني مطلوب",
+      "EMAIL_INVALID": "صيغة البريد الإلكتروني غير صحيحة",
+      "PASSWORD_REQUIRED": "كلمة المرور مطلوبة",
+      "PASSWORD_MIN": "يجب أن تكون كلمة المرور 6 أحرف على الأقل"
+    },
+    "LOGIN": {
+      "TITLE": "مرحبًا بعودتك",
+      "SUBMIT": "تسجيل الدخول",
+      "ERRORS": {
+        "INVALID_FORM": "يرجى ملء جميع الحقول المطلوبة بشكل صحيح.",
+        "INVALID_CREDENTIALS": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+        "FAILED": "فشل تسجيل الدخول. حاول مرة أخرى."
+      }
+    },
+    "REGISTER": {
+      "TITLE": "إنشاء حساب",
+      "SUBMIT": "تسجيل",
+      "HAVE_ACCOUNT": "لديك حساب بالفعل؟",
+      "SUCCESS": "تم إنشاء الحساب بنجاح",
+      "ERROR": "فشل التسجيل"
+    },
+    "FORGOT": {
+      "TITLE": "نسيت كلمة المرور",
+      "DESCRIPTION": "أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة تعيين كلمة المرور.",
+      "SUBMIT": "إرسال رابط إعادة التعيين",
+      "LOADING": "جارٍ الإرسال...",
+      "REMEMBERED": "تذكرت كلمة المرور؟",
+      "SUCCESS": "تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني",
+      "ERRORS": {
+        "INVALID_EMAIL": "يرجى إدخال بريد إلكتروني صحيح.",
+        "FAILED": "تعذر إرسال رابط إعادة التعيين. حاول مرة أخرى."
+      }
+    },
+    "VERIFY": {
+      "TITLE": "تأكيد البريد الإلكتروني",
+      "DESCRIPTION": "أدخل رمز التحقق المرسل إلى بريدك الإلكتروني.",
+      "CODE": "رمز التحقق",
+      "CODE_PLACEHOLDER": "أدخل رمز التحقق",
+      "SUBMIT": "تأكيد البريد الإلكتروني",
+      "LOADING": "جارٍ التحقق...",
+      "BACK_TO": "العودة إلى",
+      "SUCCESS": "تم تأكيد البريد الإلكتروني بنجاح",
+      "ERRORS": {
+        "INVALID_CODE": "يرجى إدخال رمز تحقق صحيح.",
+        "FAILED": "تعذر تأكيد البريد الإلكتروني. حاول مرة أخرى.",
+        "CODE_REQUIRED": "رمز التحقق مطلوب",
+        "CODE_SHORT": "رمز التحقق قصير جدًا"
+      }
+    }
+  },
+  "DASHBOARD": {
+    "PATIENT": {
+      "INFO": "المعلومات",
+      "NAME": "الاسم:",
+      "EMAIL": "البريد الإلكتروني:",
+      "MY_APPOINTMENTS": "مواعيدي",
+      "DOCTOR": "الطبيب",
+      "DAY": "اليوم",
+      "TIME": "الوقت",
+      "STATUS": "الحالة",
+      "CANCEL": "إلغاء",
+      "CANCEL_ACTION": "إلغاء",
+      "EMPTY": "ليس لديك مواعيد حتى الآن."
+    },
+    "DOCTOR": {
+      "NAV_HOME": "الرئيسية",
+      "NAV_APPOINTMENTS": "المواعيد",
+      "NAV_PATIENTS": "المرضى",
+      "NAV_BILLING": "الفواتير",
+      "LOGOUT": "تسجيل الخروج",
+      "WELCOME": "مرحبًا، {{name}}",
+      "NEW_REQUESTS": "لديك {{count}} طلبات جديدة",
+      "TOTAL_DOCTORS": "إجمالي الأطباء",
+      "PENDING": "قيد الانتظار",
+      "CONFIRMED": "مؤكد",
+      "APPOINTMENTS": "المواعيد",
+      "MY_APPOINTMENTS": "مواعيدي",
+      "ACCEPT": "قبول",
+      "REJECT": "رفض"
+    },
+    "ADMIN": {
+      "TITLE": "لوحة تحكم المدير",
+      "DOCTORS": "الأطباء",
+      "SERVICES": "الخدمات",
+      "APPOINTMENTS": "المواعيد",
+      "PENDING": "المعلقة"
+    }
+  },
+  "STATUS": {
+    "PENDING": "قيد الانتظار",
+    "CONFIRMED": "مؤكد",
+    "REJECTED": "مرفوض",
+    "CANCELLED": "ملغي"
+  },
+  "FOOTER": {
+    "BRAND_TEXT": "نقدم أفضل خدمات الرعاية الطبية المنزلية بجودة عالية واحترافية.",
+    "QUICK_LINKS": "روابط سريعة",
+    "CONTACT_US": "تواصل معنا",
+    "WORKING_HOURS": "ساعات العمل",
+    "DAYS": "السبت - الجمعة",
+    "HOURS": "متاح 24/7",
+    "COPYRIGHT": "© 2026 دوك سفير | جميع الحقوق محفوظة"
+  }
+}

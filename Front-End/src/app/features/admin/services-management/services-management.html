@@ -1,0 +1,124 @@
+<div class="services-management">
+  <!-- Header -->
+  <div class="tab-header">
+    <h2>إدارة الخدمات</h2>
+    <button class="btn-primary" (click)="openAddForm()">إضافة خدمة جديدة</button>
+  </div>
+
+  <!-- Form -->
+  <div class="form-card" *ngIf="showForm">
+    <h3>
+      {{ isEditMode ? 'تعديل خدمة' : 'إضافة خدمة جديدة' }}
+    </h3>
+
+    <form (ngSubmit)="saveService()" #serviceForm="ngForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label>اسم الخدمة</label>
+          <input type="text" class="form-control" name="name" [(ngModel)]="service.name" required />
+        </div>
+
+        <div class="form-group">
+          <label>السعر (جنيه)</label>
+          <input
+            type="number"
+            class="form-control"
+            name="price"
+            [(ngModel)]="service.price"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>الطبيب المسؤول</label>
+          <select class="form-control" name="doctorId" [(ngModel)]="service.doctorId" required>
+            <option value="">-- اختر الطبيب --</option>
+            <option *ngFor="let doc of doctors" [value]="doc.id">
+              {{ doc.name }} - {{ doc.specialty }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>المدة</label>
+          <input
+            type="text"
+            class="form-control"
+            name="duration"
+            [(ngModel)]="service.duration"
+            placeholder="مثال: 45 mins"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>الوصف</label>
+        <textarea
+          class="form-control"
+          name="description"
+          rows="3"
+          [(ngModel)]="service.description"
+          required
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>
+          <input type="checkbox" name="isActive" [(ngModel)]="service.isActive" />
+          الخدمة نشطة
+        </label>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-primary">حفظ</button>
+
+        <button type="button" class="btn-secondary" (click)="closeForm()">إلغاء</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Table -->
+  <div class="table-container">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>اسم الخدمة</th>
+          <th>الطبيب</th>
+          <th>السعر</th>
+          <th>المدة</th>
+          <th>الحالة</th>
+          <th>الإجراءات</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let service of services">
+          <td>{{ service.name }}</td>
+
+          <td>
+            {{ getDoctorName(service.doctorId) }}
+          </td>
+
+          <td>{{ service.price }} جنيه</td>
+
+          <td>{{ service.duration }}</td>
+
+          <td>
+            <span [class.active]="service.isActive">
+              {{ service.isActive ? 'نشط' : 'غير نشط' }}
+            </span>
+          </td>
+
+          <td>
+            <button class="btn-edit" (click)="editService(service)">تعديل</button>
+
+            <button class="btn-delete" (click)="deleteService(service.id)">حذف</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

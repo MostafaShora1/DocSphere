@@ -1,0 +1,90 @@
+{
+  "doctor": {
+    "id": 1,
+    "name": "Dr. Ahmed Hassan",
+    "specialty": "Cardiology",
+    "email": "ahmed.hassan@clinic.com",
+    "phone": "+20 100 123 4567",
+    "image": "https://randomuser.me/api/portraits/men/32.jpg",
+    "bio": "Senior cardiologist with 10+ years of experience in heart diseases."
+  },
+
+  "doctors": [
+    {
+      "id": 1,
+      "name": "Dr. Ahmed Hassan",
+      "specialty": "Cardiology",
+      "image": "https://randomuser.me/api/portraits/men/32.jpg",
+      "rating": 4.8
+    },
+    {
+      "id": 2,
+      "name": "Dr. Sara Mohamed",
+      "specialty": "Dermatology",
+      "image": "https://randomuser.me/api/portraits/women/44.jpg",
+      "rating": 4.6
+    },
+    {
+      "id": 3,
+      "name": "Dr. Omar Ali",
+      "specialty": "Neurology",
+      "image": "https://randomuser.me/api/portraits/men/45.jpg",
+      "rating": 4.7
+    },
+    {
+      "id": 4,
+      "name": "Dr. Noura Adel",
+      "specialty": "Pediatrics",
+      "image": "https://randomuser.me/api/portraits/women/68.jpg",
+      "rating": 4.9
+    }
+  ],
+
+  "patients": [
+    {
+      "id": 1,
+      "name": "Mohamed Ali",
+      "age": 30,
+      "gender": "Male",
+      "status": "new"
+    },
+    {
+      "id": 2,
+      "name": "Fatma Ahmed",
+      "age": 25,
+      "gender": "Female",
+      "status": "follow-up"
+    },
+    {
+      "id": 3,
+      "name": "Khaled Samir",
+      "age": 40,
+      "gender": "Male",
+      "status": "new"
+    }
+  ],
+
+  "appointments": [
+    {
+      "id": 1,
+      "patientName": "Mohamed Ali",
+      "date": "2026-04-25",
+      "time": "10:00 AM",
+      "status": "pending"
+    },
+    {
+      "id": 2,
+      "patientName": "Fatma Ahmed",
+      "date": "2026-04-26",
+      "time": "12:30 PM",
+      "status": "confirmed"
+    },
+    {
+      "id": 3,
+      "patientName": "Khaled Samir",
+      "date": "2026-04-27",
+      "time": "03:00 PM",
+      "status": "pending"
+    }
+  ]
+}

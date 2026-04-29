@@ -1,0 +1,101 @@
+<div class="appointments-section">
+  <div *ngIf="currentUser?.role !== 'patient'" class="warning-box">
+    <p>You need to login as a patient first.</p>
+  </div>
+
+  <div *ngIf="currentUser?.role === 'patient'" class="container">
+    <h1 class="section-title">Book Appointment</h1>
+    <p class="section-subtitle">Choose a doctor, service, date, and available time.</p>
+
+    <div class="form-card booking-form">
+      <h2>New Booking</h2>
+
+      <div class="error-message" *ngIf="errorMsg">{{ errorMsg }}</div>
+      <div class="success-message" *ngIf="message">{{ message }}</div>
+
+      <div class="form-group">
+        <label>Doctor</label>
+        <select class="form-control" [(ngModel)]="selectedDoctorId" (change)="onDoctorChange()">
+          <option value="">Choose a doctor</option>
+          <option *ngFor="let doctor of doctors" [value]="doctor.id">
+            {{ doctor.name }} - {{ doctor.specialty }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Service</label>
+        <select class="form-control" [(ngModel)]="selectedServiceId" (change)="onServiceChange()" [disabled]="!selectedDoctorId">
+          <option value="">Choose a service</option>
+          <option *ngFor="let service of services" [value]="service.id">
+            {{ service.name }} - {{ service.price }} EGP
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Date</label>
+        <input class="form-control" type="date" [(ngModel)]="selectedDate">
+      </div>
+
+      <div class="form-group">
+        <label>Time</label>
+        <select class="form-control" [(ngModel)]="selectedTime" [disabled]="!selectedServiceId">
+          <option value="">Choose a time</option>
+          <option *ngFor="let time of availableTimes" [value]="time">{{ time }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Notes</label>
+        <textarea class="form-control" rows="4" [(ngModel)]="notes" placeholder="Add any notes for the doctor"></textarea>
+      </div>
+
+      <div class="booking-summary" *ngIf="canConfirm && selectedService">
+        <div class="summary-item">
+          <span class="summary-label">Service</span>
+          <span>{{ selectedService.name }}</span>
+        </div>
+        <div class="summary-item">
+          <span class="summary-label">Fee</span>
+          <span>{{ selectedService.price }} EGP</span>
+        </div>
+        <div class="summary-item">
+          <span class="summary-label">Date</span>
+          <span>{{ selectedDate }}</span>
+        </div>
+        <div class="summary-item">
+          <span class="summary-label">Time</span>
+          <span>{{ selectedTime }}</span>
+        </div>
+      </div>
+
+      <button class="btn-primary btn-large" (click)="confirmBooking()" [disabled]="!canConfirm || booking">
+        {{ booking ? 'Booking...' : 'Confirm Booking' }}
+      </button>
+    </div>
+
+    <div class="appointments-list">
+      <div class="appointment-card" *ngFor="let appointment of appointments">
+        <div class="appointment-info">
+          <h4>{{ appointment.doctorName }}</h4>
+          <p>{{ appointment.serviceName }}</p>
+          <p>{{ appointment.day }} - {{ appointment.time }}</p>
+        </div>
+
+        <div class="appointment-actions">
+          <span class="btn-status"
+            [class.status-pending]="appointment.status === 'pending'"
+            [class.status-confirmed]="appointment.status === 'confirmed'"
+            [class.status-cancelled]="appointment.status === 'cancelled'">
+            {{ appointment.status }}
+          </span>
+
+          <button class="btn-primary btn-small btn-cancel" *ngIf="appointment.status === 'pending'" (click)="cancelAppointment(appointment.id)">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,64 @@
+<section class="main-content">
+  <div class="login-card">
+
+    <h2>Welcome Back</h2>
+
+    <div class="success-message" *ngIf="successMsg">
+      {{ successMsg }}
+    </div>
+
+    <div class="error-message" *ngIf="errorMsg">
+      {{ errorMsg }}
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+      <div class="form-group">
+        <label>Email</label>
+        <input
+          type="email"
+          formControlName="email"
+          required
+        >
+        <div class="error" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+          <span *ngIf="loginForm.get('email')?.errors?.['required']">Email is required</span>
+          <span *ngIf="loginForm.get('email')?.errors?.['email']">Invalid email format</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+
+        <div class="password-wrapper">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            formControlName="password"
+            required
+          >
+
+          <i
+            class="fa-solid"
+            [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"
+            (click)="togglePassword()"
+          ></i>
+        </div>
+        <div class="error" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+          <span *ngIf="loginForm.get('password')?.errors?.['required']">Password is required</span>
+          <span *ngIf="loginForm.get('password')?.errors?.['minlength']">Password must be at least 8 characters</span>
+          <span *ngIf="loginForm.get('password')?.errors?.['pattern']">Use uppercase, lowercase, and a number</span>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-login" [disabled]="loading || loginForm.invalid">
+
+        <span *ngIf="loading" class="spinner"></span>
+
+        <span *ngIf="!loading">Login</span>
+        <span *ngIf="loading">Loading...</span>
+
+      </button>
+
+    </form>
+
+  </div>
+</section>

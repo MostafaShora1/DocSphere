@@ -1,0 +1,24 @@
+<h2>إدارة الأطباء</h2>
+
+<button (click)="showForm = true">إضافة طبيب</button>
+
+<div *ngIf="showForm">
+  <input [(ngModel)]="doctor.name" placeholder="الاسم" />
+  <input [(ngModel)]="doctor.specialty" placeholder="التخصص" />
+
+  <button (click)="doctor.id ? update() : add()">
+    حفظ
+  </button>
+</div>
+
+<table>
+  <tr *ngFor="let d of doctors">
+    <td>{{ d.name }}</td>
+    <td>{{ d.specialty }}</td>
+
+    <td>
+      <button (click)="edit(d)">تعديل</button>
+      <button (click)="delete(d.id)">حذف</button>
+    </td>
+  </tr>
+</table>

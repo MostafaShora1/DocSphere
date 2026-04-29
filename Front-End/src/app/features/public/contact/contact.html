@@ -1,0 +1,54 @@
+<section class="contact-section">
+  <div class="container contact-grid">
+    <div class="contact-info">
+      <h2>Contact Information</h2>
+      <p>We are here to help you. Reach out anytime.</p>
+
+      <ul>
+        <li><i class="fa-solid fa-phone"></i> +20 123 456 789</li>
+        <li><i class="fa-solid fa-envelope"></i> contact@docsphere.com</li>
+        <li><i class="fa-solid fa-location-dot"></i> Cairo, Egypt</li>
+      </ul>
+    </div>
+
+    <div class="contact-form-card">
+      <h2>Send Message</h2>
+
+      <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" formControlName="name">
+          <span class="error" *ngIf="submitted && f['name'].errors">
+            Enter valid name (3-50 letters)
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" formControlName="email">
+          <span class="error" *ngIf="submitted && f['email'].errors">
+            Enter valid email
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label>Phone</label>
+          <input type="text" formControlName="phone">
+          <span class="error" *ngIf="submitted && f['phone'].errors">
+            Enter valid phone (10-15 digits)
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label>Message</label>
+          <textarea rows="5" formControlName="message"></textarea>
+          <span class="error" *ngIf="submitted && f['message'].errors">
+            Message must be at least 10 characters
+          </span>
+        </div>
+
+        <button class="btn-submit">Send Message</button>
+      </form>
+    </div>
+  </div>
+</section>

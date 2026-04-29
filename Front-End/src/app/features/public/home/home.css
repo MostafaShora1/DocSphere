@@ -1,0 +1,427 @@
+:root {
+    --dark-bg: #02302c;
+    --coral: #f79674;
+    --coral-dark: #e3755d;
+    --light-pink: #fff2f0;
+    --black-dark: #001910;
+    --teal: #145245;
+    --teal-light: #79d3c193;
+    --white-opaque: #ffffffe6;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 0 20px;
+}
+
+.section {
+    padding: 70px 0;
+}
+
+/* ================= BUTTON ================= */
+
+.btn {
+    padding: 14px 35px;
+    background: var(--coral);
+    border: none;
+    border-radius: 40px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all .3s;
+    font-family: 'Cairo', sans-serif;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(247, 150, 116, .4);
+    background: var(--coral-dark);
+}
+
+/* ================= HERO ================= */
+
+.hero-neo {
+    background: linear-gradient(135deg, var(--dark-bg) 0%, #024a42 100%);
+    padding: 120px 0 80px;
+    position: relative;
+    overflow: hidden;
+    min-height: 90vh;
+}
+
+.hero-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 60px;
+    flex-wrap: wrap;
+}
+
+.hero-text {
+    flex: 1;
+    color: white;
+}
+
+.hero-text h1 {
+    font-size: 3.5rem;
+    line-height: 1.3;
+    margin-bottom: 20px;
+}
+
+.hero-text p {
+    color: rgba(255, 255, 255, .9);
+    margin-bottom: 30px;
+    max-width: 500px;
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+.hero-stats {
+    display: flex;
+    gap: 40px;
+    margin-top: 40px;
+}
+
+.hero-stat-num {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--coral);
+}
+
+.hero-img img {
+    max-width: 500px;
+    width: 100%;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, .3);
+}
+
+/* ================= GRID ================= */
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+/* ================= STEPS ================= */
+
+.steps-section {
+    background: linear-gradient(135deg, var(--teal-light) 0%, rgba(121, 211, 193, .3) 100%);
+}
+
+.steps-section h2,
+.services-section h2,
+.doctors-section h2,
+.reviews-section h2 {
+    font-size: 2.5rem;
+    color: var(--dark-bg);
+    text-align: center;
+    margin-bottom: 50px;
+    font-weight: 700;
+}
+
+/* FIX: was 4 columns but you have 3 cards */
+.steps-section .grid {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+/* Step Cards - How It Works */
+.step-card {
+    background: white;
+    border-radius: 20px;
+    padding: 40px 30px;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, .08);
+    transition: all .4s;
+    position: relative;
+    overflow: hidden;
+}
+
+.step-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, var(--coral), var(--coral-dark));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .4s;
+}
+
+.step-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, .15);
+}
+
+.step-card:hover::before {
+    transform: scaleX(1);
+}
+
+.step-card h3 {
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--coral);
+    margin-bottom: 10px;
+    opacity: 0.3;
+}
+
+.step-card > p:first-of-type {
+    font-size: 1.3rem;
+    color: var(--dark-bg);
+    margin-bottom: 10px;
+}
+
+.step-card > p:last-of-type {
+    font-size: .95rem;
+    color: #666;
+    line-height: 1.6;
+}
+
+/* ================= SERVICES ================= */
+
+.service-card {
+    background: white;
+    border-radius: 20px;
+    padding: 40px 30px;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, .08);
+    cursor: pointer;
+    transition: all .4s;
+}
+
+.service-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, .2);
+}
+
+.service-card h3 {
+    font-size: 1.6rem;
+    margin-bottom: 15px;
+}
+
+.service-price {
+    color: var(--coral);
+    font-size: 1.4rem;
+    font-weight: 900;
+}
+
+/* ================= DOCTORS ================= */
+
+.doctor-card {
+    background: white;
+    border-radius: 20px;
+    padding: 30px 20px;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, .08);
+    cursor: pointer;
+    transition: all .4s;
+}
+
+.doctor-card:hover {
+    transform: translateY(-10px);
+}
+
+.doctor-image {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid var(--coral);
+}
+
+.doctor-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.doctor-specialty {
+    color: var(--coral);
+    font-weight: 600;
+}
+
+.doctor-rating {
+    margin-top: 15px;
+    color: #FFB800;
+}
+
+/* ================= STATS ================= */
+
+.stats {
+    background: linear-gradient(135deg, var(--dark-bg) 0%, #024a42 100%);
+    color: white;
+    text-align: center;
+}
+
+.stat-num {
+    font-size: 3rem;
+    color: var(--coral);
+    font-weight: 900;
+}
+
+/* ================= REVIEWS ================= */
+
+.review-card {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, .06);
+}
+
+.review-stars {
+    color: #FFB800;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+.review-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #555;
+    margin-bottom: 20px;
+    font-style: italic;
+}
+
+.review-author {
+    font-weight: 700;
+    color: var(--dark-bg);
+}
+
+/* ================= MODAL ================= */
+
+/* IMPORTANT: removed display:none because Angular controls visibility */
+.modal {
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, .7);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.modal-close {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2rem;
+    cursor: pointer;
+    color: var(--dark-bg);
+}
+
+.modal-close:hover {
+    color: var(--coral);
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 992px) {
+
+    .hero-text h1 {
+        font-size: 2.6rem;
+    }
+
+    .steps-section .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .hero-img img {
+        max-width: 100%;
+    }
+
+}
+
+@media (max-width: 768px) {
+    .hero-wrap {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .hero-stats {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .hero-text h1 {
+        font-size: 2.2rem;
+    }
+
+    .hero-text p {
+        max-width: 100%;
+        margin: 0 auto 25px;
+    }
+
+    .service-card,
+    .doctor-card,
+    .review-card,
+    .modal-content {
+        padding: 24px;
+    }
+
+    .hero-img {
+        width: 100%;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    .steps-section .grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 576px) {
+
+    .hero-wrap {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .hero-stats {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .steps-section .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-text h1 {
+        font-size: 2rem;
+    }
+
+    .hero-text p {
+        font-size: 1rem;
+    }
+
+    .service-card,
+    .doctor-card,
+    .review-card,
+    .modal-content {
+        padding: 18px;
+    }
+}
+

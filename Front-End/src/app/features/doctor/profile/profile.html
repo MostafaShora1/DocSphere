@@ -1,0 +1,46 @@
+<section class="profile-section" *ngIf="doctor">
+
+  <div class="container profile-container">
+
+    <!-- Header -->
+    <div class="profile-header">
+      <img [src]="doctor.image" alt="doctor.name">
+
+      <div class="profile-info">
+        <h1>{{ doctor.name }}</h1>
+        <p class="specialty">{{ doctor.specialty }}</p>
+        <p>{{ doctor.experience }}</p>
+        <p>⭐ {{ doctor.rating }}/5</p>
+      </div>
+    </div>
+
+    <!-- Bio -->
+    <div class="profile-card">
+      <h2>About Doctor</h2>
+      <p>{{ doctor.bio }}</p>
+    </div>
+
+    <!-- Days -->
+    <div class="profile-card">
+      <h2>Available Days</h2>
+      <span *ngFor="let day of doctor.availableDays" class="day-badge">
+        {{ day }}
+      </span>
+    </div>
+
+    <!-- Times -->
+    <div class="profile-card">
+      <h2>Available Times</h2>
+      <span *ngFor="let time of doctor.availableTimes" class="time-badge">
+        {{ time }}
+      </span>
+    </div>
+
+    <!-- Book -->
+    <button class="btn-primary btn-large" (click)="bookAppointment()">
+      Book Appointment
+    </button>
+
+  </div>
+
+</section>

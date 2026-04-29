@@ -1,0 +1,299 @@
+<!-- HERO SECTION -->
+<section class="hero-neo">
+  <div class="container hero-wrap">
+
+    <div class="hero-text">
+
+      <h1>
+        Best Medical Center
+        <span><br></span>
+      </h1>
+
+      <p>
+        We provide comprehensive medical services delivered by top specialized doctors with comfort and safety to you.
+      </p>
+
+      <button class="btn">
+        Book Your Appointment
+      </button>
+
+      <div class="hero-stats">
+
+        <div class="hero-stat">
+          <div class="hero-stat-num">150+</div>
+          <div class="hero-stat-label">Specialist Doctors</div>
+        </div>
+
+        <div class="hero-stat">
+          <div class="hero-stat-num">25k+</div>
+          <div class="hero-stat-label">Happy Patients</div>
+        </div>
+
+        <div class="hero-stat">
+          <div class="hero-stat-num">50k+</div>
+          <div class="hero-stat-label">Home Visits</div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="hero-img">
+      <img
+        src="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=800"
+        alt="Doctor"
+      >
+    </div>
+
+  </div>
+</section>
+
+
+<!-- HOW IT WORKS -->
+<section class="section steps-section">
+
+  <div class="container">
+
+    <h2>
+      How It Works?
+    </h2>
+
+    <div class="grid">
+
+      <div class="card step-card">
+        <h3>1</h3>
+        <i class="fas fa-calendar-check" style="font-size:3rem;color:var(--coral);margin:15px 0;"></i>
+        <p><strong>Book Your Appointment</strong></p>
+        <p style="font-size:.9rem;margin-top:10px;color:#666;">
+          Choose your convenient time
+        </p>
+      </div>
+
+      <div class="card step-card">
+        <h3>2</h3>
+        <i class="fas fa-user-md" style="font-size:3rem;color:var(--coral);margin:15px 0;"></i>
+        <p><strong>Select Your Doctor</strong></p>
+        <p style="font-size:.9rem;margin-top:10px;color:#666;">
+          From the best specialists
+        </p>
+      </div>
+
+      <div class="card step-card">
+        <h3>3</h3>
+        <i class="fas fa-file-medical" style="font-size:3rem;color:var(--coral);margin:15px 0;"></i>
+        <p><strong>Receive Your Report</strong></p>
+        <p style="font-size:.9rem;margin-top:10px;color:#666;">
+          Comprehensive medical report
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- SERVICES SECTION (Dynamic from JSON) -->
+<section class="section services-section">
+
+  <div class="container">
+
+    <h2>
+      Our Premium Services
+    </h2>
+
+    <div class="grid">
+
+      <div
+        class="service-card"
+        *ngFor="let svc of services"
+      >
+
+        <h3>
+          {{ svc.name }}
+        </h3>
+
+        <p>
+          {{ svc.description }}
+        </p>
+
+        <span class="service-price">
+          {{ svc.price }} EGP
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- DOCTORS SECTION -->
+<section class="section doctors-section">
+
+  <div class="container">
+
+    <h2>
+      Our Distinguished Doctors
+    </h2>
+
+    <div class="grid">
+
+      <div
+        class="doctor-card"
+        *ngFor="let doc of doctors"
+        (click)="openDoctor(doc)"
+      >
+
+        <div class="doctor-image">
+
+          <img
+            [src]="doc.image"
+            alt="doctor"
+          >
+
+        </div>
+
+        <h3>
+          {{ doc.name }}
+        </h3>
+
+        <p class="doctor-specialty">
+          {{ doc.specialty }}
+        </p>
+
+        <div class="doctor-rating">
+          ⭐ {{ doc.rating }}
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- STATS SECTION -->
+<section class="section stats">
+
+  <div class="container">
+
+    <h2>
+      Our Achievements in Numbers
+    </h2>
+
+    <div class="grid">
+
+      <div>
+        <div class="stat-num">150+</div>
+        <p>Specialist Doctors</p>
+      </div>
+
+      <div>
+        <div class="stat-num">45+</div>
+        <p>Medical Specialties</p>
+      </div>
+
+      <div>
+        <div class="stat-num">25000+</div>
+        <p>Happy Patients</p>
+      </div>
+
+      <div>
+        <div class="stat-num">50000+</div>
+        <p>Home Visits</p>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- REVIEWS SECTION -->
+<section class="section reviews-section">
+
+  <div class="container">
+
+    <h2>
+      Client Reviews
+    </h2>
+
+    <div class="grid">
+
+      <div class="review-card">
+        <div class="review-stars">⭐⭐⭐⭐⭐</div>
+        <p class="review-text">
+          "Excellent service. The doctor was professional and arrived on time."
+        </p>
+        <h4 class="review-author">Ahmed Mohamed</h4>
+      </div>
+
+      <div class="review-card">
+        <div class="review-stars">⭐⭐⭐⭐⭐</div>
+        <p class="review-text">
+          "Great consultation and accurate diagnosis."
+        </p>
+        <h4 class="review-author">Mona Elsayed</h4>
+      </div>
+
+      <div class="review-card">
+        <div class="review-stars">⭐⭐⭐⭐⭐</div>
+        <p class="review-text">
+          "Very professional team, fast and clean service."
+        </p>
+        <h4 class="review-author">Khaled Ahmed</h4>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- MODAL -->
+<div
+  class="modal"
+  *ngIf="selectedDoctor"
+>
+
+  <div class="modal-content">
+
+    <span
+      class="modal-close"
+      (click)="closeModal()"
+    >
+      &times;
+    </span>
+
+    <div style="text-align:center;">
+
+      <img
+        [src]="selectedDoctor.image"
+        style="width:150px;height:150px;border-radius:50%;object-fit:cover;margin-bottom:20px;border:4px solid var(--coral);"
+      >
+
+      <h2>
+        {{ selectedDoctor.name }}
+      </h2>
+
+      <p style="color:var(--coral);font-size:1.2rem;font-weight:600;">
+        {{ selectedDoctor.specialty }}
+      </p>
+
+      <p>
+        {{ selectedDoctor.bio }}
+      </p>
+
+    </div>
+
+  </div>
+
+</div>

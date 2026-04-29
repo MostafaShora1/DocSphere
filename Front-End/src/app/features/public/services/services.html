@@ -1,0 +1,61 @@
+<section class="services-section">
+  <div class="container">
+    <h1 class="section-title">Our Medical Services</h1>
+    <p class="section-subtitle">
+      Explore a full range of medical services tailored to your needs.
+    </p>
+
+    <div class="filters">
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        (input)="filterServices()"
+        placeholder="Search for a service..."
+        class="search-input"
+      />
+
+      <select
+        [(ngModel)]="selectedSpecialty"
+        (change)="filterServices()"
+        class="filter-select"
+      >
+        <option value="">All Specialties</option>
+        <option *ngFor="let specialty of specialties" [value]="specialty">{{ specialty }}</option>
+      </select>
+    </div>
+
+    <div class="services-grid">
+      <div *ngFor="let service of filteredServices" class="service-card">
+        <h3>{{ service.name }}</h3>
+
+        <p class="doctor-name">
+          Dr. {{ getDoctorName(service.doctorId) }}
+        </p>
+
+        <p class="duration">
+          Duration: {{ service.duration }}
+        </p>
+
+        <p class="description">
+          {{ service.description }}
+        </p>
+
+        <p class="price">
+          {{ service.price }} EGP
+        </p>
+
+        <button class="btn-primary" (click)="bookService(service.id)">
+          Book Now
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="loading" class="no-results">
+      Loading services...
+    </div>
+
+    <div *ngIf="!loading && filteredServices.length === 0" class="no-results">
+      No matching services found.
+    </div>
+  </div>
+</section>

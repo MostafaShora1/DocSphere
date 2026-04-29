@@ -1,0 +1,45 @@
+<!-- Header -->
+<header class="page-header">
+  <div class="header-content">
+    <h1>Find Your Doctor</h1>
+    <p>Professional doctors in all specialties</p>
+  </div>
+</header>
+
+<!-- Controls -->
+<div class="controls">
+  <input 
+    type="text" 
+    placeholder="Search by name"
+    [(ngModel)]="searchText"
+    (input)="applyFilter()"
+  >
+
+  <select [(ngModel)]="selectedSpecialty" (change)="applyFilter()">
+    <option value="all">All Specialties</option>
+    <option *ngFor="let s of specialties; trackBy: trackBySpecialty" [value]="s">
+      {{ s }}
+    </option>
+  </select>
+</div>
+
+<div class="section-title">
+  <p>Available Doctors</p>
+</div>
+
+<!-- Doctors List -->
+<section class="doctors-container">
+  <div class="doctor-card" *ngFor="let d of filteredDoctors; trackBy: trackByDoctor">
+    
+    <img [src]="d.image" alt="doctor">
+
+    <h3>{{ d.name }}</h3>
+    <p>{{ d.specialty }}</p>
+    <p>{{ d.rating }} ⭐</p>
+
+    <button (click)="goToProfile(d.id)">
+      View Profile
+    </button>
+
+  </div>
+</section>

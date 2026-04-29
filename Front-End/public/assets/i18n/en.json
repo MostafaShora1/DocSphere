@@ -1,0 +1,202 @@
+{
+  "NAV": {
+    "HOME": "Home",
+    "SERVICES": "Services",
+    "DOCTORS": "Doctors",
+    "CONTACT": "Contact",
+    "ABOUT": "About",
+    "LOGIN": "Login",
+    "BOOK_NOW": "Book Now"
+  },
+  "ACTIONS": {
+    "SWITCH_TO_DARK": "Switch to dark mode",
+    "SWITCH_TO_LIGHT": "Switch to light mode",
+    "SWITCH_LANGUAGE": "Switch language"
+  },
+  "COMMON": {
+    "CURRENCY": "EGP",
+    "DOCTOR_PREFIX": "Dr.",
+    "DOCTOR_IMAGE_ALT": "Doctor",
+    "STAR": "★",
+    "LOADING": "Loading...",
+    "NETWORK_ERROR": "Unable to reach the server. Please check your internet connection and try again.",
+    "UNKNOWN": "Unknown"
+  },
+  "HOME": {
+    "HERO": {
+      "TITLE": "Best Medical Center",
+      "DESCRIPTION": "We provide comprehensive medical services delivered by top specialized doctors with comfort and safety to you.",
+      "CTA": "Book Your Appointment",
+      "STAT_DOCTORS": "Specialist Doctors",
+      "STAT_PATIENTS": "Happy Patients",
+      "STAT_VISITS": "Home Visits"
+    },
+    "STEPS": {
+      "TITLE": "How It Works?",
+      "BOOK_TITLE": "Book Your Appointment",
+      "BOOK_DESC": "Choose your convenient time",
+      "SELECT_TITLE": "Select Your Doctor",
+      "SELECT_DESC": "From the best specialists",
+      "REPORT_TITLE": "Receive Your Report",
+      "REPORT_DESC": "Comprehensive medical report"
+    },
+    "SERVICES": {
+      "TITLE": "Our Premium Services"
+    },
+    "DOCTORS": {
+      "TITLE": "Our Distinguished Doctors"
+    },
+    "STATS": {
+      "TITLE": "Our Achievements in Numbers",
+      "SPECIALTIES": "Medical Specialties"
+    },
+    "REVIEWS": {
+      "TITLE": "Client Reviews",
+      "REVIEW_1_TEXT": "\"Excellent service. The doctor was professional and arrived on time.\"",
+      "REVIEW_1_AUTHOR": "Ahmed Mohamed",
+      "REVIEW_2_TEXT": "\"Great consultation and accurate diagnosis.\"",
+      "REVIEW_2_AUTHOR": "Mona Elsayed",
+      "REVIEW_3_TEXT": "\"Very professional team, fast and clean service.\"",
+      "REVIEW_3_AUTHOR": "Khaled Ahmed"
+    }
+  },
+  "DOCTORS": {
+    "TITLE": "Find Your Doctor",
+    "SUBTITLE": "Professional doctors in all specialties",
+    "SEARCH_PLACEHOLDER": "Search by name",
+    "ALL_SPECIALTIES": "All Specialties",
+    "AVAILABLE": "Available Doctors",
+    "VIEW_PROFILE": "View Profile"
+  },
+  "SERVICES": {
+    "TITLE": "Our Medical Services",
+    "SUBTITLE": "We provide a complete range of specialized medical services.",
+    "SEARCH_PLACEHOLDER": "Search for a service...",
+    "ALL_SPECIALTIES": "All Specialties",
+    "DURATION": "Duration:",
+    "BOOK_NOW": "Book Now",
+    "NO_RESULTS": "No services match your search.",
+    "LOGIN_REQUIRED": "Please login to book an appointment."
+  },
+  "SPECIALTIES": {
+    "DENTISTRY": "Dentistry",
+    "OPHTHALMOLOGY": "Ophthalmology",
+    "INTERNAL_MEDICINE": "Internal Medicine",
+    "PEDIATRICS": "Pediatrics",
+    "DERMATOLOGY": "Dermatology",
+    "CARDIOLOGY": "Cardiology"
+  },
+  "AUTH": {
+    "COMMON": {
+      "EMAIL": "Email",
+      "EMAIL_PLACEHOLDER": "Enter your email",
+      "PASSWORD": "Password",
+      "PASSWORD_PLACEHOLDER": "Enter your password",
+      "USERNAME": "Username",
+      "USERNAME_PLACEHOLDER": "Enter your username"
+    },
+    "VALIDATION": {
+      "EMAIL_REQUIRED": "Email is required",
+      "EMAIL_INVALID": "Invalid email format",
+      "PASSWORD_REQUIRED": "Password is required",
+      "PASSWORD_MIN": "Password must be at least 6 characters"
+    },
+    "LOGIN": {
+      "TITLE": "Welcome Back",
+      "SUBMIT": "Login",
+      "ERRORS": {
+        "INVALID_FORM": "Please fill in all required fields correctly.",
+        "INVALID_CREDENTIALS": "Invalid username or password",
+        "FAILED": "Login failed. Please try again."
+      }
+    },
+    "REGISTER": {
+      "TITLE": "Create Account",
+      "SUBMIT": "Register",
+      "HAVE_ACCOUNT": "Already have an account?",
+      "SUCCESS": "Account created successfully",
+      "ERROR": "Registration failed"
+    },
+    "FORGOT": {
+      "TITLE": "Forgot Password",
+      "DESCRIPTION": "Enter your email and we will send you a password reset link.",
+      "SUBMIT": "Send Reset Link",
+      "LOADING": "Sending...",
+      "REMEMBERED": "Remembered your password?",
+      "SUCCESS": "Password reset link has been sent to your email",
+      "ERRORS": {
+        "INVALID_EMAIL": "Please enter a valid email address.",
+        "FAILED": "Unable to send reset link. Please try again."
+      }
+    },
+    "VERIFY": {
+      "TITLE": "Verify Email",
+      "DESCRIPTION": "Enter the verification code sent to your email address.",
+      "CODE": "Verification Code",
+      "CODE_PLACEHOLDER": "Enter verification code",
+      "SUBMIT": "Verify Email",
+      "LOADING": "Verifying...",
+      "BACK_TO": "Back to",
+      "SUCCESS": "Email verified successfully",
+      "ERRORS": {
+        "INVALID_CODE": "Please enter a valid verification code.",
+        "FAILED": "Unable to verify email. Please try again.",
+        "CODE_REQUIRED": "Verification code is required",
+        "CODE_SHORT": "Verification code is too short"
+      }
+    }
+  },
+  "DASHBOARD": {
+    "PATIENT": {
+      "INFO": "Info",
+      "NAME": "Name:",
+      "EMAIL": "Email:",
+      "MY_APPOINTMENTS": "My Appointments",
+      "DOCTOR": "Doctor",
+      "DAY": "Day",
+      "TIME": "Time",
+      "STATUS": "Status",
+      "CANCEL": "Cancel",
+      "CANCEL_ACTION": "X",
+      "EMPTY": "You have no appointments yet."
+    },
+    "DOCTOR": {
+      "NAV_HOME": "Home",
+      "NAV_APPOINTMENTS": "Appointments",
+      "NAV_PATIENTS": "Patients",
+      "NAV_BILLING": "Billing",
+      "LOGOUT": "Logout",
+      "WELCOME": "Welcome, {{name}}",
+      "NEW_REQUESTS": "You have {{count}} new requests",
+      "TOTAL_DOCTORS": "Total Doctors",
+      "PENDING": "Pending",
+      "CONFIRMED": "Confirmed",
+      "APPOINTMENTS": "Appointments",
+      "MY_APPOINTMENTS": "My Appointments",
+      "ACCEPT": "Accept",
+      "REJECT": "Reject"
+    },
+    "ADMIN": {
+      "TITLE": "Admin Dashboard",
+      "DOCTORS": "Doctors",
+      "SERVICES": "Services",
+      "APPOINTMENTS": "Appointments",
+      "PENDING": "Pending"
+    }
+  },
+  "STATUS": {
+    "PENDING": "Pending",
+    "CONFIRMED": "Confirmed",
+    "REJECTED": "Rejected",
+    "CANCELLED": "Cancelled"
+  },
+  "FOOTER": {
+    "BRAND_TEXT": "We provide the best home medical services with high quality and professionalism.",
+    "QUICK_LINKS": "Quick Links",
+    "CONTACT_US": "Contact Us",
+    "WORKING_HOURS": "Working Hours",
+    "DAYS": "Saturday - Friday",
+    "HOURS": "24/7 Available",
+    "COPYRIGHT": "© 2026 DocSphere | All Rights Reserved"
+  }
+}

@@ -1,0 +1,67 @@
+<header class="header" [class.scrolled]="isScrolled">
+  <div class="container header-content">
+    <div class="logo">
+      <i class="fa-solid fa-stethoscope"></i>
+      DocSphere
+    </div>
+
+    <nav class="nav-menu" [class.active]="menuOpen">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMenu()">
+        Home
+      </a>
+
+      <a routerLink="/services" routerLinkActive="active" (click)="closeMenu()">
+        Services
+      </a>
+
+      <a routerLink="/doctors" routerLinkActive="active" (click)="closeMenu()">
+        Doctors
+      </a>
+
+      <a routerLink="/contact" routerLinkActive="active" (click)="closeMenu()">
+        Contact
+      </a>
+
+      <a routerLink="/about" routerLinkActive="active" (click)="closeMenu()">
+        About
+      </a>
+
+      <div class="nav-actions">
+        <button
+          *ngIf="currentUser"
+          type="button"
+          class="profile-btn"
+          (click)="navigateToDashboard()">
+          <span class="profile-avatar">
+            <i class="fa-solid fa-user"></i>
+          </span>
+          <span>Profile</span>
+        </button>
+
+        <button
+          *ngIf="currentUser"
+          type="button"
+          class="auth-btn auth-btn-secondary"
+          (click)="logout()">
+          Logout
+        </button>
+
+        <ng-container *ngIf="!currentUser">
+          <a routerLink="/login" class="auth-btn auth-btn-secondary" (click)="closeMenu()">
+            Login
+          </a>
+
+          <a routerLink="/auth/register" class="auth-btn auth-btn-primary" (click)="closeMenu()">
+            Sign Up
+          </a>
+        </ng-container>
+      </div>
+    </nav>
+
+    <button class="hamburger" (click)="toggleMenu()" [class.active]="menuOpen">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+</header>

@@ -1,0 +1,169 @@
+<section class="main-content">
+  <div class="register-card">
+    <h2>Create Account</h2>
+
+    <div class="error-message" *ngIf="errorMsg">
+      {{ errorMsg }}
+    </div>
+
+    <div class="success-message" *ngIf="successMsg">
+      {{ successMsg }}
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" formControlName="name" required>
+          <div class="error" *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched">
+            <span *ngIf="registerForm.get('name')?.errors?.['required']">Name is required</span>
+            <span *ngIf="registerForm.get('name')?.errors?.['minlength']">Name must be at least 3 characters</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" formControlName="email" required>
+          <div class="error" *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+            <span *ngIf="registerForm.get('email')?.errors?.['required']">Email is required</span>
+            <span *ngIf="registerForm.get('email')?.errors?.['email']">Invalid email format</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>User Type*</label>
+          <select formControlName="role" required>
+            <option value="patient">Patient</option>
+            <option value="doctor">Doctor</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Phone</label>
+          <input type="tel" formControlName="phone" required>
+          <div class="error" *ngIf="registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched">
+            <span *ngIf="registerForm.get('phone')?.errors?.['required']">Phone is required</span>
+            <span *ngIf="registerForm.get('phone')?.errors?.['pattern']">Enter a valid phone number</span>
+          </div>
+        </div>
+
+        <div class="form-group" *ngIf="isPatient">
+          <label>Date of Birth</label>
+          <input type="date" formControlName="birthDate" [max]="maxBirthDate">
+          <small class="helper-text">Pick your birth date from the calendar.</small>
+          <div class="error" *ngIf="registerForm.get('birthDate')?.invalid && registerForm.get('birthDate')?.touched">
+            <span>Date of birth is required</span>
+          </div>
+        </div>
+
+        <ng-container *ngIf="isDoctor">
+          <div class="form-section full-span">
+            <h3>Doctor Profile</h3>
+            <p>These details will be connected to the existing doctor profile endpoint after verification and login.</p>
+          </div>
+
+          <div class="form-group">
+            <label>Specialty</label>
+            <select formControlName="specialty">
+              <option value="">Choose a specialty</option>
+              <option *ngFor="let specialty of specialties" [value]="specialty.id">
+                {{ specialty.name }}
+              </option>
+            </select>
+            <div class="error" *ngIf="registerForm.get('specialty')?.invalid && registerForm.get('specialty')?.touched">
+              <span>Specialty is required</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Consultation Fee</label>
+            <input type="number" min="0" formControlName="consultationFee" placeholder="EGP">
+            <div class="error" *ngIf="registerForm.get('consultationFee')?.invalid && registerForm.get('consultationFee')?.touched">
+              <span>Consultation fee is required</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Years of Experience</label>
+            <input type="number" min="0" formControlName="experience" placeholder="0">
+          </div>
+
+          <div class="form-group full-span">
+            <label>Bio</label>
+            <textarea rows="4" formControlName="bio" placeholder="Tell patients a bit about your background"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Qualifications</label>
+            <input type="text" formControlName="qualifications" placeholder="MBBS, MSc, Board Certified">
+            <small class="helper-text">Separate multiple values with commas.</small>
+          </div>
+
+          <div class="form-group">
+            <label>Languages</label>
+            <input type="text" formControlName="languages" placeholder="Arabic, English">
+            <small class="helper-text">Separate multiple values with commas.</small>
+          </div>
+
+          <div class="form-group">
+            <label>Clinic Street</label>
+            <input type="text" formControlName="clinicStreet">
+          </div>
+
+          <div class="form-group">
+            <label>City</label>
+            <input type="text" formControlName="clinicCity">
+          </div>
+
+          <div class="form-group">
+            <label>State</label>
+            <input type="text" formControlName="clinicState">
+          </div>
+
+          <div class="form-group">
+            <label>Zip Code</label>
+            <input type="text" formControlName="clinicZipCode">
+          </div>
+
+          <div class="form-group">
+            <label>Country</label>
+            <input type="text" formControlName="clinicCountry">
+          </div>
+
+          <div class="form-group">
+            <label>Profile Picture URL</label>
+            <input type="url" formControlName="profilePicture" placeholder="https://...">
+          </div>
+        </ng-container>
+
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" formControlName="password" required>
+          <div class="error" *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+            <span *ngIf="registerForm.get('password')?.errors?.['required']">Password is required</span>
+            <span *ngIf="registerForm.get('password')?.errors?.['minlength']">Password must be at least 8 characters</span>
+            <span *ngIf="registerForm.get('password')?.errors?.['pattern']">Use uppercase, lowercase, and a number</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Confirm Password</label>
+          <input type="password" formControlName="confirmPassword" required>
+          <div class="error" *ngIf="(registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.errors?.['required']) || (registerForm.errors?.['passwordMismatch'] && registerForm.get('confirmPassword')?.touched)">
+            <span *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">Confirm password is required</span>
+            <span *ngIf="registerForm.errors?.['passwordMismatch']">Passwords do not match</span>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-register" [disabled]="loading || registerForm.invalid">
+        Register
+      </button>
+    </form>
+
+    <p class="login-link">
+      Already have an account?
+      <a routerLink="/login">Login</a>
+    </p>
+  </div>
+</section>
