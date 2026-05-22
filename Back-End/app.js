@@ -42,10 +42,11 @@ app.use(i18n.init);
 app.use(helmet());
 app.use(cors(
   {
-    origin: process.env.CLIENT_URL,
+    origin: "https://doc-sphere123.vercel.app",
     credentials: true
   }
 ));
+console.log("CLIENT_URL:", process.env.CLIENT_URL);
 app.use(express.json({
   verify: (req, res, buf) => {
     if (req.originalUrl && req.originalUrl.startsWith('/api/payments/webhook')) {
