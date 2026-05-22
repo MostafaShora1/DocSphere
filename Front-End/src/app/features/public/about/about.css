@@ -1,191 +1,516 @@
-:root {
-  --dark-bg: #02302c;
-  --coral: #f79674;
-  --coral-dark: #e3755d;
-  --light-pink: #fff2f0;
-  --teal: #145245;
-  --white: #ffffff;
-  --gold: #ffcc00;
+.about-page {
+  background: var(--bg-primary);
 }
 
-body {
-  font-family: Cairo, sans-serif;
-}
-
-.container {
-  max-width: 1200px;
-  margin: auto;
-  padding: 0 20px;
-}
-
-section {
+/* 1. HERO SECTION */
+.hero-section {
   padding: 80px 0;
-}
-
-.top-header {
-  background: linear-gradient(135deg, var(--dark-bg), var(--teal));
-  color: white;
-  padding: 120px 0;
+  background-color: var(--light-pink);
   text-align: center;
+  transition: background-color 0.3s;
 }
 
-.section-title {
-  text-align: center;
-  margin-bottom: 50px;
-  color: var(--teal);
-  font-size: 2.5rem;
+:host-context(body.dark-mode) .hero-section {
+  background-color: var(--bg-primary);
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 30px;
+.hero-title {
+  font-family: var(--font-heading);
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
 }
 
-.staff-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 25px;
-}
-
-.staff-card {
-  background: white;
-  border-radius: 25px;
-  overflow: hidden;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-  transition: 0.3s;
-}
-
-.staff-card:hover {
-  transform: scale(1.02);
-}
-
-.staff-card img {
-  width: 100%;
-  height: 300px;
-  object-fit: cover;
-}
-
-@media (max-width: 768px) {
-  .top-header {
-    padding: 80px 15px;
-  }
-
-  .grid,
-  .staff-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .staff-info {
-    padding: 18px;
-  }
-}
-
-@media (max-width: 480px) {
-  .top-header {
-    padding: 60px 12px;
-  }
-
-  .filter-buttons,
-  .staff-info,
-  .testimonial-card {
-    padding: 18px;
-  }
-
-  .staff-card img {
-    height: 220px;
-  }
-}
-
-.staff-info {
-  padding: 25px;
-  text-align: center;
-}
-
-.staff-info h3 {
-  color: var(--teal);
-}
-
-.staff-info p {
+.brand-text {
   color: var(--coral);
 }
 
-.filter-buttons {
-  text-align: center;
-  margin-bottom: 40px;
+/* 2. FEATURES GRID */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-top: -40px;
+  padding-bottom: 80px;
 }
 
-.tab-btn {
-  padding: 12px 30px;
-  border-radius: 50px;
-  border: 2px solid var(--teal);
+.feature-card {
+  background: var(--bg-card);
+  padding: 40px 30px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  transition: all 0.35s ease;
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card:hover {
+  transform: scale(1.03);
+  background: linear-gradient(135deg, var(--teal), #0f3f35);
+  border-color: transparent;
+  box-shadow: 0 20px 40px rgba(20, 82, 69, 0.25);
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  width: 120%;
+  height: 120%;
+  background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+  top: -50%;
+  left: -50%;
+  opacity: 0;
+  transition: 0.4s;
+}
+
+.feature-card:hover::before {
+  opacity: 1;
+}
+
+.icon-box {
+  width: 60px;
+  height: 60px;
+  background: var(--light-pink);
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--coral);
+  font-size: 1.5rem;
+  transition: all 0.35s ease;
+}
+
+.feature-card:hover .icon-box {
   background: white;
   color: var(--teal);
-  font-weight: bold;
-  cursor: pointer;
-  margin: 5px;
+  transform: scale(1.15) rotate(10deg);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
 }
 
-.tab-btn.active {
-  background: var(--coral);
-  border-color: var(--coral);
+.feature-card h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  transition: 0.3s;
+}
+
+.feature-card:hover h3 {
   color: white;
 }
 
-.testimonial-card {
-  background: white;
-  padding: 40px;
-  border-radius: 25px;
+/* 3. SPLIT SECTION */
+.split-section {
+  padding: 100px 0;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  position: relative;
+  color: white;
 }
 
-.stars {
-  color: var(--gold);
-  margin-bottom: 15px;
+.split-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 25, 16, 0.85);
 }
 
-.patient-info {
+:host-context(body.dark-mode) .split-section::before {
+  background: rgba(11, 31, 58, 0.9);
+}
+
+.split-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  position: relative;
+  z-index: 1;
+}
+
+.split-box h2 {
+  font-family: var(--font-heading);
+  font-size: 2.8rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+}
+
+.divider {
+  width: 60px;
+  height: 4px;
+  background: var(--coral);
+  margin-bottom: 30px;
+}
+
+.split-box p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.right-box {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  flex-direction: column;
+  gap: 40px;
 }
 
-.patient-avatar {
+.info-item {
+  display: flex;
+  gap: 20px;
+}
+
+.small-icon {
   width: 50px;
   height: 50px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--coral);
+  font-size: 1.2rem;
+}
+
+.info-text h4 {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+  color: white;
+}
+
+.info-text p {
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* 4. TESTIMONIALS SECTION (ENHANCED FULL WIDTH) */
+.patients-talk-section {
+  padding: 150px 0;
+  background: linear-gradient(135deg, #fff2f0 0%, #fffaf9 100%);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  transition: background 0.3s;
+}
+
+:host-context(body.dark-mode) .patients-talk-section {
+  background: #071529;
+}
+
+.patients-talk-section::before {
+  content: '';
+  position: absolute;
+  top: -100px;
+  right: -100px;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(20, 82, 69, 0.05) 0%, transparent 70%);
+  border-radius: 50%;
+  z-index: 0;
+}
+
+.patients-talk-section::after {
+  content: '';
+  position: absolute;
+  bottom: -150px;
+  left: -150px;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(247, 150, 116, 0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  z-index: 0;
+}
+
+.patients-talk-title {
+  font-family: var(--font-heading);
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: var(--black-dark);
+  position: relative;
+  z-index: 1;
+}
+
+.title-underline {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.line-teal {
+  width: 60px;
+  height: 5px;
+  background: var(--teal);
+  border-radius: 3px;
+}
+
+.line-coral {
+  width: 60px;
+  height: 5px;
   background: var(--coral);
+  border-radius: 3px;
+}
+
+.reviews-swiper-container {
+  position: relative;
+  max-width: 1400px;
+  margin: 80px auto 0;
+  padding: 0 150px;
+  z-index: 1;
+}
+
+.testimonial-content {
+  padding: 40px 20px;
+}
+
+.patient-avatar-wrapper {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  margin: 0 auto 40px;
+}
+
+.patient-avatar-wrapper img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 5px solid white;
+  object-fit: cover;
+  box-shadow: 0 15px 40px rgba(247, 150, 116, 0.25);
+  transition: transform 0.5s ease;
+}
+
+:host-context(body.dark-mode) .patient-avatar-wrapper img {
+  border-color: var(--bg-card);
+}
+
+.quote-icon {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  width: 45px;
+  height: 45px;
+  background: var(--black-dark);
+  color: white;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-weight: bold;
+  font-size: 1.1rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
-.add-form input,
-.add-form select {
-  padding: 12px;
-  margin: 8px 0;
-  width: 100%;
-  border-radius: 10px;
-  border: 2px solid var(--coral-dark);
-}
-
-.add-form button {
-  margin-top: 10px;
-  background: var(--dark-bg);
-  color: var(--coral);
-  border: none;
-  border-radius: 50px;
-  padding: 12px 30px;
-  cursor: pointer;
-}
-
-.delete-btn {
-  margin-top: 15px;
+:host-context(body.dark-mode) .quote-icon {
   background: var(--coral);
-  color: white;
-  border: none;
-  border-radius: 10px;
-  padding: 8px 15px;
+}
+
+.testimonial-text {
+  font-size: 1.8rem;
+  font-style: italic;
+  color: var(--text-primary);
+  line-height: 1.8;
+  margin-bottom: 45px;
+  font-weight: 500;
+  max-width: 850px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.patient-name {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: var(--black-dark);
+}
+
+.patient-role {
+  font-size: 1rem;
+  color: var(--coral);
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-top: 8px;
+  letter-spacing: 2px;
+}
+
+.swiper-button-prev-custom,
+.swiper-button-next-custom {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 70px;
+  height: 45px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 25, 16, 0.1);
+  border-radius: 40px;
+  color: var(--black-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+  transition: all 0.4s ease;
+  z-index: 10;
+}
+
+.swiper-button-prev-custom {
+  left: 30px;
+}
+
+.swiper-button-next-custom {
+  right: 30px;
+}
+
+.swiper-button-prev-custom:hover,
+.swiper-button-next-custom:hover {
+  background: var(--black-dark);
+  color: white;
+  width: 90px;
+  border-color: var(--black-dark);
+}
+
+/* 5. CTA SECTION */
+.cta-section-new {
+  padding: 80px 0;
+  background-color: var(--coral);
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-section-new::before,
+.cta-section-new::after {
+  content: '';
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background-color: var(--black-dark);
+  border-radius: 50%;
+}
+
+:host-context(body.dark-mode) .cta-section-new::before,
+:host-context(body.dark-mode) .cta-section-new::after {
+  background-color: #071529;
+}
+
+.cta-section-new::before {
+  top: -150px;
+  left: -150px;
+  border-radius: 0 0 150px 0;
+}
+
+.cta-section-new::after {
+  bottom: -150px;
+  right: -80px;
+  border-radius: 150px 0 0 0;
+}
+
+.cta-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.cta-headline {
+  font-family: var(--font-heading);
+  color: white;
+  font-size: 3.5rem;
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.cta-right {
+  display: flex;
+  gap: 60px;
+}
+
+.cta-info-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.cta-pill-icon {
+  width: 90px;
+  height: 50px;
+  border: 2px solid var(--black-dark);
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(-15deg);
+  transition: 0.3s;
+}
+
+.cta-info-item:hover .cta-pill-icon {
+  background: var(--black-dark);
+  transform: rotate(0deg);
+}
+
+.cta-info-item:hover .cta-pill-icon i {
+  color: var(--coral);
+}
+
+.cta-info-text a {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: white;
+  text-decoration: none;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+  .split-container {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .cta-wrapper {
+    flex-direction: column;
+    text-align: center;
+    gap: 50px;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero-title {
+    font-size: 2.5rem;
+  }
+
+  .split-box h2 {
+    font-size: 2.2rem;
+  }
+
+  .cta-headline {
+    font-size: 2.2rem;
+  }
+
+  .cta-right {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .reviews-swiper-container {
+    padding: 0 40px;
+  }
+
+  .swiper-button-prev-custom {
+    left: 0;
+  }
+
+  .swiper-button-next-custom {
+    right: 0;
+  }
 }

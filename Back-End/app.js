@@ -15,9 +15,28 @@ const serviceRoutes = require('./routes/serviceRoutes');
 const specialtyRoutes = require('./routes/specialtyRoutes');
 const scheduleRoutes = require('./routes/scheduleRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const adminsRoutes = require('./routes/adminsRoutes');
+const contactRoutes = require('./routes/contactRoutes');
 const { errorHandler, notFound } = require('./middleware/errorMiddleware');
+const i18n = require('i18n');
+const path = require('path');
 
 const app = express();
+
+// i18n configuration
+i18n.configure({
+  locales: ['en', 'ar'],
+  directory: path.join(__dirname, 'locales'),
+  defaultLocale: 'en',
+  header: 'accept-language',
+  queryParameter: 'lang',
+  autoReload: true,
+  syncFiles: true,
+  cookie: 'lang'
+});
+
+app.use(i18n.init);
+
 
 // Security middleware
 app.use(helmet());
@@ -60,6 +79,8 @@ app.use('/api/services', serviceRoutes);
 app.use('/api/specialties', specialtyRoutes);
 app.use('/api/schedules', scheduleRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/admins', adminsRoutes);
+app.use('/api/contact', contactRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

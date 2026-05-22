@@ -1,14 +1,3 @@
-:root {
-    --dark-bg: #02302c;
-    --coral: #f79674;
-    --coral-dark: #e3755d;
-    --light-pink: #fff2f0;
-    --black-dark: #001910;
-    --teal: #145245;
-    --teal-light: #79d3c193;
-    --white-opaque: #ffffffe6;
-}
-
 * {
     margin: 0;
     padding: 0;
@@ -48,7 +37,7 @@
 /* ================= HERO ================= */
 
 .hero-neo {
-    background: linear-gradient(135deg, var(--dark-bg) 0%, #024a42 100%);
+    background: linear-gradient(135deg, var(--dark-bg) 0%, var(--teal) 100%);
     padding: 120px 0 80px;
     position: relative;
     overflow: hidden;
@@ -99,6 +88,21 @@
     width: 100%;
     border-radius: 20px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, .3);
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
 }
 
 /* ================= GRID ================= */
@@ -109,196 +113,527 @@
     gap: 30px;
 }
 
-/* ================= STEPS ================= */
-
+/* ================= HOW IT WORKS (PREMIUM) ================= */
 .steps-section {
-    background: linear-gradient(135deg, var(--teal-light) 0%, rgba(121, 211, 193, .3) 100%);
-}
-
-.steps-section h2,
-.services-section h2,
-.doctors-section h2,
-.reviews-section h2 {
-    font-size: 2.5rem;
-    color: var(--dark-bg);
-    text-align: center;
-    margin-bottom: 50px;
-    font-weight: 700;
-}
-
-/* FIX: was 4 columns but you have 3 cards */
-.steps-section .grid {
-    grid-template-columns: repeat(3, 1fr);
-}
-
-/* Step Cards - How It Works */
-.step-card {
-    background: white;
-    border-radius: 20px;
-    padding: 40px 30px;
-    text-align: center;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, .08);
-    transition: all .4s;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    padding: 120px 0;
     position: relative;
     overflow: hidden;
 }
 
-.step-card::before {
+.section-header {
+    text-align: center;
+    margin-bottom: 80px;
+}
+
+.section-title-premium {
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: var(--black-dark);
+    margin-bottom: 15px;
+    font-family: var(--font-heading);
+}
+
+.title-accent {
+    width: 80px;
+    height: 5px;
+    background: var(--coral);
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+.steps-grid {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+    max-width: 1300px;
+    margin: 30px auto 0;
+}
+
+.step-card-premium {
+    flex: 1 1 calc(33.33% - 30px);
+    max-width: calc(33.33% - 30px);
+    background: white;
+    padding: 50px 30px;
+    border-radius: 30px;
+    text-align: center;
+    position: relative;
+    transition: background 0.08s linear, box-shadow 0.08s linear;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+    z-index: 1;
+}
+
+/* For the last row if 2 cards, make them 2 columns centered */
+@media (min-width: 993px) {
+    .step-card-premium:nth-child(n+4) {
+        flex: 0 1 calc(40% - 30px);
+        max-width: calc(40% - 30px);
+    }
+}
+
+.step-card-premium:hover {
+    background: var(--teal) !important;
+    box-shadow: 0 30px 60px rgba(20, 82, 69, 0.2);
+}
+
+.step-badge {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: rgba(20, 82, 69, 0.05);
+    line-height: 1;
+    transition: 0.4s;
+}
+
+.step-card-premium:hover .step-badge {
+    color: rgba(255, 255, 255, 0.1);
+    transform: scale(1.2);
+}
+
+.step-icon-wrap {
+    width: 80px;
+    height: 80px;
+    background: var(--light-pink);
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 30px;
+    font-size: 2.2rem;
+    color: var(--coral);
+    transition: all 0.4s;
+}
+
+.step-card-premium:hover .step-icon-wrap {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    transform: rotate(15deg) scale(1.1);
+}
+
+.step-content h3 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--black-dark);
+    margin-bottom: 15px;
+    transition: 0.3s;
+}
+
+.step-content p {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    transition: 0.3s;
+}
+
+.step-card-premium:hover .step-content h3,
+.step-card-premium:hover .step-content p {
+    color: white;
+}
+
+/* ================= SERVICES ================= */
+.services-section {
+    padding: 120px 0;
+    background: white;
+}
+
+.premium-services-grid {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 40px;
+}
+
+.service-card-premium {
+    background: var(--bg-card);
+    border-radius: 30px;
+    padding: 35px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.05);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    height: 100%;
+}
+
+.service-card-premium::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 5px;
-    background: linear-gradient(90deg, var(--coral), var(--coral-dark));
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform .4s;
+    background: linear-gradient(90deg, var(--teal), var(--coral));
+    opacity: 0;
+    transition: 0.3s;
 }
 
-.step-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, .15);
+.service-card-premium:hover {
+    transform: translateY(-15px);
+    box-shadow: 0 30px 60px rgba(20, 82, 69, 0.15);
 }
 
-.step-card:hover::before {
-    transform: scaleX(1);
+.service-card-premium:hover::before {
+    opacity: 1;
 }
 
-.step-card h3 {
-    font-size: 3rem;
-    font-weight: 900;
-    color: var(--coral);
-    margin-bottom: 10px;
-    opacity: 0.3;
-}
-
-.step-card > p:first-of-type {
-    font-size: 1.3rem;
-    color: var(--dark-bg);
-    margin-bottom: 10px;
-}
-
-.step-card > p:last-of-type {
-    font-size: .95rem;
-    color: #666;
-    line-height: 1.6;
-}
-
-/* ================= SERVICES ================= */
-
-.service-card {
-    background: white;
+.service-icon-wrap {
+    width: 70px;
+    height: 70px;
+    background: var(--light-pink);
     border-radius: 20px;
-    padding: 40px 30px;
-    text-align: center;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, .08);
-    cursor: pointer;
-    transition: all .4s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--teal);
+    font-size: 2rem;
+    transition: 0.4s;
 }
 
-.service-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, .2);
+.service-card-premium:hover .service-icon-wrap {
+    background: var(--teal);
+    color: white;
+    transform: rotate(10deg);
 }
 
-.service-card h3 {
+.service-body h3 {
     font-size: 1.6rem;
-    margin-bottom: 15px;
+    font-weight: 800;
+    margin-bottom: 12px;
+    color: var(--text-primary);
+    font-family: var(--font-heading);
+}
+
+.service-desc {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    margin-bottom: 25px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.service-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
 }
 
 .service-price {
-    color: var(--coral);
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     font-weight: 900;
-}
-
-/* ================= DOCTORS ================= */
-
-.doctor-card {
-    background: white;
-    border-radius: 20px;
-    padding: 30px 20px;
-    text-align: center;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, .08);
-    cursor: pointer;
-    transition: all .4s;
-}
-
-.doctor-card:hover {
-    transform: translateY(-10px);
-}
-
-.doctor-image {
-    width: 120px;
-    height: 120px;
-    margin: 0 auto 20px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 4px solid var(--coral);
-}
-
-.doctor-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.doctor-specialty {
     color: var(--coral);
-    font-weight: 600;
 }
 
-.doctor-rating {
-    margin-top: 15px;
-    color: #FFB800;
+.service-price span {
+    font-size: 0.9rem;
+    font-weight: 600;
+    opacity: 0.8;
+}
+
+.btn-sm-outline {
+    padding: 10px 20px;
+    border: 2px solid var(--teal);
+    background: transparent;
+    color: var(--teal);
+    border-radius: 30px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-sm-outline:hover {
+    background: var(--teal);
+    color: white;
+}
+
+/* ================= DOCTORS - FORCED PREMIUM MATCH ================= */
+.doctors-section {
+    background: #fff2f0 !important;
+    /* Peach background from image */
+    padding: 120px 0 !important;
+}
+
+.doctor-horizontal-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)) !important;
+    gap: 30px !important;
+}
+
+.doctor-card-premium-h {
+    display: flex !important;
+    background: #ffffff !important;
+    border-radius: 0 !important;
+    overflow: hidden !important;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.07) !important;
+    transition: transform 0.3s ease !important;
+    border: none !important;
+    height: 280px !important;
+}
+
+.doctor-card-premium-h:hover {
+    transform: none !important;
+    /* Card stays fixed on hover */
+}
+
+.doc-h-image {
+    flex: 0 0 40% !important;
+    height: 100% !important;
+}
+
+.doc-h-image img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    border-radius: 0 !important;
+}
+
+.doc-h-content {
+    flex: 1 !important;
+    padding: 40px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    background: #FFF5F1 !important;
+    /* Requested background color */
+    text-align: left !important;
+    transition: background 0.4s ease !important;
+}
+
+.doctor-card-premium-h:hover .doc-h-content {
+    background: #F7A582 !important;
+    /* Requested hover color */
+}
+
+.doctor-card-premium-h:hover .doc-h-content h3,
+.doctor-card-premium-h:hover .doc-h-content .doc-h-bio,
+.doctor-card-premium-h:hover .doc-h-content .doc-h-specialty {
+    color: #fff !important;
+    /* All text becomes white for maximum contrast on hover */
+}
+
+[dir="rtl"] .doc-h-content {
+    text-align: right !important;
+}
+
+.doc-h-content h3 {
+    font-size: 1.8rem !important;
+    color: #001910 !important;
+    margin-bottom: 8px !important;
+    font-weight: 700 !important;
+    font-family: var(--font-heading);
+}
+
+.doc-h-specialty {
+    color: var(--coral) !important;
+    font-size: 0.9rem !important;
+    font-weight: 600 !important;
+    margin-bottom: 20px !important;
+    text-transform: capitalize !important;
+}
+
+.doc-h-bio {
+    font-size: 0.95rem !important;
+    color: #555 !important;
+    line-height: 1.8 !important;
+    margin: 0 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 3 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
 }
 
 /* ================= STATS ================= */
-
 .stats {
-    background: linear-gradient(135deg, var(--dark-bg) 0%, #024a42 100%);
+    background: linear-gradient(135deg, var(--dark-bg) 0%, var(--teal) 100%);
     color: white;
     text-align: center;
+    padding: 120px 0;
 }
 
-.stat-num {
-    font-size: 3rem;
+.stats .stat-num {
+    font-size: 3.5rem;
     color: var(--coral);
     font-weight: 900;
+    margin-bottom: 10px;
 }
 
-/* ================= REVIEWS ================= */
-
-.review-card {
-    background: white;
-    padding: 30px;
-    border-radius: 20px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, .06);
-}
-
-.review-stars {
-    color: #FFB800;
-    font-size: 1.5rem;
-    margin-bottom: 15px;
-}
-
-.review-text {
+.stats p {
     font-size: 1.1rem;
-    line-height: 1.8;
-    color: #555;
-    margin-bottom: 20px;
-    font-style: italic;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.9;
 }
 
-.review-author {
-    font-weight: 700;
-    color: var(--dark-bg);
+/* ================= REVIEWS — PREMIUM IMAGE MATCH ================= */
+/* ================= PATIENTS TALK (REVIEWS) ================= */
+.patients-talk-section {
+    padding: 120px 0;
+    background: linear-gradient(135deg, #fff2f0 0%, #fffaf9 100%);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
+
+.patients-talk-section::before {
+    content: '';
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(20, 82, 69, 0.05) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: 0;
+}
+
+.patients-talk-section::after {
+    content: '';
+    position: absolute;
+    bottom: -150px;
+    left: -150px;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(247, 150, 116, 0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: 0;
+}
+
+.patients-talk-title {
+    font-family: var(--font-heading);
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: var(--black-dark);
+    position: relative;
+    z-index: 1;
+}
+
+.section-header-centered {
+    margin-bottom: 80px;
+}
+
+.reviews-swiper-container {
+    position: relative;
+    max-width: 1400px;
+    margin: 80px auto 0;
+    padding: 0 150px;
+    z-index: 1;
+}
+
+.testimonial-content {
+    padding: 40px 20px;
+}
+
+.patient-avatar-wrapper {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 40px;
+}
+
+.patient-avatar-wrapper img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 5px solid white;
+    object-fit: cover;
+    box-shadow: 0 15px 40px rgba(247, 150, 116, 0.25);
+    transition: transform 0.5s ease;
+}
+
+.quote-icon {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    width: 45px;
+    height: 45px;
+    background: var(--black-dark);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.testimonial-text {
+    font-size: 1.8rem;
+    font-style: italic;
+    color: var(--text-primary);
+    line-height: 1.8;
+    margin-bottom: 45px;
+    font-weight: 500;
+    max-width: 850px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.patient-name {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--black-dark);
+}
+
+.patient-role {
+    font-size: 1rem;
+    color: var(--coral);
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-top: 8px;
+    letter-spacing: 2px;
+}
+
+.swiper-button-prev-custom,
+.swiper-button-next-custom {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 70px;
+    height: 45px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 25, 16, 0.1);
+    border-radius: 40px;
+    color: var(--black-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    z-index: 10;
+}
+
+.swiper-button-prev-custom {
+    left: 30px;
+}
+
+.swiper-button-next-custom {
+    right: 30px;
+}
+
+.swiper-button-prev-custom:hover,
+.swiper-button-next-custom:hover {
+    background: var(--black-dark);
+    color: white;
+    width: 90px;
+    border-color: var(--black-dark);
 }
 
 /* ================= MODAL ================= */
 
-/* IMPORTANT: removed display:none because Angular controls visibility */
 .modal {
     position: fixed;
     z-index: 2000;
@@ -314,7 +649,8 @@
 }
 
 .modal-content {
-    background: white;
+    background: var(--bg-card);
+    color: var(--text-primary);
     padding: 40px;
     border-radius: 20px;
     max-width: 600px;
@@ -322,6 +658,7 @@
     max-height: 80vh;
     overflow-y: auto;
     position: relative;
+    border: 1px solid var(--border-color);
 }
 
 .modal-close {
@@ -330,7 +667,7 @@
     left: 20px;
     font-size: 2rem;
     cursor: pointer;
-    color: var(--dark-bg);
+    color: var(--text-primary);
 }
 
 .modal-close:hover {
@@ -340,7 +677,6 @@
 /* ================= RESPONSIVE ================= */
 
 @media (max-width: 992px) {
-
     .hero-text h1 {
         font-size: 2.6rem;
     }
@@ -352,7 +688,6 @@
     .hero-img img {
         max-width: 100%;
     }
-
 }
 
 @media (max-width: 768px) {
@@ -391,9 +726,114 @@
     .steps-section .grid {
         grid-template-columns: 1fr;
     }
+
+    /* الكارت أصغر على موبايل */
+    .review-card {
+        width: 280px;
+        padding: 26px 22px 20px;
+    }
 }
 
-@media (max-width: 576px) {
+/* ================= DARK MODE OVERRIDES ================= */
+
+:host-context(body.dark-mode) .hero-neo {
+    background: radial-gradient(circle at top right, #132A4A, #0B1F3A);
+}
+
+:host-context(body.dark-mode) .hero-text h1,
+:host-context(body.dark-mode) .hero-text p {
+    color: #ffffff;
+}
+
+:host-context(body.dark-mode) .steps-section {
+    background: #0B1F3A;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+:host-context(body.dark-mode) .step-card-premium {
+    background: #132A4A;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+:host-context(body.dark-mode) .services-section,
+:host-context(body.dark-mode) .doctors-section {
+    background: #0B1F3A !important;
+}
+
+/* Doctors Dark Mode */
+:host-context(body.dark-mode) .doctor-card-premium-h {
+    background: #132A4A !important;
+}
+
+:host-context(body.dark-mode) .doc-h-content {
+    background: #1a3a5f !important;
+}
+
+:host-context(body.dark-mode) .doc-h-content h3 {
+    color: #ffffff !important;
+}
+
+:host-context(body.dark-mode) .doc-h-bio {
+    color: #cbd5e1 !important;
+}
+
+:host-context(body.dark-mode) .doctor-card-premium-h:hover .doc-h-content {
+    background: var(--coral) !important;
+}
+
+/* Reviews Dark Mode */
+:host-context(body.dark-mode) .patients-talk-section {
+    background: #071529 !important;
+}
+
+:host-context(body.dark-mode) .patients-talk-title,
+:host-context(body.dark-mode) .testimonial-text,
+:host-context(body.dark-mode) .patient-name {
+    color: #ffffff !important;
+}
+
+:host-context(body.dark-mode) .patient-avatar-wrapper img {
+    border-color: #132A4A;
+}
+
+:host-context(body.dark-mode) .quote-icon {
+    background: var(--coral);
+}
+
+:host-context(body.dark-mode) .swiper-button-prev-custom,
+:host-context(body.dark-mode) .swiper-button-next-custom {
+    background: #132A4A;
+    color: #ffffff;
+}
+
+:host-context(body.dark-mode) .stats {
+    background: radial-gradient(circle at bottom left, #132A4A, #071529);
+    color: #ffffff;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+:host-context(body.dark-mode) .stat-num {
+    color: #FF7A50;
+    text-shadow: 0 0 20px rgba(255, 122, 80, 0.3);
+}
+
+:host-context(body.dark-mode) .footer {
+    background: #071529;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+@media (max-width: 992px) {
+    .step-card-premium {
+        flex: 1 1 calc(50% - 30px);
+        max-width: calc(50% - 30px);
+    }
+}
+
+@media (max-width: 600px) {
+    .step-card-premium {
+        flex: 1 1 100%;
+        max-width: 100%;
+    }
 
     .hero-wrap {
         flex-direction: column;
@@ -403,10 +843,6 @@
     .hero-stats {
         flex-wrap: wrap;
         justify-content: center;
-    }
-
-    .steps-section .grid {
-        grid-template-columns: 1fr;
     }
 
     .hero-text h1 {
@@ -424,4 +860,3 @@
         padding: 18px;
     }
 }
-

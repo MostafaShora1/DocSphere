@@ -1,53 +1,94 @@
-<section class="contact-section">
-  <div class="container contact-grid">
-    <div class="contact-info">
-      <h2>Contact Information</h2>
-      <p>We are here to help you. Reach out anytime.</p>
+<section class="contact-header-section">
+  <div class="container">
+    <div class="info-cards-grid">
+      <!-- Phone Card -->
+      <div class="info-card">
+        <div class="info-icon">
+          <i class="fa-solid fa-phone"></i>
+        </div>
+        <div class="info-content">
+          <p>+20 123 456 789</p>
+          <p>+20 987 654 321</p>
+        </div>
+      </div>
 
-      <ul>
-        <li><i class="fa-solid fa-phone"></i> +20 123 456 789</li>
-        <li><i class="fa-solid fa-envelope"></i> contact@docsphere.com</li>
-        <li><i class="fa-solid fa-location-dot"></i> Cairo, Egypt</li>
-      </ul>
+      <!-- Email Card -->
+      <div class="info-card">
+        <div class="info-icon">
+          <i class="fa-solid fa-envelope"></i>
+        </div>
+        <div class="info-content">
+          <p>info&#64;docsphere.com</p>
+          <p>support&#64;docsphere.com</p>
+        </div>
+      </div>
+
+      <!-- Location Card -->
+      <div class="info-card">
+        <div class="info-icon">
+          <i class="fa-solid fa-location-dot"></i>
+        </div>
+        <div class="info-content">
+          <p>{{ 'CONTACT.ADDRESS' | translate }}</p>
+        </div>
+      </div>
     </div>
+  </div>
+</section>
 
-    <div class="contact-form-card">
-      <h2>Send Message</h2>
+<section class="contact-form-section">
+  <div class="container">
+    <div class="form-wrapper">
+      <div class="section-header">
+        <h2 class="contact-title">{{ 'NAV.CONTACT' | translate }}</h2>
+        <p class="contact-subtitle">{{ 'CONTACT.INFO_DESC' | translate }}</p>
+      </div>
 
-      <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
-        <div class="form-group">
-          <label>Name</label>
-          <input type="text" formControlName="name">
-          <span class="error" *ngIf="submitted && f['name'].errors">
-            Enter valid name (3-50 letters)
-          </span>
+      <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="premium-form">
+        <div class="form-grid">
+          <!-- Left Column: Inputs -->
+          <div class="inputs-column">
+            <div class="form-group">
+              <label>{{ 'CONTACT.FIRST_NAME' | translate }} :</label>
+              <input type="text" formControlName="firstName" placeholder="">
+              <span class="error" *ngIf="submitted && f['firstName'].errors">{{ 'CONTACT.ERR_NAME' | translate }}</span>
+            </div>
+
+            <div class="form-group">
+              <label>{{ 'CONTACT.LAST_NAME' | translate }} :</label>
+              <input type="text" formControlName="lastName" placeholder="">
+              <span class="error" *ngIf="submitted && f['lastName'].errors">{{ 'CONTACT.ERR_NAME' | translate }}</span>
+            </div>
+
+            <div class="form-group">
+              <label>{{ 'CONTACT.PHONE' | translate }} :</label>
+              <input type="text" formControlName="phone" placeholder="">
+              <span class="error" *ngIf="submitted && f['phone'].errors">{{ 'CONTACT.ERR_PHONE' | translate }}</span>
+            </div>
+
+            <div class="form-group">
+              <label>{{ 'CONTACT.EMAIL' | translate }} :</label>
+              <input type="email" formControlName="email" placeholder="">
+              <span class="error" *ngIf="submitted && f['email'].errors">{{ 'CONTACT.ERR_EMAIL' | translate }}</span>
+            </div>
+          </div>
+
+          <!-- Right Column: Textarea -->
+          <div class="message-column">
+            <div class="form-group full-height">
+              <label>{{ 'CONTACT.COMMENT' | translate }}</label>
+              <textarea formControlName="message" placeholder=""></textarea>
+              <span class="error" *ngIf="submitted && f['message'].errors">{{ 'CONTACT.ERR_MSG' | translate }}</span>
+            </div>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" formControlName="email">
-          <span class="error" *ngIf="submitted && f['email'].errors">
-            Enter valid email
-          </span>
+        <div class="form-footer">
+          <button type="submit" class="btn-submit-premium" [disabled]="isSubmitting">
+            <span *ngIf="!isSubmitting">{{ 'CONTACT.SUBMIT' | translate }} <i class="fa-solid fa-arrow-right"></i></span>
+            <span *ngIf="isSubmitting">{{ 'COMMON.LOADING' | translate }} <i class="fa-solid fa-spinner fa-spin"></i></span>
+          </button>
         </div>
-
-        <div class="form-group">
-          <label>Phone</label>
-          <input type="text" formControlName="phone">
-          <span class="error" *ngIf="submitted && f['phone'].errors">
-            Enter valid phone (10-15 digits)
-          </span>
-        </div>
-
-        <div class="form-group">
-          <label>Message</label>
-          <textarea rows="5" formControlName="message"></textarea>
-          <span class="error" *ngIf="submitted && f['message'].errors">
-            Message must be at least 10 characters
-          </span>
-        </div>
-
-        <button class="btn-submit">Send Message</button>
       </form>
     </div>
   </div>

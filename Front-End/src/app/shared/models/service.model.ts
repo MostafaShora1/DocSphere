@@ -1,7 +1,9 @@
 export interface Service {
   id: string
   name: string
-  description: string
+  nameKey?: string;
+  description: string;
+  descriptionKey?: string;
   duration: string
   price: number
   doctorId: string

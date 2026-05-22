@@ -13,6 +13,14 @@ const doctorSchema = new mongoose.Schema(
       required: [true, 'Doctor name is required'],
       trim: true
     },
+    fullNameAr: {
+      type: String,
+      trim: true
+    },
+    fullNameEn: {
+      type: String,
+      trim: true
+    },
     specialty: {
       type: mongoose.Schema.ObjectId,
       ref: 'Specialty',
@@ -42,9 +50,14 @@ const doctorSchema = new mongoose.Schema(
       country: String
     },
     profilePicture: String,
+    certificate: String,
     isApproved: {
       type: Boolean,
       default: false
+    },
+    isActive: {
+      type: Boolean,
+      default: true
     },
     averageRating: {
       type: Number,

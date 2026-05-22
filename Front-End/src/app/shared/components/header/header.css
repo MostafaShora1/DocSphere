@@ -6,11 +6,19 @@
   top: 0;
   z-index: 1000;
   transition: padding 0.3s, box-shadow 0.3s, background-color 0.3s;
+  border: none;
+  outline: none;
+  font-family: var(--font-main);
+}
+
+:host-context(body.dark-mode) .header {
+  background-color: #0B1F3A;
+  backdrop-filter: blur(10px);
 }
 
 .header.scrolled {
   padding: 12px 0;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
 }
 
 .header-content {
@@ -27,11 +35,14 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  font-family: var(--font-heading);
 }
 
 .logo i {
   color: var(--coral);
 }
+
+/* ================= NAV ================= */
 
 .nav-menu {
   display: flex;
@@ -43,20 +54,89 @@
   color: #fff;
   text-decoration: none;
   font-weight: 600;
-  transition: color 0.3s;
+  position: relative;
+  transition: 0.3s;
+  font-family: var(--font-main);
+}
+
+/* underline بس للينكات العادية */
+.nav-menu a:not(.auth-btn)::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--coral);
+  transition: 0.3s;
+  border-radius: 2px;
+}
+
+.nav-menu a:not(.auth-btn):hover::after,
+.nav-menu a:not(.auth-btn).active::after {
+  width: 100%;
 }
 
 .nav-menu a.active {
   color: var(--coral);
 }
 
+/* ================= ACTIONS ================= */
+
 .nav-actions {
   display: flex;
   align-items: center;
   gap: 12px;
-  flex-wrap: wrap;
 }
 
+.theme-toggle,
+.lang-toggle {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 0 12px;
+}
+
+.theme-toggle:hover,
+.lang-toggle:hover {
+  background: var(--coral);
+  border-color: var(--coral);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 122, 80, 0.3);
+}
+
+:host-context(body.dark-mode) .theme-toggle,
+:host-context(body.dark-mode) .lang-toggle {
+  background: rgba(26, 188, 156, 0.1);
+  border-color: rgba(26, 188, 156, 0.2);
+}
+
+:host-context(body.dark-mode) .theme-toggle:hover,
+:host-context(body.dark-mode) .lang-toggle:hover {
+  background: var(--teal);
+  border-color: var(--teal);
+}
+
+.theme-toggle i {
+  transition: transform 0.5s ease;
+}
+
+.theme-toggle:hover i {
+  transform: scale(1.2);
+}
+
+/* ===== base ===== */
 .auth-btn,
 .profile-btn {
   display: inline-flex;
@@ -67,32 +147,30 @@
   padding: 0 20px;
   border-radius: 999px;
   font-weight: 700;
-  transition: all 0.3s;
+  transition: all 0.25s ease;
   white-space: nowrap;
 }
 
-.auth-btn {
-  text-decoration: none;
-  cursor: pointer;
-  font-family: inherit;
-  border: 1px solid transparent;
-  background: transparent;
-}
+/* ===== LOGIN (نضيف وبسيط) ===== */
 
 .auth-btn-secondary {
   border: 1px solid rgba(255, 255, 255, 0.25);
-  background: transparent;
   color: #fff;
+  background: transparent;
 }
 
 .auth-btn-secondary:hover {
   border-color: var(--coral);
   color: var(--coral);
+  background: rgba(255, 127, 80, 0.08);
+  transform: translateY(-1px);
 }
+
+/* ===== SIGN UP ===== */
 
 .auth-btn-primary,
 .profile-btn {
-  border: 1px solid transparent;
+  border: none;
   background: var(--coral);
   color: #fff;
 }
@@ -100,12 +178,8 @@
 .auth-btn-primary:hover,
 .profile-btn:hover {
   background: var(--coral-dark);
-  color: #fff;
-}
-
-.profile-btn {
-  cursor: pointer;
-  font-family: inherit;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(255, 127, 80, 0.3);
 }
 
 .profile-avatar {
@@ -118,6 +192,8 @@
   justify-content: center;
 }
 
+/* ================= HAMBURGER ================= */
+
 .hamburger {
   display: none;
   flex-direction: column;
@@ -125,14 +201,12 @@
   background: var(--dark-bg);
   border: 2px solid var(--coral);
   gap: 4px;
-  position: relative;
-  z-index: 2001;
   width: 40px;
   height: 40px;
   align-items: center;
   justify-content: center;
   border-radius: 8px;
-  transition: background 0.2s, border 0.2s;
+  transition: 0.3s;
 }
 
 .hamburger:hover,
@@ -145,8 +219,7 @@
   width: 25px;
   height: 3px;
   background: white;
-  transition: all 0.3s;
-  transform-origin: center;
+  transition: 0.3s;
 }
 
 .hamburger.active span:nth-child(1) {
@@ -161,6 +234,8 @@
   transform: rotate(-45deg) translate(7px, -6px);
 }
 
+/* ================= RESPONSIVE ================= */
+
 @media (min-width: 993px) {
   .hamburger {
     display: none !important;
@@ -170,16 +245,15 @@
 @media (max-width: 992px) {
   .nav-menu {
     position: fixed;
-    top: 76px;
+    top: 70px;
     left: 0;
     width: 100%;
-    height: calc(100vh - 76px);
+    height: calc(100vh - 70px);
     background: var(--dark-bg);
     flex-direction: column;
-    justify-content: flex-start;
     padding-top: 20px;
-    transform: translateY(-100%);
-    transition: transform 0.3s ease;
+    transform: translateY(-110%);
+    transition: 0.35s;
     z-index: 999;
     overflow-y: auto;
     gap: 0;
@@ -190,64 +264,26 @@
   }
 
   .nav-menu a {
-    padding: 18px 25px;
-    font-size: 17px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 16px 25px;
     width: 100%;
     text-align: center;
   }
 
   .nav-actions {
-    width: 100%;
-    flex-direction: column;
-    padding: 18px 20px;
+    flex-direction: row;
+    justify-content: center;
+    padding: 20px;
+    gap: 10px;
+    flex-wrap: wrap;
   }
 
   .auth-btn,
   .profile-btn {
-    width: 100%;
+    flex: 1;
+    max-width: 160px;
   }
 
   .hamburger {
     display: flex;
-    min-width: 44px;
-    padding: 10px;
-    background: var(--dark-bg);
-    z-index: 2001;
-  }
-
-  .header {
-    padding: 15px 0;
-  }
-}
-
-@media (max-width: 768px) {
-  .nav-menu a {
-    padding: 16px 20px;
-    font-size: 16px;
-  }
-
-  .hamburger span {
-    width: 22px;
-    height: 2px;
-  }
-}
-
-@media (max-width: 480px) {
-  .header {
-    padding: 12px 0;
-  }
-
-  .nav-menu a {
-    font-size: 15px;
-    padding: 14px 18px;
-  }
-
-  .hamburger {
-    padding: 8px;
-  }
-
-  .logo {
-    font-size: 1.4rem;
   }
 }

@@ -11,10 +11,13 @@ import { Subscription } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
 import { User } from '../../models/user.model';
 
+import { ThemeService } from '../../../core/services/theme.service';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TranslateModule],
   templateUrl: './header.html',
   styleUrls: ['./header.css']
 })
@@ -27,8 +30,32 @@ export class Header implements OnInit, OnDestroy {
   constructor(
     private cdr: ChangeDetectorRef,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private themeService: ThemeService,
+    public translate: TranslateService
   ) {}
+
+  toggleTheme() {
+    this.themeService.toggleTheme();
+    this.cdr.detectChanges();
+  }
+
+  isDarkMode(): boolean {
+    return this.themeService.isDarkMode();
+  }
+
+  switchLanguage() {
+    const newLang = this.translate.currentLang === 'ar' ? 'en' : 'ar';
+    this.translate.use(newLang);
+    localStorage.setItem('lang', newLang);
+    document.documentElement.dir = newLang === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.lang = newLang;
+    this.cdr.detectChanges();
+  }
+
+  get currentLang(): string {
+    return this.translate.currentLang || 'en';
+  }
 
   ngOnInit() {
     this.currentUser = this.authService.getCurrentUser() as User | null;

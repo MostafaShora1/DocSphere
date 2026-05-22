@@ -7,6 +7,9 @@ import {
   Validators,
   FormGroup
 } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
+import { ApiService } from '../../../core/services/api.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-contact',
@@ -15,18 +18,22 @@ import {
   imports: [
     CommonModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TranslateModule
   ],
   styleUrls: ['./contact.css']
 })
 export class ContactComponent implements OnInit {
 
   submitted = false;
+  isSubmitting = false;
 
   contactForm!: FormGroup;
 
   constructor(
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private apiService: ApiService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -34,11 +41,21 @@ export class ContactComponent implements OnInit {
     this.contactForm =
       this.fb.group({
 
-        name: [
+        firstName: [
           '',
           [
             Validators.required,
-            Validators.pattern(/^[A-Za-z\s]{3,50}$/)
+            Validators.minLength(2),
+            Validators.pattern(/^[A-Za-z\sأ-ي]{2,50}$/)
+          ]
+        ],
+
+        lastName: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(2),
+            Validators.pattern(/^[A-Za-z\sأ-ي]{2,50}$/)
           ]
         ],
 
@@ -54,7 +71,7 @@ export class ContactComponent implements OnInit {
           '',
           [
             Validators.required,
-            Validators.pattern(/^\d{10,15}$/)
+            Validators.pattern(/^[0-9+]{10,15}$/)
           ]
         ],
 
@@ -62,7 +79,7 @@ export class ContactComponent implements OnInit {
           '',
           [
             Validators.required,
-            Validators.minLength(10)
+            Validators.minLength(5)
           ]
         ]
 
@@ -83,11 +100,27 @@ export class ContactComponent implements OnInit {
     if (this.contactForm.invalid)
       return;
 
-    alert('Message sent successfully ✅');
+    if (!this.authService.isLoggedIn()) {
+      alert('You must be logged in to send a message. Please login first. ');
+      return;
+    }
 
-    this.contactForm.reset();
+    this.isSubmitting = true;
 
-    this.submitted = false;
+    this.apiService.submitContactMessage(this.contactForm.value).subscribe({
+      next: (res) => {
+        alert('Message sent successfully! The admin will review it soon. ');
+        this.contactForm.reset();
+        this.submitted = false;
+        this.isSubmitting = false;
+      },
+      error: (err) => {
+        console.error('Error submitting message:', err);
+        const errorMsg = err.error?.message || 'Failed to send message. Please try again later.';
+        alert(errorMsg );
+        this.isSubmitting = false;
+      }
+    });
 
   }
 

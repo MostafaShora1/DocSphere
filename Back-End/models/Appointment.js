@@ -14,7 +14,6 @@ const appointmentSchema = new mongoose.Schema(
     },
     service: {
       type: mongoose.Schema.ObjectId,
-      ref: 'Service',
       default: null
     },
     date: {

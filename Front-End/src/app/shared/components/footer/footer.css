@@ -29,7 +29,7 @@
 }
 
 .footer-bottom {
-  border-top: 1px solid rgba(255,255,255,.2);
+  border-top: 1px solid rgba(255, 255, 255, .2);
   margin-top: 30px;
   padding-top: 15px;
   text-align: center;
@@ -46,4 +46,10 @@
   .footer-content {
     gap: 20px;
   }
+}
+
+:host-context(body.dark-mode) .footer {
+  background: #0B1F3A;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background 0.3s ease;
 }

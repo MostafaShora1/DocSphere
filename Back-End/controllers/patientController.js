@@ -59,7 +59,9 @@ exports.updatePatientProfile = async (req, res, next) => {
 exports.getPatients = async (req, res, next) => {
   try {
     const patients = await Patient.find().populate('user');
-    res.status(200).json({ success: true, count: patients.length, data: patients });
+    // Filter out orphans
+    const validPatients = patients.filter(p => p.user !== null);
+    res.status(200).json({ success: true, count: validPatients.length, data: validPatients });
   } catch (error) {
     next(error);
   }

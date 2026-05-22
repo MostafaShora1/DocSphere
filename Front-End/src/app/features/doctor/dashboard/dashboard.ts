@@ -30,11 +30,13 @@ const passwordMatchValidator: ValidatorFn = (
   return newPassword === confirmPassword ? null : { passwordMismatch: true };
 };
 
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+
 @Component({
   selector: 'app-doctor-dashboard',
   templateUrl: './dashboard.html',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslateModule],
   styleUrls: ['./dashboard.css']
 })
 export class DashboardComponent implements OnInit {
@@ -59,6 +61,12 @@ export class DashboardComponent implements OnInit {
   showRejectModal = false;
   selectedAppointment: any = null;
   rejectReason = '';
+  
+  // Reschedule proposal fields
+  isRescheduling = false;
+  proposedDate = '';
+  proposedStartTime = '';
+  proposedEndTime = '';
 
   readonly scheduleForm;
   readonly passwordForm;
@@ -69,7 +77,8 @@ export class DashboardComponent implements OnInit {
     private doctorService: DoctorService,
     private appointmentService: AppointmentService,
     private apiService: ApiService,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) {
     this.scheduleForm = this.fb.group({
       date: ['', [Validators.required]],
@@ -102,6 +111,11 @@ export class DashboardComponent implements OnInit {
     this.activeSection = section;
   }
 
+  get todayDate(): string {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
+  }
+
   get timeSlots(): FormArray {
     return this.scheduleForm.get('timeSlots') as FormArray;
   }
@@ -126,11 +140,11 @@ export class DashboardComponent implements OnInit {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
-
+  
   private loadDoctorDashboard() {
     this.loading = true;
 
-    this.doctorService.getAllDoctors().subscribe({
+    this.apiService.getDoctors(true).subscribe({
       next: doctors => {
         this.doctor = doctors.find(doctor => doctor.userId === this.currentUser?.id) || null;
 
@@ -251,6 +265,15 @@ export class DashboardComponent implements OnInit {
       return;
     }
 
+    const selectedDate = this.scheduleForm.get('date')?.value;
+    const now = new Date();
+    const todayStr = now.toISOString().split('T')[0];
+
+    if (!selectedDate || selectedDate < todayStr) {
+      this.scheduleError = this.translate.instant('ERRORS.PAST_DATE_ERROR');
+      return;
+    }
+
     const normalizedSlots = this.timeSlots.getRawValue()
       .map((slot: any) => ({
         startTime: slot.startTime,
@@ -259,6 +282,20 @@ export class DashboardComponent implements OnInit {
       }))
       .filter((slot: any) => slot.startTime && slot.endTime)
       .sort((a: any, b: any) => a.startTime.localeCompare(b.startTime));
+
+    // If date is today, check if start times are in the future
+    if (selectedDate === todayStr) {
+      const currentMinutes = now.getHours() * 60 + now.getMinutes();
+      const hasPastTime = normalizedSlots.some((slot: any) => {
+        const [hours, minutes] = slot.startTime.split(':').map(Number);
+        return (hours * 60 + minutes) < currentMinutes;
+      });
+
+      if (hasPastTime) {
+        this.scheduleError = this.translate.instant('ERRORS.PAST_TIME_ERROR');
+        return;
+      }
+    }
 
     this.scheduleSaving = true;
     this.scheduleError = '';
@@ -350,6 +387,10 @@ export class DashboardComponent implements OnInit {
     this.showRejectModal = false;
     this.selectedAppointment = null;
     this.rejectReason = '';
+    this.isRescheduling = false;
+    this.proposedDate = '';
+    this.proposedStartTime = '';
+    this.proposedEndTime = '';
   }
 
   // Submit rejection
@@ -358,8 +399,31 @@ export class DashboardComponent implements OnInit {
       return;
     }
 
-    this.rejectAppointment(this.selectedAppointment.id, this.rejectReason.trim());
-    this.closeRejectDialog();
+    const updateData: any = {
+      status: 'rejected',
+      rejectionReason: this.rejectReason.trim()
+    };
+
+    if (this.isRescheduling) {
+      if (!this.proposedDate || !this.proposedStartTime || !this.proposedEndTime) {
+        alert('Please fill all rescheduling fields.');
+        return;
+      }
+      updateData.proposedDate = this.proposedDate;
+      updateData.proposedStartTime = this.proposedStartTime;
+      updateData.proposedEndTime = this.proposedEndTime;
+      updateData.proposedReason = this.rejectReason.trim();
+    }
+
+    this.appointmentService.updateAppointment(this.selectedAppointment.id, updateData).subscribe({
+      next: () => {
+        this.loadAppointments();
+        this.closeRejectDialog();
+      },
+      error: error => {
+        console.error('Failed to update appointment:', error);
+      }
+    });
   }
 
   private createTimeSlotGroup() {

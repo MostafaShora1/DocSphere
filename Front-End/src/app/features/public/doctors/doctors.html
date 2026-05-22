@@ -1,45 +1,53 @@
 <!-- Header -->
 <header class="page-header">
   <div class="header-content">
-    <h1>Find Your Doctor</h1>
-    <p>Professional doctors in all specialties</p>
+    <h1>{{ 'DOCTORS_PAGE.TITLE' | translate }}</h1>
+    <p>{{ 'DOCTORS_PAGE.SUBTITLE' | translate }}</p>
   </div>
 </header>
 
 <!-- Controls -->
 <div class="controls">
-  <input 
-    type="text" 
-    placeholder="Search by name"
-    [(ngModel)]="searchText"
-    (input)="applyFilter()"
-  >
+  <div class="search-input-wrapper">
+    <i class="fas fa-search search-icon"></i>
+    <input 
+      type="text" 
+      [placeholder]="'DOCTORS_PAGE.SEARCH' | translate"
+      [(ngModel)]="searchText"
+      (input)="applyFilter()"
+    >
+  </div>
 
-  <select [(ngModel)]="selectedSpecialty" (change)="applyFilter()">
-    <option value="all">All Specialties</option>
-    <option *ngFor="let s of specialties; trackBy: trackBySpecialty" [value]="s">
-      {{ s }}
-    </option>
-  </select>
+  <div class="select-wrapper">
+    <select [(ngModel)]="selectedSpecialty" (change)="applyFilter()">
+      <option value="all">{{ 'DOCTORS_PAGE.ALL_SPECIALTIES' | translate }}</option>
+      <option *ngFor="let s of specialties; trackBy: trackBySpecialty" [value]="s">
+        {{ 'SPECIALTIES.' + s?.toUpperCase() | translate }}
+      </option>
+    </select>
+    <i class="fas fa-chevron-down select-icon"></i>
+  </div>
 </div>
 
 <div class="section-title">
-  <p>Available Doctors</p>
+  <p>{{ 'DOCTORS_PAGE.AVAILABLE' | translate }}</p>
 </div>
 
 <!-- Doctors List -->
-<section class="doctors-container">
-  <div class="doctor-card" *ngFor="let d of filteredDoctors; trackBy: trackByDoctor">
-    
-    <img [src]="d.image" alt="doctor">
-
-    <h3>{{ d.name }}</h3>
-    <p>{{ d.specialty }}</p>
-    <p>{{ d.rating }} ⭐</p>
-
-    <button (click)="goToProfile(d.id)">
-      View Profile
-    </button>
-
+<section class="doctors-premium-section">
+  <div class="doctor-horizontal-grid">
+    <div class="doctor-card-premium-h" *ngFor="let d of filteredDoctors; trackBy: trackByDoctor" (click)="goToProfile(d.id)">
+      <div class="doc-h-image">
+        <img [src]="d.image || 'assets/images/default-doctor.png'" 
+             (error)="$any($event.target).src = 'https://img.magnific.com/premium-vector/flat-illustration-doctor_9206-28836.jpg?semt=ais_hybrid&w=740&q=80'"
+             alt="doctor">
+      </div>
+      <div class="doc-h-content">
+        <h3>{{ getLocalizedName(d) }}</h3>
+        <p class="doc-h-specialty">{{ 'SPECIALTIES.' + (d.specialty || '').toUpperCase() | translate }}</p>
+        <p class="doc-h-bio">{{ d.bio || 'Professional medical specialist with years of experience in providing high-quality care.' }}</p>
+        <div class="doc-h-rating">{{ d.rating | number:'1.1-1' }} ⭐</div>
+      </div>
+    </div>
   </div>
 </section>

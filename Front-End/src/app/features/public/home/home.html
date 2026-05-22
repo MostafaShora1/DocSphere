@@ -2,47 +2,34 @@
 <section class="hero-neo">
   <div class="container hero-wrap">
 
-    <div class="hero-text">
-
+    <div class="hero-text" data-aos="fade-right">
       <h1>
-        Best Medical Center
+        {{ 'HOME.HERO_TITLE' | translate }}
         <span><br></span>
       </h1>
-
       <p>
-        We provide comprehensive medical services delivered by top specialized doctors with comfort and safety to you.
+        {{ 'HOME.HERO_DESC' | translate }}
       </p>
-
-      <button class="btn">
-        Book Your Appointment
+      <button class="btn" (click)="handleHeroClick()">
+        {{ 'HOME.HERO_BTN' | translate }}
       </button>
-
       <div class="hero-stats">
-
-        <div class="hero-stat">
+        <div class="hero-stat" data-aos="zoom-in" data-aos-delay="100">
           <div class="hero-stat-num">150+</div>
-          <div class="hero-stat-label">Specialist Doctors</div>
+          <div class="hero-stat-label">{{ 'HOME.STAT_DOCTORS' | translate }}</div>
         </div>
-
-        <div class="hero-stat">
+        <div class="hero-stat" data-aos="zoom-in" data-aos-delay="200">
           <div class="hero-stat-num">25k+</div>
-          <div class="hero-stat-label">Happy Patients</div>
+          <div class="hero-stat-label">{{ 'HOME.STAT_PATIENTS' | translate }}</div>
         </div>
-
-        <div class="hero-stat">
+        <div class="hero-stat" data-aos="zoom-in" data-aos-delay="300">
           <div class="hero-stat-num">50k+</div>
-          <div class="hero-stat-label">Home Visits</div>
+          <div class="hero-stat-label">{{ 'HOME.STAT_VISITS' | translate }}</div>
         </div>
-
       </div>
-
     </div>
-
-    <div class="hero-img">
-      <img
-        src="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=800"
-        alt="Doctor"
-      >
+    <div class="hero-img" data-aos="fade-left">
+      <img src="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=800" alt="Doctor">
     </div>
 
   </div>
@@ -51,164 +38,162 @@
 
 <!-- HOW IT WORKS -->
 <section class="section steps-section">
-
   <div class="container">
-
-    <h2>
-      How It Works?
-    </h2>
-
-    <div class="grid">
-
-      <div class="card step-card">
-        <h3>1</h3>
-        <i class="fas fa-calendar-check" style="font-size:3rem;color:var(--coral);margin:15px 0;"></i>
-        <p><strong>Book Your Appointment</strong></p>
-        <p style="font-size:.9rem;margin-top:10px;color:#666;">
-          Choose your convenient time
-        </p>
-      </div>
-
-      <div class="card step-card">
-        <h3>2</h3>
-        <i class="fas fa-user-md" style="font-size:3rem;color:var(--coral);margin:15px 0;"></i>
-        <p><strong>Select Your Doctor</strong></p>
-        <p style="font-size:.9rem;margin-top:10px;color:#666;">
-          From the best specialists
-        </p>
-      </div>
-
-      <div class="card step-card">
-        <h3>3</h3>
-        <i class="fas fa-file-medical" style="font-size:3rem;color:var(--coral);margin:15px 0;"></i>
-        <p><strong>Receive Your Report</strong></p>
-        <p style="font-size:.9rem;margin-top:10px;color:#666;">
-          Comprehensive medical report
-        </p>
-      </div>
-
+    <div class="section-header" data-aos="fade-up">
+      <h2 class="section-title-premium">{{ 'HOME.HOW_TITLE' | translate }}</h2>
+      <div class="title-accent"></div>
     </div>
 
-  </div>
+    <div class="steps-grid">
+      <!-- Step 1 -->
+      <div class="step-card-premium" data-aos="fade-up" data-aos-delay="100">
+        <div class="step-badge">01</div>
+        <div class="step-icon-wrap">
+          <i class="fas fa-search-plus"></i>
+        </div>
+        <div class="step-content">
+          <h3>{{ 'HOME.STEP1_TITLE' | translate }}</h3>
+          <p>{{ 'HOME.STEP1_DESC' | translate }}</p>
+        </div>
+      </div>
 
+      <!-- Step 2 -->
+      <div class="step-card-premium" data-aos="fade-up" data-aos-delay="200">
+        <div class="step-badge">02</div>
+        <div class="step-icon-wrap">
+          <i class="fas fa-user-md"></i>
+        </div>
+        <div class="step-content">
+          <h3>{{ 'HOME.STEP2_TITLE' | translate }}</h3>
+          <p>{{ 'HOME.STEP2_DESC' | translate }}</p>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step-card-premium" data-aos="fade-up" data-aos-delay="300">
+        <div class="step-badge">03</div>
+        <div class="step-icon-wrap">
+          <i class="fas fa-file-medical-alt"></i>
+        </div>
+        <div class="step-content">
+          <h3>{{ 'HOME.STEP3_TITLE' | translate }}</h3>
+          <p>{{ 'HOME.STEP3_DESC' | translate }}</p>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="step-card-premium" data-aos="fade-up" data-aos-delay="400">
+        <div class="step-badge">04</div>
+        <div class="step-icon-wrap">
+          <i class="fas fa-hand-holding-heart"></i>
+        </div>
+        <div class="step-content">
+          <h3>{{ 'HOME.STEP4_TITLE' | translate }}</h3>
+          <p>{{ 'HOME.STEP4_DESC' | translate }}</p>
+        </div>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="step-card-premium" data-aos="fade-up" data-aos-delay="500">
+        <div class="step-badge">05</div>
+        <div class="step-icon-wrap">
+          <i class="fas fa-star-half-alt"></i>
+        </div>
+        <div class="step-content">
+          <h3>{{ 'HOME.STEP5_TITLE' | translate }}</h3>
+          <p>{{ 'HOME.STEP5_DESC' | translate }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
 
 <!-- SERVICES SECTION (Dynamic from JSON) -->
 <section class="section services-section">
-
   <div class="container">
-
-    <h2>
-      Our Premium Services
-    </h2>
-
-    <div class="grid">
-
-      <div
-        class="service-card"
-        *ngFor="let svc of services"
-      >
-
-        <h3>
-          {{ svc.name }}
-        </h3>
-
-        <p>
-          {{ svc.description }}
-        </p>
-
-        <span class="service-price">
-          {{ svc.price }} EGP
-        </span>
-
-      </div>
-
+    <div class="section-header" data-aos="fade-up">
+      <h2 class="section-title-premium">{{ 'HOME.SERVICES_TITLE' | translate }}</h2>
+      <div class="title-accent"></div>
     </div>
 
+    <div class="grid premium-services-grid">
+      <div class="service-card-premium" *ngFor="let svc of services; let i = index" data-aos="fade-up"
+        [attr.data-aos-delay]="i * 100">
+        <div class="service-icon-wrap">
+          <i class="fas fa-hand-holding-medical"></i>
+        </div>
+        <div class="service-body">
+          <h3>
+            {{ (svc.nameKey | translate) !== svc.nameKey ? (svc.nameKey | translate) : svc.name }}
+          </h3>
+          <p class="service-desc">
+            {{ (svc.descriptionKey | translate) !== svc.descriptionKey ? (svc.descriptionKey | translate) : svc.description }}
+          </p>
+          <div class="service-footer">
+            <span class="service-price">
+              {{ svc.price }} <span>{{ 'SERVICES.EGP' | translate }}</span>
+            </span>
+            <button class="btn-sm-outline" (click)="bookService(svc.id)">{{ 'SERVICES.BOOK_NOW' | translate }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-
 </section>
 
 
 <!-- DOCTORS SECTION -->
 <section class="section doctors-section">
-
   <div class="container">
-
-    <h2>
-      Our Distinguished Doctors
-    </h2>
-
-    <div class="grid">
-
-      <div
-        class="doctor-card"
-        *ngFor="let doc of doctors"
-        (click)="openDoctor(doc)"
-      >
-
-        <div class="doctor-image">
-
-          <img
-            [src]="doc.image"
-            alt="doctor"
-          >
-
-        </div>
-
-        <h3>
-          {{ doc.name }}
-        </h3>
-
-        <p class="doctor-specialty">
-          {{ doc.specialty }}
-        </p>
-
-        <div class="doctor-rating">
-          ⭐ {{ doc.rating }}
-        </div>
-
-      </div>
-
+    <div class="section-header" data-aos="fade-up">
+      <h2 class="section-title-premium">{{ 'HOME.DOCTORS_TITLE' | translate }}</h2>
+      <div class="title-accent"></div>
     </div>
 
+    <div class="doctor-horizontal-grid">
+      <div class="doctor-card-premium-h" *ngFor="let doc of doctors; let i = index" data-aos="fade-up" [attr.data-aos-delay]="i * 100">
+        <div class="doc-h-image">
+          <img [src]="doc.image || 'assets/images/default-doctor.png'" 
+               (error)="$any($event.target).src = 'https://img.magnific.com/premium-vector/flat-illustration-doctor_9206-28836.jpg?semt=ais_hybrid&w=740&q=80'"
+               [alt]="doc.name">
+        </div>
+        <div class="doc-h-content">
+          <h3>{{ getLocalizedName(doc) }}</h3>
+          <p class="doc-h-specialty">{{ 'SPECIALTIES.' + (doc.specialty || '').toUpperCase() | translate }}</p>
+          <p class="doc-h-bio">{{ doc.bio || 'Professional medical specialist with years of experience in providing high-quality care.' }}</p>
+        </div>
+      </div>
+    </div>
   </div>
-
 </section>
 
 
 <!-- STATS SECTION -->
 <section class="section stats">
-
   <div class="container">
-
-    <h2>
-      Our Achievements in Numbers
-    </h2>
+    <div class="section-header" data-aos="fade-up">
+      <h2 class="section-title-premium" style="color: white;">{{ 'HOME.STATS_TITLE' | translate }}</h2>
+      <div class="title-accent"></div>
+    </div>
 
     <div class="grid">
-
-      <div>
+      <div data-aos="zoom-in" data-aos-delay="100">
         <div class="stat-num">150+</div>
-        <p>Specialist Doctors</p>
+        <p>{{ 'HOME.STAT_DOCTORS' | translate }}</p>
       </div>
-
-      <div>
+      <div data-aos="zoom-in" data-aos-delay="200">
         <div class="stat-num">45+</div>
-        <p>Medical Specialties</p>
+        <p>{{ 'HOME.STAT_SPECIALTIES' | translate }}</p>
       </div>
-
-      <div>
+      <div data-aos="zoom-in" data-aos-delay="300">
         <div class="stat-num">25000+</div>
-        <p>Happy Patients</p>
+        <p>{{ 'HOME.STAT_PATIENTS' | translate }}</p>
       </div>
-
-      <div>
+      <div data-aos="zoom-in" data-aos-delay="400">
         <div class="stat-num">50000+</div>
-        <p>Home Visits</p>
+        <p>{{ 'HOME.STAT_VISITS' | translate }}</p>
       </div>
-
     </div>
 
   </div>
@@ -217,68 +202,53 @@
 
 
 <!-- REVIEWS SECTION -->
-<section class="section reviews-section">
-
+<section class="patients-talk-section">
   <div class="container">
-
-    <h2>
-      Client Reviews
-    </h2>
-
-    <div class="grid">
-
-      <div class="review-card">
-        <div class="review-stars">⭐⭐⭐⭐⭐</div>
-        <p class="review-text">
-          "Excellent service. The doctor was professional and arrived on time."
-        </p>
-        <h4 class="review-author">Ahmed Mohamed</h4>
+    <div class="section-header-centered" data-aos="fade-up">
+      <h2 class="patients-talk-title">{{ 'HOME.REVIEWS_TITLE' | translate }}</h2>
+      <div class="title-underline">
+        <span class="line-teal"></span>
+        <span class="line-coral"></span>
       </div>
-
-      <div class="review-card">
-        <div class="review-stars">⭐⭐⭐⭐⭐</div>
-        <p class="review-text">
-          "Great consultation and accurate diagnosis."
-        </p>
-        <h4 class="review-author">Mona Elsayed</h4>
-      </div>
-
-      <div class="review-card">
-        <div class="review-stars">⭐⭐⭐⭐⭐</div>
-        <p class="review-text">
-          "Very professional team, fast and clean service."
-        </p>
-        <h4 class="review-author">Khaled Ahmed</h4>
-      </div>
-
     </div>
 
-  </div>
+    <div class="reviews-swiper-container" data-aos="fade-up">
+      <div class="swiper reviews-swiper">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide" *ngFor="let review of reviews">
+            <div class="testimonial-content">
+              <div class="patient-avatar-wrapper">
+                <img [src]="'https://ui-avatars.com/api/?name=' + (review.patient?.firstName || 'User') + '&background=random'" alt="Patient Avatar">
+                <div class="quote-icon"><i class="fas fa-quote-left"></i></div>
+              </div>
+              <p class="testimonial-text">"{{ review.comment }}"</p>
+              <h3 class="patient-name">{{ review.patient?.firstName }} {{ review.patient?.lastName }}</h3>
+              <p class="patient-role">{{ 'ABOUT.PATIENT_STORY' | translate }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
+      <button class="swiper-button-prev-custom"><i class="fas fa-chevron-left"></i></button>
+      <button class="swiper-button-next-custom"><i class="fas fa-chevron-right"></i></button>
+    </div>
+  </div>
 </section>
 
 
 <!-- MODAL -->
-<div
-  class="modal"
-  *ngIf="selectedDoctor"
->
+<div class="modal" *ngIf="selectedDoctor">
 
   <div class="modal-content">
 
-    <span
-      class="modal-close"
-      (click)="closeModal()"
-    >
+    <span class="modal-close" (click)="closeModal()">
       &times;
     </span>
 
     <div style="text-align:center;">
 
-      <img
-        [src]="selectedDoctor.image"
-        style="width:150px;height:150px;border-radius:50%;object-fit:cover;margin-bottom:20px;border:4px solid var(--coral);"
-      >
+      <img [src]="selectedDoctor.image"
+        style="width:150px;height:150px;border-radius:50%;object-fit:cover;margin-bottom:20px;border:4px solid var(--coral);">
 
       <h2>
         {{ selectedDoctor.name }}

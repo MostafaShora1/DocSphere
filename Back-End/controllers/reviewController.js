@@ -3,6 +3,7 @@ const Review = require('../models/Review');
 const Appointment = require('../models/Appointment');
 const Doctor = require('../models/Doctor');
 const Patient = require('../models/Patient');
+const Payment = require('../models/Payment');
 
 exports.createReview = async (req, res, next) => {
   try {
@@ -19,6 +20,17 @@ exports.createReview = async (req, res, next) => {
     const appointment = await Appointment.findById(req.body.appointment);
     if (!appointment || appointment.patient.toString() !== patientProfile._id.toString()) {
       return res.status(404).json({ message: 'Appointment not found or not owned by patient' });
+    }
+
+    // Check if appointment is confirmed
+    if (appointment.status !== 'confirmed') {
+      return res.status(400).json({ message: 'Cannot leave review for unconfirmed appointment' });
+    }
+
+    // Check if payment exists and is paid
+    const payment = await Payment.findOne({ appointment: appointment._id });
+    if (!payment || payment.status !== 'paid') {
+      return res.status(400).json({ message: 'Cannot leave review without completed payment' });
     }
 
     const doctorProfile = await Doctor.findById(req.body.doctor);
@@ -47,8 +59,30 @@ exports.createReview = async (req, res, next) => {
 
 exports.getDoctorReviews = async (req, res, next) => {
   try {
-    const reviews = await Review.find({ doctor: req.params.doctorId }).populate('patient doctor');
-    res.status(200).json({ success: true, count: reviews.length, data: reviews });
+    const reviews = await Review.find({ doctor: req.params.doctorId })
+      .populate('patient doctor appointment');
+
+    res.status(200).json({
+      success: true,
+      count: reviews.length,
+      data: reviews
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getAllReviews = async (_req, res, next) => {
+  try {
+    const reviews = await Review.find()
+      .populate('patient doctor appointment')
+      .sort('-createdAt');
+
+    res.status(200).json({
+      success: true,
+      count: reviews.length,
+      data: reviews
+    });
   } catch (error) {
     next(error);
   }
@@ -61,8 +95,14 @@ exports.getMyReviews = async (req, res, next) => {
       return res.status(404).json({ message: 'Patient profile not found' });
     }
 
-    const reviews = await Review.find({ patient: patientProfile._id }).populate('doctor appointment');
-    res.status(200).json({ success: true, count: reviews.length, data: reviews });
+    const reviews = await Review.find({ patient: patientProfile._id })
+      .populate('doctor appointment');
+
+    res.status(200).json({
+      success: true,
+      count: reviews.length,
+      data: reviews
+    });
   } catch (error) {
     next(error);
   }

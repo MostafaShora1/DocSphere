@@ -74,6 +74,10 @@ export class AppointmentService {
     status?: string;
     notes?: string;
     rejectionReason?: string;
+    proposedDate?: string;
+    proposedStartTime?: string;
+    proposedEndTime?: string;
+    proposedReason?: string;
   }): Observable<any> {
     return this.http.put(`${this.baseUrl}/${id}`, data);
   }

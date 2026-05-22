@@ -1,80 +1,59 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { DataService } from '../../../core/services/data.service';
+import { ApiService } from '../../../core/services/api.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-doctors-management',
   templateUrl: './doctors-management.html',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   styleUrls: ['./doctors-management.css']
 })
 export class DoctorsManagementComponent implements OnInit {
 
   doctors: any[] = [];
+  pendingDoctors: any[] = [];
+  selectedDoctor: any = null;
+  showDetailsModal = false;
 
-  doctor: any = {};
-
-  showForm = false;
-
-  constructor(private dataService: DataService) {}
+  constructor(private apiService: ApiService) {}
 
   ngOnInit() {
-    this.load();
+    this.loadDoctors();
+    this.loadPendingDoctors();
   }
 
-  load() {
-
-    this.dataService.getDoctors().subscribe(res => {
-
+  loadDoctors() {
+    this.apiService.getDoctors(true).subscribe(res => {
       this.doctors = res;
-
     });
-
   }
 
-  add() {
-
-    this.dataService.addDoctor(this.doctor);
-
-    this.doctor = {};
-
-    this.showForm = false;
-
-    this.load();
-
+  loadPendingDoctors() {
+    this.apiService.getPendingDoctors().subscribe(res => {
+      this.pendingDoctors = res;
+    });
   }
 
-  edit(d: any) {
-
-    this.doctor = { ...d };
-
-    this.showForm = true;
-
+  viewDetails(doctor: any) {
+    this.selectedDoctor = doctor;
+    this.showDetailsModal = true;
   }
 
-  update() {
-
-    this.dataService.updateDoctor(
-      this.doctor.id,
-      this.doctor
-    );
-
-    this.doctor = {};
-
-    this.showForm = false;
-
-    this.load();
-
+  closeModal() {
+    this.showDetailsModal = false;
+    this.selectedDoctor = null;
   }
 
-  delete(id: string) {
-
-    this.dataService.deleteDoctor(id);
-
-    this.load();
-
+  approve(id: string) {
+    this.apiService.approveDoctor(id).subscribe(() => {
+      this.loadDoctors();
+      this.loadPendingDoctors();
+      this.closeModal();
+    });
   }
 
+  // Other methods if needed (delete/edit can be implemented similarly)
 }

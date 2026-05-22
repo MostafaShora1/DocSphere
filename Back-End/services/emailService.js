@@ -89,6 +89,16 @@ exports.sendAppointmentStatusEmail = async (
       ${rejectionReason ? `<p><strong>Reason:</strong> ${rejectionReason}</p>` : ''}
       <p>Please book a new appointment with a different time slot or doctor through your patient portal.</p>
     `;
+  } else if (status === 'proposed') {
+    subject = 'Appointment Reschedule Proposal';
+    html = `
+      <h2>Hello ${patientName}</h2>
+      <p>Dr. ${doctorName} has suggested an alternative time for your appointment.</p>
+      <p><strong>New Suggested Date:</strong> ${formattedDate}</p>
+      <p><strong>New Suggested Time:</strong> ${appointmentTime}</p>
+      ${rejectionReason ? `<p><strong>Reason for Change:</strong> ${rejectionReason}</p>` : ''}
+      <p>Please log in to your patient portal to accept or reject this new time.</p>
+    `;
   }
 
   await sendEmail({

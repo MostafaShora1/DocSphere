@@ -1,99 +1,290 @@
+:host {
+  display: block;
+}
+
+.doctors-section {
+  padding: 120px 0 80px;
+  background: var(--bg-primary);
+  min-height: 90vh;
+  transition: background-color 0.3s;
+}
+
 .page-header {
-    background-color: #145245;
-    color: white;
-    padding: 40px;
-    text-align: center;
+  padding: 140px 20px 80px;
+  background: linear-gradient(135deg, var(--dark-bg) 0%, var(--teal) 100%);
+  color: white;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
 }
 
+
+.page-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('https://www.transparenttextures.com/patterns/cubes.png');
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+.header-content h1 {
+  font-size: 3.5rem;
+  font-weight: 800;
+  margin-bottom: 15px;
+  letter-spacing: -1px;
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.header-content p {
+  font-size: 1.2rem;
+  opacity: 0.9;
+  max-width: 600px;
+  margin: 0 auto;
+  animation: fadeInUp 1s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* FILTERS */
 .controls {
-    text-align: center;
-    margin: 20px;
+  display: flex;
+  gap: 0;
+  margin: -40px auto 60px;
+  justify-content: center;
+  max-width: 800px;
+  background: white;
+  padding: 10px;
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+  position: relative;
+  z-index: 10;
 }
 
-.controls input,
+.search-input-wrapper,
+.select-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.search-input-wrapper {
+  flex: 2;
+  border-right: 1px solid #eee;
+}
+
+.select-wrapper {
+  flex: 1;
+}
+
+.search-icon {
+  margin-left: 20px;
+  color: #999;
+  font-size: 1.1rem;
+}
+
+[dir="rtl"] .search-icon {
+  margin-left: 0;
+  margin-right: 20px;
+}
+
+.select-icon {
+  position: absolute;
+  right: 25px;
+  color: var(--teal);
+  pointer-events: none;
+  font-size: 0.9rem;
+}
+
+[dir="rtl"] .select-icon {
+  right: auto;
+  left: 25px;
+}
+
+.controls input {
+  width: 100%;
+  padding: 18px 15px;
+  border: none;
+  background: transparent;
+  font-size: 1.1rem;
+}
+
 .controls select {
-    padding: 10px;
-    margin: 5px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
+  width: 100%;
+  padding: 18px 25px;
+  padding-right: 45px;
+  border: none;
+  background: transparent;
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: var(--teal);
+  font-weight: 600;
+  appearance: none;
+}
+
+[dir="rtl"] .controls select {
+  padding-right: 25px;
+  padding-left: 45px;
+}
+
+.controls input:focus,
+.controls select:focus {
+  outline: none;
 }
 
 .section-title {
-    text-align: center;
-    font-size: 26px;
-    color: #145245;
+  text-align: center;
+  margin-bottom: 40px;
 }
 
-.doctors-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    justify-content: center;
-    gap: 25px;
-    padding: 40px 20px;
-    max-width: 1200px;
-    width: 100%;
-    margin: 0 auto;
+.section-title p {
+  display: inline-block;
+  padding: 8px 20px;
+  background: rgba(255, 127, 80, 0.1);
+  color: var(--coral);
+  border-radius: 99px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
 }
 
-.doctor-card {
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    text-align: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
+/* GRID & CARDS */
+.doctors-premium-section {
+  padding: 40px 0;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.doctor-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+.doctor-horizontal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  gap: 30px;
+  margin-top: 30px;
 }
 
-.doctor-card img {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
+.doctor-card-premium-h {
+  display: flex;
+  background: var(--bg-card);
+  border-radius: 0 !important;
+  overflow: hidden;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  border: none;
+  height: 280px;
+  cursor: pointer;
 }
 
-.doctor-card button {
-    margin-top: 10px;
-    padding: 8px 12px;
-    background-color: #f79674;
-    border: none;
-    cursor: pointer;
-    border-radius: 10px;
+.doctor-card-premium-h:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
 }
 
-.doctor-card button:hover {
-    background-color: #e3755d;
+.doc-h-image {
+  flex: 0 0 40%;
+  height: 100%;
 }
 
-@media (max-width: 768px) {
-  .doctors-container {
+.doc-h-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0 !important;
+}
+
+.doc-h-content {
+  flex: 1;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #fff2f0;
+  text-align: left;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+[dir="rtl"] .doc-h-content {
+  text-align: right;
+}
+
+.doctor-card-premium-h:hover .doc-h-content {
+  background: var(--coral);
+}
+
+.doc-h-content h3 {
+  font-size: 1.8rem;
+  color: #001910;
+  margin-bottom: 8px;
+  font-weight: 700;
+  font-family: var(--font-heading);
+  transition: color 0.3s ease;
+}
+
+.doc-h-specialty {
+  color: var(--coral);
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  text-transform: capitalize;
+  transition: color 0.3s ease;
+}
+
+.doc-h-bio {
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color 0.3s ease;
+}
+
+.doc-h-rating {
+  font-weight: 700;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
+}
+
+.doctor-card-premium-h:hover h3,
+.doctor-card-premium-h:hover .doc-h-specialty,
+.doctor-card-premium-h:hover .doc-h-bio,
+.doctor-card-premium-h:hover .doc-h-rating {
+  color: white !important;
+}
+
+@media (max-width: 992px) {
+  .doctor-horizontal-grid {
     grid-template-columns: 1fr;
   }
-
-  .page-header {
-    padding: 30px 15px;
-  }
-
-  .controls {
-    margin: 20px 10px;
-  }
 }
 
-@media (max-width: 480px) {
-  .doctor-card {
-    padding: 18px;
+@media (max-width: 600px) {
+  .doctor-card-premium-h {
+    flex-direction: column;
+    height: auto;
   }
 
-  .doctor-card img {
-    width: 90px;
-    height: 90px;
+  .doc-h-image {
+    height: 250px;
+    flex: 0 0 100%;
   }
 
-  .doctor-card button {
-    width: 100%;
+  .doc-h-content {
+    padding: 25px;
   }
 }

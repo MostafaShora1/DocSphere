@@ -1,24 +1,103 @@
-<h2>إدارة الأطباء</h2>
+<div class="admin-container">
+  <header class="admin-header">
+    <h2>{{ 'DASHBOARD.ADMIN.TITLE' | translate }} - {{ 'DASHBOARD.ADMIN.APPROVED_DOCTORS' | translate }}</h2>
+  </header>
 
-<button (click)="showForm = true">إضافة طبيب</button>
+  <div class="stats-overview" *ngIf="pendingDoctors.length > 0">
+    <div class="alert-card warning">
+      <i class="fas fa-exclamation-circle"></i>
+      <span>لديك {{ pendingDoctors.length }} طلبات انضمام جديدة في انتظار المراجعة.</span>
+    </div>
+  </div>
 
-<div *ngIf="showForm">
-  <input [(ngModel)]="doctor.name" placeholder="الاسم" />
-  <input [(ngModel)]="doctor.specialty" placeholder="التخصص" />
+  <section class="doctors-section">
+    <div class="section-header">
+      <h3>قائمة الأطباء</h3>
+    </div>
 
-  <button (click)="doctor.id ? update() : add()">
-    حفظ
-  </button>
+    <div class="table-container">
+      <table class="premium-table">
+        <thead>
+          <tr>
+            <th>الطبيب</th>
+            <th>التخصص</th>
+            <th>الحالة</th>
+            <th>الإجراءات</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let doc of doctors">
+            <td>
+              <div class="user-info">
+                <img [src]="doc.image || 'https://ui-avatars.com/api/?name=' + doc.name + '&background=0D8ABC&color=fff'" alt="Doctor" class="avatar-small">
+                <div class="user-details">
+                  <span class="name">{{ doc.name }}</span>
+                  <span class="email">{{ doc.email }}</span>
+                </div>
+              </div>
+            </td>
+            <td>{{ doc.specialty }}</td>
+            <td>
+              <span class="status-badge" [ngClass]="doc.isApproved ? 'approved' : 'pending'">
+                {{ doc.isApproved ? ('DASHBOARD.DOCTOR.CONFIRMED' | translate) : ('DASHBOARD.DOCTOR.PENDING' | translate) }}
+              </span>
+            </td>
+            <td>
+              <button class="btn-icon view" (click)="viewDetails(doc)" title="عرض التفاصيل">
+                <i class="fas fa-eye"></i> عرض
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Details Modal -->
+  <div class="modal-overlay" *ngIf="showDetailsModal" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>تفاصيل الطبيب: {{ selectedDoctor?.name }}</h3>
+        <button class="close-btn" (click)="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body" *ngIf="selectedDoctor">
+        <div class="doctor-profile-grid">
+          <div class="profile-image-large">
+            <img [src]="selectedDoctor.image || 'https://ui-avatars.com/api/?name=' + selectedDoctor.name + '&background=0D8ABC&color=fff'" alt="Profile">
+          </div>
+          <div class="profile-info-details">
+            <p><strong>التخصص:</strong> {{ selectedDoctor.specialty }}</p>
+            <p><strong>الخبرة:</strong> {{ selectedDoctor.experience }}</p>
+            <p><strong>رسوم الكشف:</strong> {{ selectedDoctor.consultationFee }} جنيه</p>
+            <p><strong>الهاتف:</strong> {{ selectedDoctor.phone }}</p>
+            <p><strong>البريد:</strong> {{ selectedDoctor.email }}</p>
+            <div class="bio-box">
+              <strong>نبذة:</strong>
+              <p>{{ selectedDoctor.bio }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="certificate-section" *ngIf="selectedDoctor.certificate || selectedDoctor.certificateUrl">
+          <h4>الشهادة العلمية / مزاولة المهنة</h4>
+          <div class="certificate-preview-admin">
+            <a [href]="selectedDoctor.certificate || selectedDoctor.certificateUrl" target="_blank" class="cert-link">
+              <i class="fas fa-file-pdf" *ngIf="selectedDoctor.certificate?.endsWith('.pdf')"></i>
+              <img [src]="selectedDoctor.certificate || selectedDoctor.certificateUrl" *ngIf="!selectedDoctor.certificate?.endsWith('.pdf')" class="cert-img">
+              <span>عرض الشهادة بالحجم الكامل</span>
+            </a>
+          </div>
+        </div>
+        <div class="no-cert" *ngIf="!selectedDoctor.certificate && !selectedDoctor.certificateUrl">
+          <p class="warning-text">⚠️ لم يتم رفع شهادة بعد لهذا الطبيب.</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="closeModal()">إغلاق</button>
+        <button class="btn-primary" *ngIf="!selectedDoctor?.isApproved" (click)="approve(selectedDoctor.id)">
+          الموافقة على الطبيب
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
-
-<table>
-  <tr *ngFor="let d of doctors">
-    <td>{{ d.name }}</td>
-    <td>{{ d.specialty }}</td>
-
-    <td>
-      <button (click)="edit(d)">تعديل</button>
-      <button (click)="delete(d.id)">حذف</button>
-    </td>
-  </tr>
-</table>

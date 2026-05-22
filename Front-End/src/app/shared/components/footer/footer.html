@@ -13,8 +13,7 @@
         </h3>
 
         <p>
-          We provide the best home medical services
-          with high quality and professionalism.
+          {{ 'FOOTER.DESC' | translate }}
         </p>
 
       </div>
@@ -22,19 +21,19 @@
       <!-- Links -->
       <div class="footer-section">
 
-        <h3>Quick Links</h3>
+        <h3>{{ 'FOOTER.QUICK_LINKS' | translate }}</h3>
 
-        <a routerLink="/">Home</a>
-        <a routerLink="/services">Services</a>
-        <a routerLink="/doctors">Doctors</a>
-        <a routerLink="/contact">Contact</a>
+        <a routerLink="/">{{ 'NAV.HOME' | translate }}</a>
+        <a routerLink="/services">{{ 'NAV.SERVICES' | translate }}</a>
+        <a routerLink="/doctors">{{ 'NAV.DOCTORS' | translate }}</a>
+        <a routerLink="/contact">{{ 'NAV.CONTACT' | translate }}</a>
 
       </div>
 
       <!-- Contact -->
       <div class="footer-section">
 
-        <h3>Contact Us</h3>
+        <h3>{{ 'FOOTER.CONTACT_US' | translate }}</h3>
 
         <p>
           <i class="fas fa-phone"></i>
@@ -43,12 +42,12 @@
 
         <p>
           <i class="fas fa-envelope"></i>
-          info@docsphere.com
+          info&#64;docsphere.com
         </p>
 
         <p>
           <i class="fas fa-map-marker-alt"></i>
-          Cairo, Egypt
+          {{ 'FOOTER.LOCATION' | translate }}
         </p>
 
       </div>
@@ -56,17 +55,17 @@
       <!-- Hours -->
       <div class="footer-section">
 
-        <h3>Working Hours</h3>
+        <h3>{{ 'FOOTER.WORKING_HOURS' | translate }}</h3>
 
-        <p>Saturday - Friday</p>
-        <p>24/7 Available</p>
+        <p>{{ 'FOOTER.DAYS' | translate }}</p>
+        <p>{{ 'FOOTER.AVAILABLE' | translate }}</p>
 
       </div>
 
     </div>
 
     <div class="footer-bottom">
-      © 2026 DocSphere | All Rights Reserved
+      {{ 'FOOTER.COPYRIGHT' | translate }}
     </div>
 
   </div>

@@ -1,121 +1,105 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { ApiService } from '../../../core/services/api.service';
+import { TranslateModule } from '@ngx-translate/core';
+
+declare var Swiper: any;
 
 @Component({
   selector: 'app-about',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './about.html',
   styleUrls: ['./about.css']
 })
-export class AboutComponent implements OnInit {
+export class AboutComponent implements OnInit, AfterViewInit {
+  doctors: any[] = [];
+  admins: any[] = [];
+  reviews: any[] = [];
+  isLoading = false;
+  isLoadingReviews = false;
+  error: string | null = null;
+  bgImage = 'assets/images/about-bg.png';
 
-  staff: any[] = [];
-  filteredStaff: any[] = [];
-
-  activeFilter: string = 'all';
-
-  testimonials: any[] = [
-    {
-      name: 'Abdo',
-      text: 'The medical staff is outstanding.',
-      rating: 5
-    },
-    {
-      name: 'Nour',
-      text: 'I felt like I was with family.',
-      rating: 5
-    },
-    {
-      name: 'Mohamed Ali',
-      text: 'Highly professional staff.',
-      rating: 4
-    }
-  ];
-
-  newName: string = '';
-  newText: string = '';
-  newRating: number = 5;
-
-  constructor(private http: HttpClient) {}
+  constructor(private apiService: ApiService) {}
 
   ngOnInit(): void {
-    this.loadStaff();
+    this.loadData();
+    this.loadReviews();
   }
 
-  // ================= Load Staff =================
-
-  loadStaff() {
-    this.http
-      .get<any>('assets/medical.json')
-      .subscribe(data => {
-
-        const doctors = (data.doctors || []).map((p: any) => ({
-          ...p,
-          type: 'doctor'
-        }));
-
-        const nurses = (data.nurses || []).map((p: any) => ({
-          ...p,
-          type: 'nurse'
-        }));
-
-        const admins = (data.management || []).map((p: any) => ({
-          ...p,
-          type: 'admin'
-        }));
-
-        this.staff = [...doctors, ...nurses, ...admins];
-
-        this.applyFilter('all');
+  ngAfterViewInit(): void {
+    if (typeof (window as any).AOS !== 'undefined') {
+      (window as any).AOS.init({
+        duration: 1000,
+        once: true
       });
-  }
-
-  // ================= Filter =================
-
-  applyFilter(type: string) {
-    this.activeFilter = type;
-
-    if (type === 'all') {
-      this.filteredStaff = this.staff;
-    } else {
-      this.filteredStaff = this.staff.filter(p => p.type === type);
     }
   }
 
-  // ================= Testimonials =================
+  loadData(): void {
+    this.isLoading = true;
+    this.error = null;
 
-  addTestimonial() {
-
-    if (!this.newName || this.newName.length < 3) {
-      alert('Enter valid name');
-      return;
-    }
-
-    if (!this.newText || this.newText.length < 10) {
-      alert('Enter longer comment');
-      return;
-    }
-
-    this.testimonials.unshift({
-      name: this.newName,
-      text: this.newText,
-      rating: this.newRating
+    this.apiService.getDoctors().subscribe({
+      next: res => {
+        this.doctors = res || [];
+      },
+      error: err => {
+        console.error('Error loading doctors', err);
+        this.error = 'Failed to load doctors';
+      }
     });
 
-    this.newName = '';
-    this.newText = '';
-    this.newRating = 5;
+    this.apiService.getAdmins().subscribe({
+      next: res => {
+        this.admins = res || [];
+        this.isLoading = false;
+      },
+      error: err => {
+        console.error('Error loading admins', err);
+        this.error = this.error || 'Failed to load admins';
+        this.isLoading = false;
+      }
+    });
   }
 
-  deleteTestimonial(index: number) {
-    this.testimonials.splice(index, 1);
+  loadReviews(): void {
+    this.isLoadingReviews = true;
+    this.apiService.getReviews().subscribe({
+      next: (res: any) => {
+        this.reviews = res.data || res || [];
+        this.isLoadingReviews = false;
+        setTimeout(() => this.initSwiper(), 100);
+      },
+      error: (err) => {
+        console.error('Error loading reviews', err);
+        this.isLoadingReviews = false;
+      }
+    });
   }
 
-  getStars(rating: number) {
-    return '★'.repeat(rating) + '☆'.repeat(5 - rating);
+  initSwiper(): void {
+    if (typeof Swiper !== 'undefined') {
+      const needsLoop = this.reviews.length >= 3;
+      
+      new Swiper('.about-reviews-swiper', {
+        slidesPerView: 1,
+        spaceBetween: 30,
+        loop: needsLoop,
+        autoplay: needsLoop ? {
+          delay: 5000,
+          disableOnInteraction: false,
+        } : false,
+        navigation: {
+          nextEl: '.swiper-button-next-custom',
+          prevEl: '.swiper-button-prev-custom',
+        },
+        pagination: {
+          el: '.swiper-pagination',
+          clickable: true,
+        },
+      });
+    }
   }
-
 }

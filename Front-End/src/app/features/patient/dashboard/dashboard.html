@@ -1,64 +1,90 @@
 <div class="wrap">
 
   <!-- Patient Info -->
-  <div class="card">
-    <h2>Info</h2>
-    <p><strong>Name:</strong> {{ user?.name }}</p>
-    <p><strong>Email:</strong> {{ user?.email }}</p>
+  <div class="card patient-info-card">
+    <div class="card-header">
+      <h2>{{ 'DASHBOARD.PATIENT.INFO' | translate }}</h2>
+    </div>
+    <div class="info-content">
+      <div class="info-item">
+        <label>{{ 'CONTACT.NAME' | translate }}</label>
+        <p>{{ user?.name }}</p>
+      </div>
+      <div class="info-item">
+        <label>{{ 'AUTH.COMMON.EMAIL' | translate }}</label>
+        <p>{{ user?.email }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Message -->
+  <div class="message success-message" *ngIf="paymentSuccessMessage">
+    <i class="fas fa-check-circle"></i>
+    {{ paymentSuccessMessage }}
   </div>
 
   <!-- Appointments -->
-  <div class="card">
-    <h2>My Apps</h2>
+  <div class="card appointments-card">
+    <div class="card-header">
+      <h2>{{ 'DASHBOARD.PATIENT.MY_APPOINTMENTS' | translate }}</h2>
+    </div>
 
     <div class="table-wrap" *ngIf="appointments.length > 0">
       <table>
         <thead>
           <tr>
-            <th>Doctor</th>
-            <th>Day</th>
-            <th>Time</th>
-            <th>Status</th>
-            <th>Cancel</th>
+            <th>{{ 'DASHBOARD.PATIENT.DOCTOR' | translate }}</th>
+            <th>{{ 'DOCTORS_PAGE.ALL_SPECIALTIES' | translate }}</th>
+            <th>{{ 'NAV.SERVICES' | translate }}</th>
+            <th>{{ 'DASHBOARD.PATIENT.DAY' | translate }}</th>
+            <th>{{ 'DASHBOARD.PATIENT.TIME' | translate }}</th>
+            <th>{{ 'DASHBOARD.PATIENT.STATUS' | translate }}</th>
+            <th>{{ 'HOME.HOW_TITLE' | translate }}</th>
           </tr>
         </thead>
 
         <tbody>
           <tr *ngFor="let a of appointments">
-            <td>{{ getDoctorName(a.doctorId) }}</td>
-            <td>{{ a.day }}</td>
+            <td>Dr. {{ getDoctorName(a.doctorId) }}</td>
+            <td><span class="specialty-badge">{{ a.doctorSpecialty }}</span></td>
+            <td>{{ a.serviceName }}</td>
+            <td>{{ a.fullDate | date:'mediumDate' }}</td>
             <td>{{ a.time }}</td>
-            <td>{{ a.status }}</td>
+            <td>
+              <span class="status-badge" [attr.data-status]="a.status">
+                {{ a.status }}
+              </span>
+            </td>
             <td>
               <!-- Reschedule proposal -->
               <ng-container *ngIf="a.isRescheduleProposal && a.status === 'pending'; else regularActions">
-                <button (click)="acceptReschedule(a.id)">Accept</button>
-                <button (click)="cancelRescheduleProposal(a.id)" style="margin-left: 8px;">Cancel</button>
+                <div class="proposal-actions">
+                  <button (click)="acceptReschedule(a.id)" class="btn-action accept" title="Accept Proposal">{{ 'DASHBOARD.DOCTOR.ACCEPT' | translate }}</button>
+                  <button (click)="cancelRescheduleProposal(a.id)" class="btn-action reject" title="Reject Proposal">{{ 'DASHBOARD.DOCTOR.REJECT' | translate }}</button>
+                </div>
               </ng-container>
 
               <!-- Regular appointment actions -->
               <ng-template #regularActions>
-                <!-- Confirmed -> Payment step -->
                 <ng-container *ngIf="a.status === 'confirmed'; else pendingActions">
                   <ng-container *ngIf="a.paymentStatus === 'paid'; else paymentActions">
-                    Paid
-                    <span *ngIf="a.paymentMethod">({{ a.paymentMethod }})</span>
+                    <span class="paid-badge">{{ 'DASHBOARD.DOCTOR.CONFIRMED' | translate }} ({{ a.paymentMethod || 'Stripe' }})</span>
                   </ng-container>
 
                   <ng-template #paymentActions>
-                    <button (click)="payCash(a.id)" [disabled]="payBusyAppointmentId === a.id">
-                      {{ payBusyAppointmentId === a.id ? 'Paying...' : 'Cash' }}
-                    </button>
-
-                    <button (click)="openStripePayment(a.id)" style="margin-left: 8px;" [disabled]="payBusyAppointmentId === a.id">
-                      Stripe
-                    </button>
+                    <div class="payment-buttons">
+                      <button class="btn-pay cash" (click)="payCash(a.id)" [disabled]="payBusyAppointmentId === a.id">
+                        {{ 'DASHBOARD.PATIENT.CASH' | translate }}
+                      </button>
+                      <button class="btn-pay stripe" (click)="openStripePayment(a.id)" [disabled]="payBusyAppointmentId === a.id">
+                        Stripe
+                      </button>
+                    </div>
                   </ng-template>
                 </ng-container>
 
-                <!-- Pending -> cancel -->
                 <ng-template #pendingActions>
-                  <button *ngIf="a.status === 'pending'" (click)="cancelApp(a.id)">X</button>
+                  <button *ngIf="a.status === 'pending'" class="btn-cancel-app" (click)="cancelApp(a.id)">{{ 'DASHBOARD.PATIENT.CANCEL' | translate }}</button>
                 </ng-template>
               </ng-template>
             </td>
@@ -67,72 +93,190 @@
       </table>
     </div>
 
-    <div *ngIf="appointments.length === 0">
-      <p>
-        You have no appointments yet.
-        <button (click)="go()">Book Now</button>
-      </p>
+    <div *ngIf="!loading && appointments.length === 0" class="empty-state">
+      <p>{{ 'DASHBOARD.PATIENT.EMPTY' | translate }}</p>
+      <button class="btn-primary" (click)="go()">{{ 'HOME.HERO_BTN' | translate }}</button>
     </div>
-
   </div>
 
-  <div class="card">
-    <h2>Change Password</h2>
+  <!-- Review Reminder -->
+  <div class="review-reminder" *ngIf="appointments.filter(a => a.paymentStatus === 'paid' && !a.review).length > 0">
+    <div class="reminder-icon">🔔</div>
+    <div class="reminder-text">
+      <h4>{{ 'DASHBOARD.PATIENT.PENDING_REVIEWS' | translate }}</h4>
+      <p>{{ 'DASHBOARD.PATIENT.PENDING_REVIEWS_DESC' | translate:{count: appointments.filter(a => a.paymentStatus === 'paid' && !a.review).length} }}</p>
+    </div>
+    <button class="btn-scroll" (click)="reviewsSection.scrollIntoView({behavior: 'smooth'})">{{ 'COMMON.VIEW_ALL' | translate }}</button>
+  </div>
+
+  <!-- Reviews Section -->
+  <div class="card reviews-card" #reviewsSection>
+    <div class="card-header">
+      <h2>{{ 'DASHBOARD.PATIENT.FEEDBACK_TITLE' | translate }}</h2>
+      <p class="subtitle">{{ 'DASHBOARD.PATIENT.FEEDBACK_SUBTITLE' | translate }}</p>
+    </div>
+
+    <div *ngIf="appointments.filter(a => a.paymentStatus === 'paid' && !a.review).length === 0" class="empty-reviews">
+      <div class="empty-icon">✨</div>
+      <p>{{ 'DASHBOARD.PATIENT.NO_PENDING_REVIEWS' | translate }}</p>
+    </div>
+
+    <div class="reviews-grid">
+      <div 
+        class="review-item-card" 
+        *ngFor="let appointment of appointments.filter(a => a.paymentStatus === 'paid' && !a.review)"
+      >
+        <div class="review-card-header">
+          <div class="doc-avatar">
+            {{ getDoctorName(appointment.doctorId).charAt(0) }}
+          </div>
+          <div class="doc-details">
+            <div class="service-tag">{{ appointment.serviceName }}</div>
+            <h4>{{ 'DASHBOARD.PATIENT.DOCTOR_PREFIX' | translate }} {{ getDoctorName(appointment.doctorId) }}</h4>
+            <span class="specialty-text">{{ appointment.doctorSpecialty }}</span>
+          </div>
+          <div class="review-date">
+            {{ appointment.fullDate | date:'mediumDate' }}
+          </div>
+        </div>
+
+        <form (ngSubmit)="submitReview(appointment.id, appointment.doctorId)" class="modern-review-form">
+          <div class="star-rating-group">
+            <div class="stars">
+              <button 
+                type="button" 
+                *ngFor="let s of [1,2,3,4,5]" 
+                (click)="setRating(appointment, s)"
+                [class.active]="appointment.rating && s <= appointment.rating"
+              >
+                ★
+              </button>
+            </div>
+            <span class="rating-hint" *ngIf="appointment.rating">{{ appointment.rating }}/5 {{ 'DASHBOARD.PATIENT.STARS' | translate }}</span>
+          </div>
+
+          <div class="form-group">
+            <textarea 
+              [(ngModel)]="appointment.comment" 
+              name="comment" 
+              [placeholder]="'DASHBOARD.PATIENT.REVIEW_PLACEHOLDER' | translate:{name: getDoctorName(appointment.doctorId)}" 
+              required
+            ></textarea>
+          </div>
+
+          <button 
+            type="submit" 
+            class="btn-submit-review" 
+            [disabled]="reviewLoading || !appointment.rating || !appointment.comment"
+          >
+            {{ reviewLoading ? ('COMMON.LOADING' | translate) : ('DASHBOARD.PATIENT.SUBMIT_REVIEW' | translate) }}
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Security Settings -->
+  <div class="card security-card">
+    <div class="card-header">
+      <h2>{{ 'AUTH.REGISTER.DOCTOR_PROFILE' | translate }}</h2>
+    </div>
 
     <div class="message error-message" *ngIf="passwordError">{{ passwordError }}</div>
     <div class="message success-message" *ngIf="passwordSuccess">{{ passwordSuccess }}</div>
 
     <form class="password-form" [formGroup]="passwordForm" (ngSubmit)="updatePassword()">
       <div class="form-group">
-        <label for="currentPassword">Current Password</label>
-        <input id="currentPassword" type="password" formControlName="currentPassword">
+        <label>{{ 'AUTH.COMMON.PASSWORD' | translate }}</label>
+        <input type="password" formControlName="currentPassword">
       </div>
 
       <div class="form-grid">
         <div class="form-group">
-          <label for="newPassword">New Password</label>
-          <input id="newPassword" type="password" formControlName="newPassword">
+          <label>{{ 'AUTH.REGISTER.CONFIRM_PASSWORD' | translate }}</label>
+          <input type="password" formControlName="newPassword">
         </div>
 
         <div class="form-group">
-          <label for="confirmPassword">Confirm New Password</label>
-          <input id="confirmPassword" type="password" formControlName="confirmPassword">
+          <label>{{ 'AUTH.REGISTER.CONFIRM_PASSWORD' | translate }}</label>
+          <input type="password" formControlName="confirmPassword">
         </div>
       </div>
 
-      <div class="error" *ngIf="passwordForm.errors?.['passwordMismatch'] && passwordForm.get('confirmPassword')?.touched">
-        Password confirmation does not match.
-      </div>
-
-      <button type="submit" [disabled]="passwordLoading">
-        {{ passwordLoading ? 'Updating...' : 'Update Password' }}
+      <button type="submit" [disabled]="passwordLoading" class="btn-update-password">
+        {{ passwordLoading ? ('COMMON.LOADING' | translate) : ('AUTH.REGISTER.SUBMIT' | translate) }}
       </button>
     </form>
   </div>
 
-  <!-- Stripe Modal -->
+  <!-- Stripe Modal Overlay -->
   <div class="stripe-modal-overlay" *ngIf="stripeModalOpen">
-    <div class="stripe-modal" (click)="$event.stopPropagation()">
+    <div class="stripe-modal">
       <div class="stripe-modal-header">
-        <h3>Pay with Stripe</h3>
-        <button type="button" class="stripe-close" (click)="stripeModalOpen = false" [disabled]="stripeProcessing">
-          ✕
-        </button>
+        <h3>{{ 'DASHBOARD.PATIENT.SECURE_PAYMENT' | translate }}</h3>
+        <button type="button" class="stripe-close" (click)="stripeModalOpen = false" [disabled]="stripeProcessing">✕</button>
       </div>
 
       <div class="stripe-modal-body">
-        <div id="card-element" class="card-element"></div>
+        <p class="payment-total" *ngIf="stripePayment">
+          {{ 'COMMON.TOTAL' | translate }}: {{ stripePayment.amount / 100 | number:'1.2-2' }} {{ stripePayment.currency | uppercase }}
+        </p>
+        <div #cardElement class="stripe-card-element"></div>
+        <div class="stripe-error" *ngIf="stripeError">{{ stripeError }}</div>
+      </div>
 
-        <div class="error-message" *ngIf="stripeError">
-          {{ stripeError }}
+      <div class="stripe-modal-footer">
+        <button class="stripe-cancel" (click)="stripeModalOpen = false">{{ 'COMMON.CANCEL' | translate }}</button>
+        <button class="stripe-submit" (click)="confirmStripePayment()" [disabled]="stripeProcessing || !stripeScriptLoaded">
+          {{ stripeProcessing ? ('COMMON.LOADING' | translate) : ('DASHBOARD.PATIENT.PAY_NOW' | translate) }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Review Prompt Modal Overlay -->
+  <div class="stripe-modal-overlay review-prompt-overlay" *ngIf="showReviewModal && pendingReviewAppointment">
+    <div class="modal-card review-prompt-modal">
+      <button class="close-btn" (click)="closeReviewModal()">×</button>
+      
+      <div class="modal-icon">⭐</div>
+      <h3>{{ 'DASHBOARD.PATIENT.OPINION_MATTERS' | translate }}</h3>
+      <p>{{ 'DASHBOARD.PATIENT.REVIEW_PROMPT' | translate:{name: getDoctorName(pendingReviewAppointment.doctorId), service: pendingReviewAppointment.serviceName} }}</p>
+
+      <form (ngSubmit)="submitReview(pendingReviewAppointment.id, pendingReviewAppointment.doctorId)" class="modern-review-form">
+        <div class="star-rating-group centered">
+          <div class="stars big">
+            <button 
+              type="button" 
+              *ngFor="let s of [1,2,3,4,5]" 
+              (click)="setRating(pendingReviewAppointment, s)"
+              [class.active]="pendingReviewAppointment.rating && s <= pendingReviewAppointment.rating"
+            >
+              ★
+            </button>
+          </div>
         </div>
 
-        <div class="stripe-actions">
-          <button type="button" class="btn-primary" (click)="confirmStripePayment()" [disabled]="stripeProcessing">
-            {{ stripeProcessing ? 'Processing...' : 'Pay' }}
+        <div class="form-group">
+          <textarea 
+            [(ngModel)]="pendingReviewAppointment.comment" 
+            name="comment" 
+            [placeholder]="'DASHBOARD.PATIENT.REVIEW_PROMPT_PLACEHOLDER' | translate" 
+            required
+          ></textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-text" (click)="closeReviewModal()">{{ 'DASHBOARD.PATIENT.MAYBE_LATER' | translate }}</button>
+          <button 
+            type="submit" 
+            class="btn-primary" 
+            [disabled]="reviewLoading || !pendingReviewAppointment.rating || !pendingReviewAppointment.comment"
+          >
+            {{ reviewLoading ? ('COMMON.LOADING' | translate) : ('DASHBOARD.PATIENT.SEND_REVIEW' | translate) }}
           </button>
         </div>
-      </div>
+      </form>
     </div>
   </div>
 

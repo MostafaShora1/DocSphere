@@ -4,11 +4,12 @@ import { CommonModule } from '@angular/common';
 import { DoctorService } from '../../../core/services/doctor.service';
 import { Doctor } from '../../../shared/models/doctor.model';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-doctors',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './doctors.html',
   styleUrls: ['./doctors.css']
 })
@@ -23,8 +24,17 @@ export class DoctorsComponent implements OnInit {
 
   constructor(
     private doctorService: DoctorService,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) {}
+
+  getLocalizedName(doc: Doctor): string {
+    const lang = this.translate.currentLang || 'ar';
+    if (lang === 'ar') {
+      return doc.fullNameAr || doc.name;
+    }
+    return doc.fullNameEn || doc.name;
+  }
 
   ngOnInit(): void {
 

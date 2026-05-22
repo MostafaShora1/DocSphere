@@ -1,7 +1,7 @@
 <section class="main-content">
   <div class="login-card">
 
-    <h2>Welcome Back</h2>
+    <h2>{{ 'AUTH.LOGIN.TITLE' | translate }}</h2>
 
     <div class="success-message" *ngIf="successMsg">
       {{ successMsg }}
@@ -14,20 +14,20 @@
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
 
       <div class="form-group">
-        <label>Email</label>
+        <label>{{ 'AUTH.COMMON.EMAIL' | translate }}</label>
         <input
           type="email"
           formControlName="email"
           required
         >
         <div class="error" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
-          <span *ngIf="loginForm.get('email')?.errors?.['required']">Email is required</span>
-          <span *ngIf="loginForm.get('email')?.errors?.['email']">Invalid email format</span>
+          <span *ngIf="loginForm.get('email')?.errors?.['required']">{{ 'AUTH.VALIDATION.EMAIL_REQUIRED' | translate }}</span>
+          <span *ngIf="loginForm.get('email')?.errors?.['email']">{{ 'AUTH.VALIDATION.EMAIL_INVALID' | translate }}</span>
         </div>
       </div>
 
       <div class="form-group">
-        <label>Password</label>
+        <label>{{ 'AUTH.COMMON.PASSWORD' | translate }}</label>
 
         <div class="password-wrapper">
           <input
@@ -43,13 +43,12 @@
           ></i>
         </div>
         <div class="error" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
-          <span *ngIf="loginForm.get('password')?.errors?.['required']">Password is required</span>
-          <span *ngIf="loginForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters</span>
-          <span *ngIf="loginForm.get('password')?.errors?.['pattern']">Password format is invalid</span>
+          <span *ngIf="loginForm.get('password')?.errors?.['required']">{{ 'AUTH.VALIDATION.PASSWORD_REQUIRED' | translate }}</span>
+          <span *ngIf="loginForm.get('password')?.errors?.['minlength']">{{ 'AUTH.VALIDATION.PASSWORD_MIN' | translate }}</span>
         </div>
 
         <div class="form-meta">
-          <a routerLink="/forgot-password" class="forgot-link">Forgot Password?</a>
+          <a routerLink="/forgot-password" class="forgot-link">{{ 'AUTH.FORGOT.TITLE' | translate }}?</a>
         </div>
       </div>
 
@@ -57,16 +56,16 @@
 
         <span *ngIf="loading" class="spinner"></span>
 
-        <span *ngIf="!loading">Login</span>
-        <span *ngIf="loading">Loading...</span>
+        <span *ngIf="!loading">{{ 'AUTH.LOGIN.SUBMIT' | translate }}</span>
+        <span *ngIf="loading">{{ 'COMMON.LOADING' | translate }}</span>
 
       </button>
 
     </form>
 
     <p class="auth-link">
-      Don't have an account?
-      <a routerLink="/auth/register">Sign Up</a>
+      {{ 'AUTH.REGISTER.NO_ACCOUNT' | translate }}
+      <a routerLink="/auth/register">{{ 'NAV.SIGNUP' | translate }}</a>
     </p>
 
   </div>

@@ -1,6 +1,6 @@
 <section class="main-content">
   <div class="register-card">
-    <h2>Create Account</h2>
+    <h2>{{ 'AUTH.REGISTER.TITLE' | translate }}</h2>
 
     <div class="error-message" *ngIf="errorMsg">
       {{ errorMsg }}
@@ -12,158 +12,156 @@
 
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
       <div class="form-grid">
-        <div class="form-group">
-          <label>Full Name</label>
-          <input type="text" formControlName="name" required>
+        <!-- Patient Name -->
+        <div class="form-group" *ngIf="isPatient">
+          <label>{{ 'AUTH.COMMON.NAME' | translate }}</label>
+          <input type="text" formControlName="name" [required]="isPatient">
           <div class="error" *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched">
-            <span *ngIf="registerForm.get('name')?.errors?.['required']">Name is required</span>
-            <span *ngIf="registerForm.get('name')?.errors?.['minlength']">Name must be at least 3 characters</span>
+            <span *ngIf="registerForm.get('name')?.errors?.['required']">{{ 'CONTACT.ERR_NAME' | translate }}</span>
+          </div>
+        </div>
+
+        <!-- Doctor Name (Arabic) -->
+        <div class="form-group" *ngIf="isDoctor">
+          <label>{{ 'AUTH.COMMON.NAME_AR' | translate }}</label>
+          <input type="text" formControlName="nameAr" [required]="isDoctor">
+          <div class="error" *ngIf="registerForm.get('nameAr')?.invalid && registerForm.get('nameAr')?.touched">
+            <span *ngIf="registerForm.get('nameAr')?.errors?.['required']">{{ 'CONTACT.ERR_NAME' | translate }}</span>
+          </div>
+        </div>
+
+        <!-- Doctor Name (English) -->
+        <div class="form-group" *ngIf="isDoctor">
+          <label>{{ 'AUTH.COMMON.NAME_EN' | translate }}</label>
+          <input type="text" formControlName="nameEn" [required]="isDoctor">
+          <div class="error" *ngIf="registerForm.get('nameEn')?.invalid && registerForm.get('nameEn')?.touched">
+            <span *ngIf="registerForm.get('nameEn')?.errors?.['required']">{{ 'CONTACT.ERR_NAME' | translate }}</span>
           </div>
         </div>
 
         <div class="form-group">
-          <label>Email</label>
+          <label>{{ 'AUTH.COMMON.EMAIL' | translate }}</label>
           <input type="email" formControlName="email" required>
           <div class="error" *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
-            <span *ngIf="registerForm.get('email')?.errors?.['required']">Email is required</span>
-            <span *ngIf="registerForm.get('email')?.errors?.['email']">Invalid email format</span>
+            <span *ngIf="registerForm.get('email')?.errors?.['required']">{{ 'AUTH.VALIDATION.EMAIL_REQUIRED' | translate }}</span>
+            <span *ngIf="registerForm.get('email')?.errors?.['email']">{{ 'AUTH.VALIDATION.EMAIL_INVALID' | translate }}</span>
           </div>
         </div>
 
         <div class="form-group">
-          <label>User Type*</label>
+          <label>{{ 'AUTH.REGISTER.ROLE' | translate }}*</label>
           <select formControlName="role" required>
-            <option value="patient">Patient</option>
-            <option value="doctor">Doctor</option>
+            <option value="patient">{{ 'AUTH.REGISTER.PATIENT' | translate }}</option>
+            <option value="doctor">{{ 'AUTH.REGISTER.DOCTOR' | translate }}</option>
           </select>
         </div>
 
         <div class="form-group">
-          <label>Phone</label>
+          <label>{{ 'CONTACT.PHONE' | translate }}</label>
           <input type="tel" formControlName="phone" required>
           <div class="error" *ngIf="registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched">
-            <span *ngIf="registerForm.get('phone')?.errors?.['required']">Phone is required</span>
-            <span *ngIf="registerForm.get('phone')?.errors?.['pattern']">Enter a valid phone number</span>
+            <span *ngIf="registerForm.get('phone')?.errors?.['required']">{{ 'CONTACT.ERR_PHONE' | translate }}</span>
+            <span *ngIf="registerForm.get('phone')?.errors?.['pattern']">{{ 'AUTH.VALIDATION.PHONE_INVALID' | translate }}</span>
           </div>
         </div>
 
         <div class="form-group" *ngIf="isPatient">
-          <label>Date of Birth</label>
+          <label>{{ 'AUTH.REGISTER.BIRTH_DATE' | translate }}</label>
           <input type="date" formControlName="birthDate" [max]="maxBirthDate">
-          <small class="helper-text">Pick your birth date from the calendar.</small>
-          <div class="error" *ngIf="registerForm.get('birthDate')?.invalid && registerForm.get('birthDate')?.touched">
-            <span>Date of birth is required</span>
-          </div>
         </div>
 
         <ng-container *ngIf="isDoctor">
           <div class="form-section full-span">
-            <h3>Doctor Profile</h3>
-            <p>These details will be connected to the existing doctor profile endpoint after verification and login.</p>
+            <h3>{{ 'AUTH.REGISTER.DOCTOR_PROFILE' | translate }}</h3>
           </div>
 
           <div class="form-group">
-            <label>Specialty</label>
+            <label>{{ 'AUTH.REGISTER.SPECIALTY' | translate }}</label>
             <select formControlName="specialty">
-              <option value="">Choose a specialty</option>
+              <option value="">{{ 'AUTH.REGISTER.CHOOSE_SPECIALTY' | translate }}</option>
               <option *ngFor="let specialty of specialties" [value]="specialty.id">
-                {{ specialty.name }}
+                {{ 'SPECIALTIES.' + specialty.name.toUpperCase() | translate }}
               </option>
             </select>
             <div class="error" *ngIf="registerForm.get('specialty')?.invalid && registerForm.get('specialty')?.touched">
-              <span>Specialty is required</span>
+              <span *ngIf="registerForm.get('specialty')?.errors?.['required']">{{ 'AUTH.VALIDATION.REQUIRED' | translate }}</span>
             </div>
           </div>
 
           <div class="form-group">
-            <label>Consultation Fee</label>
-            <input type="number" min="0" formControlName="consultationFee" placeholder="EGP">
+            <label>{{ 'AUTH.REGISTER.FEE' | translate }}</label>
+            <input type="number" min="0" formControlName="consultationFee" [placeholder]="'SERVICES.EGP' | translate">
             <div class="error" *ngIf="registerForm.get('consultationFee')?.invalid && registerForm.get('consultationFee')?.touched">
-              <span>Consultation fee is required</span>
+              <span *ngIf="registerForm.get('consultationFee')?.errors?.['required']">{{ 'AUTH.VALIDATION.REQUIRED' | translate }}</span>
+              <span *ngIf="registerForm.get('consultationFee')?.errors?.['min']">{{ 'AUTH.VALIDATION.MIN_ZERO' | translate }}</span>
             </div>
           </div>
 
           <div class="form-group">
-            <label>Years of Experience</label>
+            <label>{{ 'AUTH.REGISTER.EXPERIENCE' | translate }}</label>
             <input type="number" min="0" formControlName="experience" placeholder="0">
           </div>
 
           <div class="form-group full-span">
-            <label>Bio</label>
-            <textarea rows="4" formControlName="bio" placeholder="Tell patients a bit about your background"></textarea>
+            <label>{{ 'AUTH.REGISTER.BIO' | translate }}</label>
+            <textarea rows="4" formControlName="bio"></textarea>
           </div>
 
-          <div class="form-group">
-            <label>Qualifications</label>
-            <input type="text" formControlName="qualifications" placeholder="MBBS, MSc, Board Certified">
-            <small class="helper-text">Separate multiple values with commas.</small>
+          <!--  Restore Cloudinary Upload -->
+          <div class="form-group full-span">
+            <label>{{ 'AUTH.REGISTER.PROFILE_PICTURE' | translate }}</label>
+            <div class="upload-container">
+              <input type="file" (change)="onFileSelected($event)" accept="image/*" class="file-input">
+              <div class="preview-area" *ngIf="imagePreview">
+                <img [src]="imagePreview" alt="Preview" class="profile-preview rounded">
+              </div>
+            </div>
           </div>
 
-          <div class="form-group">
-            <label>Languages</label>
-            <input type="text" formControlName="languages" placeholder="Arabic, English">
-            <small class="helper-text">Separate multiple values with commas.</small>
+          <div class="form-group full-span">
+            <label>{{ 'AUTH.REGISTER.CERTIFICATE' | translate }}</label>
+            <div class="upload-container">
+              <input type="file" (change)="onCertificateSelected($event)" accept="image/*,application/pdf" class="file-input">
+              <div class="preview-area" *ngIf="certificatePreview">
+                <div class="pdf-placeholder" *ngIf="isPdf">
+                  <i class="fas fa-file-pdf"></i>
+                  <span>{{ selectedCertificate?.name }}</span>
+                </div>
+                <img [src]="certificatePreview" alt="Certificate Preview" class="profile-preview" *ngIf="!isPdf">
+              </div>
+            </div>
           </div>
 
-          <div class="form-group">
-            <label>Clinic Street</label>
-            <input type="text" formControlName="clinicStreet">
-          </div>
-
-          <div class="form-group">
-            <label>City</label>
-            <input type="text" formControlName="clinicCity">
-          </div>
-
-          <div class="form-group">
-            <label>State</label>
-            <input type="text" formControlName="clinicState">
-          </div>
-
-          <div class="form-group">
-            <label>Zip Code</label>
-            <input type="text" formControlName="clinicZipCode">
-          </div>
-
-          <div class="form-group">
-            <label>Country</label>
-            <input type="text" formControlName="clinicCountry">
-          </div>
-
-          <div class="form-group">
-            <label>Profile Picture URL</label>
-            <input type="url" formControlName="profilePicture" placeholder="https://...">
-          </div>
         </ng-container>
 
         <div class="form-group">
-          <label>Password</label>
+          <label>{{ 'AUTH.COMMON.PASSWORD' | translate }}</label>
           <input type="password" formControlName="password" required>
           <div class="error" *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
-            <span *ngIf="registerForm.get('password')?.errors?.['required']">Password is required</span>
-            <span *ngIf="registerForm.get('password')?.errors?.['minlength']">Password must be at least 8 characters</span>
-            <span *ngIf="registerForm.get('password')?.errors?.['pattern']">Use uppercase, lowercase, and a number</span>
+            <span *ngIf="registerForm.get('password')?.errors?.['required']">{{ 'AUTH.VALIDATION.PASSWORD_REQUIRED' | translate }}</span>
+            <span *ngIf="registerForm.get('password')?.errors?.['minlength']">{{ 'AUTH.VALIDATION.PASSWORD_MIN' | translate }}</span>
+            <span *ngIf="registerForm.get('password')?.errors?.['pattern']">{{ 'AUTH.VALIDATION.PASSWORD_PATTERN' | translate }}</span>
           </div>
         </div>
 
         <div class="form-group">
-          <label>Confirm Password</label>
+          <label>{{ 'AUTH.REGISTER.CONFIRM_PASSWORD' | translate }}</label>
           <input type="password" formControlName="confirmPassword" required>
-          <div class="error" *ngIf="(registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.errors?.['required']) || (registerForm.errors?.['passwordMismatch'] && registerForm.get('confirmPassword')?.touched)">
-            <span *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">Confirm password is required</span>
-            <span *ngIf="registerForm.errors?.['passwordMismatch']">Passwords do not match</span>
+          <div class="error"
+            *ngIf="(registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.errors?.['required']) || (registerForm.errors?.['passwordMismatch'] && registerForm.get('confirmPassword')?.touched)">
+            <span *ngIf="registerForm.errors?.['passwordMismatch']">{{ 'AUTH.REGISTER.ERR_MISMATCH' | translate }}</span>
           </div>
         </div>
       </div>
 
-      <button type="submit" class="btn-register" [disabled]="loading || registerForm.invalid">
-        Register
+      <button type="submit" class="btn-register" [disabled]="loading">
+        {{ 'AUTH.REGISTER.SUBMIT' | translate }}
       </button>
     </form>
 
     <p class="login-link">
-      Already have an account?
-      <a routerLink="/login">Login</a>
+      {{ 'AUTH.REGISTER.HAVE_ACCOUNT' | translate }}
+      <a routerLink="/login">{{ 'NAV.LOGIN' | translate }}</a>
     </p>
   </div>
 </section>

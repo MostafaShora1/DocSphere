@@ -1,12 +1,14 @@
 import { DOCUMENT } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorHandler, Injectable, inject } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GlobalErrorHandler implements ErrorHandler {
   private readonly document = inject(DOCUMENT);
+  private readonly translate = inject(TranslateService);
   private readonly containerId = 'app-error-toast-container';
   private readonly toastClassName = 'app-error-toast';
 
@@ -42,38 +44,38 @@ export class GlobalErrorHandler implements ErrorHandler {
     }
 
     if (error.status === 0) {
-      return 'Unable to reach the server. Please check your connection and try again.';
+      return this.translate.instant('ERRORS.SERVER_UNREACHABLE');
     }
 
     if (error.status === 400) {
-      return this.getServerMessage(error) ?? 'The request could not be processed. Please review your input.';
+      return this.getServerMessage(error) ?? this.translate.instant('ERRORS.BAD_REQUEST');
     }
 
     if (error.status === 401) {
-      return 'Your session is invalid or has expired. Please sign in again.';
+      return this.translate.instant('ERRORS.UNAUTHORIZED');
     }
 
     if (error.status === 403) {
-      return 'You do not have permission to perform this action.';
+      return this.translate.instant('ERRORS.FORBIDDEN');
     }
 
     if (error.status === 404) {
-      return 'The requested resource was not found.';
+      return this.translate.instant('ERRORS.NOT_FOUND');
     }
 
     if (error.status >= 500) {
-      return 'Something went wrong on the server. Please try again in a moment.';
+      return this.translate.instant('ERRORS.SERVER_ERROR');
     }
 
-    return this.getServerMessage(error) ?? 'Something went wrong. Please try again.';
+    return this.getServerMessage(error) ?? this.translate.instant('ERRORS.DEFAULT');
   }
 
   private getRuntimeErrorMessage(error: unknown): string {
     if (error instanceof HttpErrorResponse) {
-      return this.getHttpErrorMessage(error) ?? 'Something went wrong. Please try again.';
+      return this.getHttpErrorMessage(error) ?? this.translate.instant('ERRORS.DEFAULT');
     }
 
-    return 'An unexpected error occurred. Please try again.';
+    return this.translate.instant('ERRORS.UNEXPECTED');
   }
 
   private getServerMessage(error: HttpErrorResponse): string | null {

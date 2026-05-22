@@ -1,6 +1,7 @@
 const { validationResult } = require('express-validator');
 const Payment = require('../models/Payment');
 const Appointment = require('../models/Appointment');
+const mongoose = require('mongoose');
 const {
   createPaymentIntent,
   retrievePaymentIntent,
@@ -29,12 +30,38 @@ exports.createPaymentIntent = async (req, res, next) => {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const appointment = await Appointment.findById(req.body.appointment)
+    const appointmentId = req.body.appointment;
+
+    console.log('[payments/intent] req.body:', {
+      appointment: appointmentId,
+      currency: req.body.currency
+    });
+
+    console.log('[payments/intent] req.user._id:', req.user?._id);
+
+    if (!mongoose.isValidObjectId(appointmentId)) {
+      return res.status(400).json({
+        step: 'appointment_id',
+        message: 'Invalid appointment id'
+      });
+    }
+
+    const appointment = await Appointment.findById(appointmentId)
       .populate({ path: 'doctor', select: 'consultationFee' })
       .populate({
         path: 'patient',
         populate: { path: 'user', select: '_id' }
       });
+
+    console.log('[payments/intent] appointment state:', {
+      status: appointment?.status,
+      payment: appointment?.payment,
+      patientUser: appointment?.patient?.user,
+      patientUserId:
+        appointment?.patient?.user?._id?.toString?.() ||
+        appointment?.patient?.user?._id ||
+        null
+    });
 
     if (!appointment) {
       return res.status(404).json({ message: 'Appointment not found' });
@@ -43,7 +70,9 @@ exports.createPaymentIntent = async (req, res, next) => {
     // Only allow Stripe payment when appointment is confirmed
     if (appointment.status !== 'confirmed') {
       return res.status(400).json({
-        message: 'Payment is only available after the appointment is confirmed.'
+        step: 'appointment_status',
+        message: 'Appointment must be confirmed before payment',
+        currentStatus: appointment.status
       });
     }
 
@@ -61,12 +90,110 @@ exports.createPaymentIntent = async (req, res, next) => {
     }
 
     /**
-     * Prevent duplicate payment
+     * Handle existing payment safely:
+     * - paid => block
+     * - pending => reuse existing Stripe PaymentIntent (retry-safe)
+     * - failed => delete and allow new payment
      */
     if (appointment.payment) {
-      return res.status(400).json({
-        message: 'Payment already exists for this appointment'
+      const existingPayment = await Payment.findOne({
+        appointment: appointment._id
       });
+
+      console.log('[payments/intent] existingPayment found:', {
+        paymentId: existingPayment?._id?.toString?.(),
+        paymentStatus: existingPayment?.status,
+        stripePaymentIntentId: existingPayment?.stripePaymentIntentId
+      });
+
+      // appointment.payment points to something but doc missing -> clear appointment lock
+      if (!existingPayment) {
+        await Appointment.findByIdAndUpdate(appointment._id, {
+          $set: { payment: null }
+        });
+      } else if (existingPayment.status === 'paid') {
+        return res.status(400).json({
+          step: 'payment_exists',
+          message: 'Payment already exists for this appointment',
+          currentPaymentStatus: existingPayment.status
+        });
+      } else if (existingPayment.status === 'pending') {
+        // Reuse existing Stripe PaymentIntent so the UI can retry without creating duplicates
+        if (!existingPayment.stripePaymentIntentId) {
+          // No stripe intent stored -> treat as failed and allow new payment
+          await Payment.findByIdAndDelete(existingPayment._id);
+
+          await Appointment.findByIdAndUpdate(appointment._id, {
+            $set: { payment: null }
+          });
+        } else {
+          const existingIntent = await retrievePaymentIntent(
+            existingPayment.stripePaymentIntentId
+          );
+
+          console.log('[payments/intent] reused PaymentIntent:', {
+            id: existingIntent?.id,
+            status: existingIntent?.status
+          });
+
+          // If Stripe already succeeded but DB not updated yet, mark paid and return success payload
+          // so the frontend can sync UI instead of being stuck in a retry error state.
+          if (existingIntent?.status === 'succeeded') {
+            existingPayment.status = 'paid';
+            await existingPayment.save();
+
+            return res.status(200).json({
+              success: true,
+              data: {
+                clientSecret: existingIntent.client_secret,
+                id: existingIntent.id,
+                amount: existingIntent.amount,
+                currency: existingIntent.currency,
+                paymentId: existingPayment._id,
+                status: 'paid'
+              }
+            });
+          }
+
+          // If Stripe canceled/invalid, allow new payment
+          if (['canceled', 'requires_payment_method'].includes(existingIntent?.status)) {
+            // Allow a fresh attempt: delete payment doc to satisfy unique constraint
+            await Payment.findByIdAndDelete(existingPayment._id);
+
+            await Appointment.findByIdAndUpdate(appointment._id, {
+              $set: { payment: null }
+            });
+
+            // Continue to create a NEW intent below
+          } else {
+            // For retriable statuses (e.g. requires_payment_method), reuse clientSecret
+            return res.status(200).json({
+              success: true,
+              data: {
+                clientSecret: existingIntent.client_secret,
+                id: existingIntent.id,
+                amount: existingIntent.amount,
+                currency: existingIntent.currency,
+                paymentId: existingPayment._id,
+                status: existingPayment.status
+              }
+            });
+          }
+        }
+      } else if (existingPayment.status === 'failed') {
+        // Allow retry: remove failed payment and clear appointment.payment
+        await Payment.findByIdAndDelete(existingPayment._id);
+        await Appointment.findByIdAndUpdate(appointment._id, {
+          $set: { payment: null }
+        });
+      } else {
+        // Unexpected status => fail safe by blocking to avoid corrupt state
+        return res.status(400).json({
+          step: 'payment_exists',
+          message: 'Payment already exists for this appointment',
+          currentPaymentStatus: existingPayment.status
+        });
+      }
     }
 
     /**
@@ -96,6 +223,12 @@ exports.createPaymentIntent = async (req, res, next) => {
         doctorId: appointment.doctor._id.toString()
       }
     );
+
+    console.log('[payments/intent] created PaymentIntent:', {
+      id: paymentIntent?.id,
+      status: paymentIntent?.status,
+      clientSecretPresent: !!paymentIntent?.client_secret
+    });
 
     /**
      * Create payment record

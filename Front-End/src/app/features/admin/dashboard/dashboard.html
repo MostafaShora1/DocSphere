@@ -1,39 +1,48 @@
 <section class="admin-section">
   <div class="page-header">
     <div>
-      <h1>Admin Dashboard</h1>
-      <p>Manage approvals, users, doctors, patients, and appointments.</p>
+      <h1>{{ 'DASHBOARD.ADMIN.TITLE' | translate }}</h1>
+      <p>{{ 'DASHBOARD.ADMIN.DESC' | translate }}</p>
     </div>
   </div>
 
   <div class="stats-grid">
     <div class="stat-card">
-      <h3>Approved Doctors</h3>
+      <h3>{{ 'DASHBOARD.ADMIN.APPROVED_DOCTORS' | translate }}</h3>
       <p class="stat-number">{{ totalDoctors }}</p>
     </div>
 
     <div class="stat-card">
-      <h3>Patients</h3>
+      <h3>{{ 'AUTH.REGISTER.PATIENT' | translate }}</h3>
       <p class="stat-number">{{ totalPatients }}</p>
     </div>
 
     <div class="stat-card">
-      <h3>Appointments</h3>
+      <h3>{{ 'DASHBOARD.DOCTOR.NAV_APPOINTMENTS' | translate }}</h3>
       <p class="stat-number">{{ totalAppointments }}</p>
     </div>
 
     <div class="stat-card">
-      <h3>Pending Approvals</h3>
+      <h3>{{ 'DASHBOARD.ADMIN.PENDING_APPROVALS' | translate }}</h3>
       <p class="stat-number">{{ pendingApprovals }}</p>
     </div>
   </div>
 
   <div class="admin-tabs">
-    <button class="tab-btn" [class.active]="activeTab === 'overview'" (click)="setTab('overview')">Overview</button>
-    <button class="tab-btn" [class.active]="activeTab === 'pending'" (click)="setTab('pending')">Pending Doctors</button>
-    <button class="tab-btn" [class.active]="activeTab === 'doctors'" (click)="setTab('doctors')">Doctors</button>
-    <button class="tab-btn" [class.active]="activeTab === 'patients'" (click)="setTab('patients')">Patients</button>
-    <button class="tab-btn" [class.active]="activeTab === 'appointments'" (click)="setTab('appointments')">Appointments</button>
+    <button class="tab-btn" [class.active]="activeTab === 'overview'" (click)="setTab('overview')">{{
+      'DASHBOARD.DOCTOR.NAV_HOME' | translate }}</button>
+    <button class="tab-btn" [class.active]="activeTab === 'pending'" (click)="setTab('pending')">{{
+      'DASHBOARD.ADMIN.TAB_PENDING' | translate }}</button>
+    <button class="tab-btn" [class.active]="activeTab === 'doctors'" (click)="setTab('doctors')">{{ 'NAV.DOCTORS' |
+      translate }}</button>
+    <button class="tab-btn" [class.active]="activeTab === 'patients'" (click)="setTab('patients')">{{
+      'AUTH.REGISTER.PATIENT' | translate }}</button>
+    <button class="tab-btn" [class.active]="activeTab === 'appointments'" (click)="setTab('appointments')">{{
+      'DASHBOARD.DOCTOR.NAV_APPOINTMENTS' | translate }}</button>
+    <button class="tab-btn" [class.active]="activeTab === 'messages'" (click)="setTab('messages')">
+      {{ 'NAV.CONTACT' | translate }}
+      <span class="badge" *ngIf="unreadMessages > 0">{{ unreadMessages }}</span>
+    </button>
   </div>
 
   <div class="panel" *ngIf="activeTab === 'overview'">
@@ -92,32 +101,38 @@
       <table>
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Specialty</th>
-            <th>Email</th>
-            <th>Status</th>
-            <th>Action</th>
+            <th>{{ 'DASHBOARD.DOCTOR.NAME' | translate }}</th>
+            <th>{{ 'DASHBOARD.DOCTOR.SPECIALTY' | translate }}</th>
+            <th>{{ 'AUTH.COMMON.EMAIL' | translate }}</th>
+            <th>{{ 'DASHBOARD.PATIENT.STATUS' | translate }}</th>
+            <th>{{ 'DASHBOARD.DOCTOR.ADD_SLOT' | translate }}</th> <!-- Action -->
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let doctor of doctors">
             <td>{{ doctor.name }}</td>
-            <td>{{ doctor.specialty }}</td>
+            <td>{{ 'SPECIALTIES.' + doctor.specialty?.toUpperCase() | translate }}</td>
             <td>{{ doctor.email || 'N/A' }}</td>
             <td>
-              <span class="status-chip"
-                [class.approved]="doctor.moderationStatus === 'approved'"
+              <span class="status-chip" [class.approved]="doctor.moderationStatus === 'approved'"
                 [class.pending]="doctor.moderationStatus === 'pending'"
                 [class.deactivated]="doctor.moderationStatus === 'deactivated' || doctor.moderationStatus === 'rejected'">
-                {{ doctor.moderationStatus === 'deactivated' ? 'Deactivated' : (doctor.moderationStatus === 'rejected' ? 'Rejected' : (doctor.isApproved ? 'Approved' : 'Pending')) }}
+                {{
+                doctor.moderationStatus === 'deactivated' ? ('DASHBOARD.DOCTOR.DEACTIVATED' | translate) :
+                (doctor.moderationStatus === 'rejected' ? ('DASHBOARD.DOCTOR.REJECT' | translate) :
+                (doctor.isApproved ? ('DASHBOARD.DOCTOR.CONFIRMED' | translate) : ('DASHBOARD.DOCTOR.PENDING' |
+                translate)))
+                }}
               </span>
             </td>
             <td>
-              <button class="table-btn" *ngIf="doctor.isApproved && doctor.isActive !== false" (click)="deactivateDoctor(doctor.id)">
-                Deactivate
+              <button class="table-btn deactivate" *ngIf="doctor.isApproved && doctor.isActive !== false"
+                (click)="deactivateDoctor(doctor.id)" [disabled]="deactivatingDoctorId === doctor.id">
+                {{ deactivatingDoctorId === doctor.id ? '...' : ('DASHBOARD.DOCTOR.DEACTIVATE' | translate) }}
               </button>
-              <button class="table-btn" *ngIf="doctor.moderationStatus === 'deactivated'" (click)="reactivateDoctor(doctor.id)">
-                Reactivate
+              <button class="table-btn reactivate" *ngIf="doctor.moderationStatus === 'deactivated'"
+                (click)="reactivateDoctor(doctor.id)" [disabled]="deactivatingDoctorId === doctor.id">
+                {{ deactivatingDoctorId === doctor.id ? '...' : ('DASHBOARD.DOCTOR.ACTIVATE' | translate) }}
               </button>
             </td>
           </tr>
@@ -137,6 +152,8 @@
             <th>Name</th>
             <th>Phone</th>
             <th>Date of Birth</th>
+            <th>{{ 'DASHBOARD.PATIENT.STATUS' | translate }}</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -144,6 +161,22 @@
             <td>{{ patient.firstName }} {{ patient.lastName }}</td>
             <td>{{ patient.phone || 'N/A' }}</td>
             <td>{{ patient.dateOfBirth ? (patient.dateOfBirth | date: 'mediumDate') : 'N/A' }}</td>
+            <td>
+              <span class="status-chip" [class.approved]="patient.user?.isActive !== false"
+                [class.deactivated]="patient.user?.isActive === false">
+                {{ patient.user?.isActive === false ? ('DASHBOARD.DOCTOR.DEACTIVATED' | translate) : ('DASHBOARD.DOCTOR.CONFIRMED' | translate) }}
+              </span>
+            </td>
+            <td>
+              <button class="table-btn deactivate" *ngIf="patient.user?.isActive !== false"
+                (click)="deactivateUser(patient.user?._id)" [disabled]="deactivatingUserId === patient.user?._id">
+                {{ deactivatingUserId === patient.user?._id ? '...' : ('DASHBOARD.DOCTOR.DEACTIVATE' | translate) }}
+              </button>
+              <button class="table-btn reactivate" *ngIf="patient.user?.isActive === false"
+                (click)="reactivateUser(patient.user?._id)" [disabled]="deactivatingUserId === patient.user?._id">
+                {{ deactivatingUserId === patient.user?._id ? '...' : ('DASHBOARD.DOCTOR.ACTIVATE' | translate) }}
+              </button>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -167,7 +200,8 @@
         <tbody>
           <tr *ngFor="let appointment of appointments">
             <td>{{ appointment.doctor?.fullName || appointment.doctor?.user?.name || 'N/A' }}</td>
-            <td>{{ appointment.patient?.firstName ? (appointment.patient.firstName + ' ' + appointment.patient.lastName) : 'N/A' }}</td>
+            <td>{{ appointment.patient?.firstName ? (appointment.patient.firstName + ' ' + appointment.patient.lastName)
+              : 'N/A' }}</td>
             <td>{{ appointment.status || 'N/A' }}</td>
             <td>{{ appointment.createdAt ? (appointment.createdAt | date: 'medium') : 'N/A' }}</td>
           </tr>
@@ -177,5 +211,35 @@
     <ng-template #noAppointments>
       <div class="empty-state">No appointments found.</div>
     </ng-template>
+  </div>
+  <div class="panel" *ngIf="activeTab === 'messages'">
+    <div class="empty-state" *ngIf="messages.length === 0">
+      No messages from users yet.
+    </div>
+
+    <div class="list-grid" *ngIf="messages.length > 0">
+      <article class="list-card message-card" *ngFor="let msg of messages" [class.unread]="msg.status === 'unread'">
+        <div class="card-head">
+          <div>
+            <h3>{{ msg.firstName }} {{ msg.lastName }}</h3>
+            <p class="email">{{ msg.email }} | {{ msg.phone }}</p>
+          </div>
+          <span class="status-chip" [class.unread]="msg.status === 'unread'" [class.read]="msg.status === 'read'">
+            {{ msg.status | uppercase }}
+          </span>
+        </div>
+
+        <div class="message-content">
+          <p>{{ msg.message }}</p>
+        </div>
+
+        <div class="card-footer">
+          <span class="date">{{ msg.createdAt | date:'medium' }}</span>
+          <button class="secondary-btn small" *ngIf="msg.status === 'unread'" (click)="markAsRead(msg._id)">
+            Mark as Read
+          </button>
+        </div>
+      </article>
+    </div>
   </div>
 </section>

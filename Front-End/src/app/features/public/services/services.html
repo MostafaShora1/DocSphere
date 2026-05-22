@@ -1,8 +1,8 @@
 <section class="services-section">
   <div class="container">
-    <h1 class="section-title">Our Medical Services</h1>
+    <h1 class="section-title">{{ 'SERVICES.TITLE' | translate }}</h1>
     <p class="section-subtitle">
-      Explore a full range of medical services tailored to your needs.
+      {{ 'SERVICES.SUBTITLE' | translate }}
     </p>
 
     <div class="filters">
@@ -10,7 +10,7 @@
         type="text"
         [(ngModel)]="searchTerm"
         (input)="filterServices()"
-        placeholder="Search for a service..."
+        [placeholder]="'SERVICES.SEARCH' | translate"
         class="search-input"
       />
 
@@ -19,43 +19,49 @@
         (change)="filterServices()"
         class="filter-select"
       >
-        <option value="">All Specialties</option>
+        <option value="">{{ 'SERVICES.ALL_SPECIALTIES' | translate }}</option>
         <option *ngFor="let specialty of specialties" [value]="specialty">{{ specialty }}</option>
       </select>
     </div>
 
     <div class="services-grid">
-      <div *ngFor="let service of filteredServices" class="service-card">
-        <h3>{{ service.name }}</h3>
+      <div *ngFor="let service of filteredServices" class="service-card-premium" data-aos="fade-up">
+        <div class="service-icon-wrap">
+          <i class="fas fa-hand-holding-medical"></i>
+        </div>
+        <div class="service-body">
+          <h3>
+            {{ (service.nameKey | translate) !== service.nameKey ? (service.nameKey | translate) : service.name }}
+          </h3>
+          
+          <p class="service-desc">
+            {{ service.description }}
+          </p>
 
-        <p class="doctor-name">
-          Dr. {{ getDoctorName(service.doctorId) }}
-        </p>
+          <div class="service-meta">
+            <span class="duration-badge">
+              <i class="far fa-clock"></i> {{ service.duration }}
+            </span>
+          </div>
 
-        <p class="duration">
-          Duration: {{ service.duration }}
-        </p>
-
-        <p class="description">
-          {{ service.description }}
-        </p>
-
-        <p class="price">
-          {{ service.price }} EGP
-        </p>
-
-        <button class="btn-primary" (click)="bookService(service.id)">
-          Book Now
-        </button>
+          <div class="service-footer">
+            <span class="service-price">
+              {{ service.price }} <span>{{ 'SERVICES.EGP' | translate }}</span>
+            </span>
+            <button class="btn-sm-outline" (click)="bookService(service.id)">
+              {{ 'SERVICES.BOOK_NOW' | translate }}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
     <div *ngIf="loading" class="no-results">
-      Loading services...
+      {{ 'SERVICES.LOADING' | translate }}
     </div>
 
     <div *ngIf="!loading && filteredServices.length === 0" class="no-results">
-      No matching services found.
+      {{ 'SERVICES.NO_RESULTS' | translate }}
     </div>
   </div>
 </section>

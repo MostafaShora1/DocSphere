@@ -6,11 +6,14 @@ import { Doctor } from '../../../shared/models/doctor.model';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { forkJoin } from 'rxjs';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+
+declare var Swal: any;
 
 @Component({
   selector: 'app-services',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, TranslateModule],
   templateUrl: './services.html',
   styleUrls: ['./services.css']
 })
@@ -26,7 +29,8 @@ export class ServicesComponent implements OnInit {
 
   constructor(
     private apiService: ApiService,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -80,16 +84,36 @@ export class ServicesComponent implements OnInit {
     return doctor ? doctor.name : 'Doctor';
   }
 
+  getDoctorSpecialty(id: string): string {
+    const doctor = this.doctors.find(d => d.id === id);
+    return doctor ? doctor.specialty : '';
+  }
+
   bookService(serviceId: string) {
     const rawUser = localStorage.getItem('currentUser');
 
     if (!rawUser) {
+      Swal.fire({
+        title: this.translate.instant('SERVICES.BOOKING_ERROR_TITLE'),
+        text: this.translate.instant('SERVICES.LOGIN_REQUIRED_MSG'),
+        icon: 'warning',
+        confirmButtonText: this.translate.instant('SERVICES.OK'),
+        confirmButtonColor: '#145245'
+      });
       this.router.navigate(['/login']);
       return;
     }
 
-    const currentUser = JSON.parse(rawUser);
-    if (currentUser.role !== 'patient') {
+    const user = JSON.parse(rawUser);
+
+    if (user.role !== 'patient') {
+      Swal.fire({
+        title: this.translate.instant('SERVICES.BOOKING_ERROR_TITLE'),
+        text: this.translate.instant('SERVICES.PATIENT_ONLY_MSG'),
+        icon: 'error',
+        confirmButtonText: this.translate.instant('SERVICES.OK'),
+        confirmButtonColor: '#145245'
+      });
       return;
     }
 

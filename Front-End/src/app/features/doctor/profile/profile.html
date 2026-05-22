@@ -10,7 +10,7 @@
         <h1>{{ doctor.name }}</h1>
         <p class="specialty">{{ doctor.specialty }}</p>
         <p>{{ doctor.experience }}</p>
-        <p>⭐ {{ doctor.rating }}/5</p>
+        <p>⭐ {{ doctor.rating | number:'1.1-1' }}/5</p>
       </div>
     </div>
 

@@ -3,13 +3,15 @@ const router = express.Router();
 const {
   createReview,
   getDoctorReviews,
-  getMyReviews
+  getMyReviews,
+  getAllReviews
 } = require('../controllers/reviewController');
 const { protect } = require('../middleware/authMiddleware');
 const { authorize } = require('../middleware/roleMiddleware');
 const { createReviewValidator } = require('../validators/reviewValidator');
 
 router.post('/', protect, authorize('patient'), createReviewValidator, createReview);
+router.get('/', getAllReviews);
 router.get('/doctor/:doctorId', getDoctorReviews);
 router.get('/me', protect, authorize('patient'), getMyReviews);
 

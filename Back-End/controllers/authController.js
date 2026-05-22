@@ -13,20 +13,27 @@ exports.register = async (req, res, next) => {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { name, email, password, role = 'patient' } = req.body;
+    const { name, nameAr, nameEn, email, password, phone, phonePrimary, birthDate, role = 'patient' } = req.body;
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(409).json({ message: 'User already exists with this email.' });
+      return res.status(409).json({ message: res.__('USER_EXISTS') });
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
     const verificationCode = crypto.randomBytes(3).toString('hex');
 
+    // Ensure name is not empty (especially for doctors where it might be nameEn/nameAr)
+    const finalName = name || nameEn || nameAr || email.split('@')[0];
+
     const user = await User.create({
-      name,
+      name: finalName,
+      nameAr,
+      nameEn,
       email,
       password: hashedPassword,
+      phone: phonePrimary || phone,
+      birthDate,
       role,
       isVerified: false,
       verificationCode
@@ -35,7 +42,7 @@ exports.register = async (req, res, next) => {
     await sendVerificationEmail(user.email, user.name, verificationCode);
 
     res.status(201).json({
-      message: 'Registration successful. Please verify your email before logging in.',
+      message: res.__('REGISTRATION_SUCCESS'),
       user: {
         id: user._id,
         name: user.name,
@@ -55,22 +62,22 @@ exports.verifyEmail = async (req, res, next) => {
 
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(404).json({ message: 'User not found.' });
+      return res.status(404).json({ message: res.__('USER_NOT_FOUND') });
     }
 
     if (user.isVerified) {
-      return res.status(200).json({ message: 'Email has already been verified.' });
+      return res.status(200).json({ message: res.__('EMAIL_VERIFIED_ALREADY') });
     }
 
     if (user.verificationCode !== verificationCode) {
-      return res.status(400).json({ message: 'Invalid verification code.' });
+      return res.status(400).json({ message: res.__('INVALID_VERIFICATION_CODE') });
     }
 
     user.isVerified = true;
     user.verificationCode = null;
     await user.save();
 
-    res.status(200).json({ message: 'Email verified successfully.' });
+    res.status(200).json({ message: res.__('EMAIL_VERIFIED_SUCCESS') });
   } catch (error) {
     next(error);
   }
@@ -88,16 +95,20 @@ exports.login = async (req, res, next) => {
 
     const user = await User.findOne({ email }).select('+password');
     if (!user) {
-      return res.status(401).json({ message: 'Invalid email or password.' });
+      return res.status(401).json({ message: res.__('INVALID_CREDENTIALS') });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ message: 'Invalid email or password.' });
+      return res.status(401).json({ message: res.__('INVALID_CREDENTIALS') });
+    }
+
+    if (!user.isActive) {
+      return res.status(403).json({ message: 'Your account has been deactivated. Please contact support.' });
     }
 
     if (!user.isVerified) {
-      return res.status(403).json({ message: 'Email must be verified before login.' });
+      return res.status(403).json({ message: res.__('EMAIL_NOT_VERIFIED') });
     }
 
     const token = generateJwtToken(user._id);
@@ -119,7 +130,7 @@ exports.forgotPassword = async (req, res, next) => {
     const { email } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(200).json({ message: 'If that email exists, a reset link will be sent.' });
+      return res.status(200).json({ message: res.__('RESET_LINK_SENT') });
     }
 
     const resetToken = crypto.randomBytes(32).toString('hex');
@@ -132,7 +143,7 @@ exports.forgotPassword = async (req, res, next) => {
     const resetUrl = `${frontendUrl}/reset-password/${resetToken}`;
     await sendResetPasswordEmail(user.email, user.name, resetUrl);
 
-    res.status(200).json({ message: 'Password reset link has been sent if the account exists.' });
+    res.status(200).json({ message: res.__('RESET_LINK_SENT') });
   } catch (error) {
     next(error);
   }
@@ -155,7 +166,7 @@ exports.resetPassword = async (req, res, next) => {
     });
 
     if (!user) {
-      return res.status(400).json({ message: 'Invalid or expired password reset token.' });
+      return res.status(400).json({ message: res.__('INVALID_RESET_TOKEN') });
     }
 
     user.password = await bcrypt.hash(req.body.password, 12);
@@ -163,7 +174,7 @@ exports.resetPassword = async (req, res, next) => {
     user.resetPasswordExpire = null;
     await user.save();
 
-    res.status(200).json({ message: 'Password has been reset successfully.' });
+    res.status(200).json({ message: res.__('PASSWORD_RESET_SUCCESS') });
   } catch (error) {
     next(error);
   }
@@ -180,10 +191,10 @@ exports.verifyResetToken = async (req, res, next) => {
     });
 
     if (!user) {
-      return res.status(400).json({ message: 'Invalid or expired password reset token.' });
+      return res.status(400).json({ message: res.__('INVALID_RESET_TOKEN') });
     }
 
-    return res.status(200).json({ valid: true, message: 'Reset token is valid.' });
+    return res.status(200).json({ valid: true, message: res.__('RESET_TOKEN_VALID') });
   } catch (error) {
     next(error);
   }
@@ -227,18 +238,18 @@ exports.updatePassword = async (req, res, next) => {
     const { currentPassword, newPassword } = req.body;
 
     if (!user || !(await bcrypt.compare(currentPassword, user.password))) {
-      return res.status(401).json({ message: 'Current password is incorrect.' });
+      return res.status(401).json({ message: res.__('CURRENT_PASSWORD_INCORRECT') });
     }
 
     user.password = await bcrypt.hash(newPassword, 12);
     await user.save();
 
-    res.status(200).json({ message: 'Password updated successfully.' });
+    res.status(200).json({ message: res.__('PASSWORD_UPDATED_SUCCESS') });
   } catch (error) {
     next(error);
   }
 };
 
 exports.logout = (req, res, next) => {
-  res.status(200).json({ message: 'Logout successful.' });
+  res.status(200).json({ message: res.__('LOGOUT_SUCCESS') });
 };

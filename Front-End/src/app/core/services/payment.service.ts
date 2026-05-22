@@ -37,27 +37,54 @@ export class PaymentService {
     return res.publishableKey;
   }
 
-  async createStripePaymentIntent(appointmentId: string, currency = 'usd'): Promise<StripePaymentIntentResponse> {
-    return await firstValueFrom(
-      this.http.post<StripePaymentIntentResponse>(`${this.baseUrl}/intent`, {
+  async createStripePaymentIntent(
+    appointmentId: string,
+    currency = 'usd'
+  ): Promise<StripePaymentIntentResponse> {
+    const res = await firstValueFrom(
+      this.http.post<any>(`${this.baseUrl}/intent`, {
         appointment: appointmentId,
         currency
       })
     );
+
+    // Backend returns: { success: true, data: { clientSecret, id, ..., paymentId, status } }
+    const data = res?.data ?? res;
+    return {
+      clientSecret: data?.clientSecret,
+      id: data?.id,
+      amount: data?.amount,
+      currency: data?.currency,
+      paymentId: data?.paymentId,
+      status: data?.status
+    };
   }
 
-  async createCashPayment(appointmentId: string, currency = 'usd'): Promise<CashPaymentResponse> {
-    return await firstValueFrom(
-      this.http.post<CashPaymentResponse>(`${this.baseUrl}/cash`, {
+  async createCashPayment(
+    appointmentId: string,
+    currency = 'usd'
+  ): Promise<CashPaymentResponse> {
+    const res = await firstValueFrom(
+      this.http.post<any>(`${this.baseUrl}/cash`, {
         appointment: appointmentId,
         currency
       })
     );
+
+    // Backend returns: { success: true, data: { paymentId, status, paymentMethod } }
+    const data = res?.data ?? res;
+    return {
+      paymentId: data?.paymentId,
+      status: data?.status,
+      paymentMethod: data?.paymentMethod
+    };
   }
 
   async verifyPayment(paymentId: string): Promise<any> {
-    return await firstValueFrom(
-      this.http.get(`${this.baseUrl}/verify/${paymentId}`)
+    const res = await firstValueFrom(
+      this.http.get<any>(`${this.baseUrl}/verify/${paymentId}`)
     );
+    // Backend returns: { success, isPaid, status, data }
+    return res;
   }
 }

@@ -2,6 +2,8 @@ export interface Doctor {
   id: string;
   userId?: string;
   name: string;
+  fullNameAr?: string;
+  fullNameEn?: string;
   specialty: string;
   specialtyId?: string;
   experience: string;
@@ -16,4 +18,5 @@ export interface Doctor {
   consultationFee?: number;
   availableDays: string[];
   availableTimes: string[];
+  certificate?: string;
 }

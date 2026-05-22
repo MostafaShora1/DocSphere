@@ -9,12 +9,13 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.html',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, RouterLink],
+  imports: [ReactiveFormsModule, CommonModule, RouterLink, TranslateModule],
   styleUrls: ['./login.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -38,7 +39,8 @@ export class LoginComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private fb: FormBuilder,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private translate: TranslateService
   ) {}
 
   // Initialize form safely
@@ -78,8 +80,7 @@ export class LoginComponent implements OnInit {
 
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
-      this.errorMsg =
-        'Please fill in all required fields correctly.';
+      this.errorMsg = this.translate.instant('AUTH.LOGIN.ERRORS.INVALID_FORM');
       return;
     }
 
@@ -114,13 +115,15 @@ export class LoginComponent implements OnInit {
         this.router.navigate(['/patient']);
       }
 
-    } catch (error) {
+    } catch (error: any) {
 
       console.error('Login error:', error);
 
-      this.errorMsg =
-        (error as any)?.error?.message ||
-        'Login failed. Please try again.';
+      if (error.status === 401) {
+        this.errorMsg = this.translate.instant('AUTH.LOGIN.ERRORS.INVALID_CREDENTIALS');
+      } else {
+        this.errorMsg = error.error?.message || this.translate.instant('AUTH.LOGIN.ERRORS.FAILED');
+      }
 
     } finally {
 

@@ -3,6 +3,7 @@ const Appointment = require('../models/Appointment');
 const Doctor = require('../models/Doctor');
 const Patient = require('../models/Patient');
 const Schedule = require('../models/Schedule');
+const Payment = require('../models/Payment');
 
 exports.getAppointments = async (req, res, next) => {
   try {
@@ -19,7 +20,8 @@ exports.getAppointments = async (req, res, next) => {
     }
 
     const appointments = await Appointment.find(filters)
-      .populate('doctor patient payment')
+      .populate({ path: 'doctor', populate: { path: 'specialty' } })
+      .populate('patient payment service')
       .sort('-createdAt');
 
     res.status(200).json({ success: true, count: appointments.length, data: appointments });
@@ -42,7 +44,8 @@ exports.getPatientAppointments = async (req, res, next) => {
     }
 
     const appointments = await Appointment.find({ patient: patientProfile._id })
-      .populate('doctor patient payment')
+      .populate({ path: 'doctor', populate: { path: 'specialty' } })
+      .populate('patient payment service')
       .sort('-createdAt');
 
     return res.status(200).json({ success: true, count: appointments.length, data: appointments });
@@ -66,7 +69,8 @@ exports.getDoctorAppointments = async (req, res, next) => {
     }
 
     const appointments = await Appointment.find({ doctor: doctorProfile._id })
-      .populate('doctor patient payment')
+      .populate({ path: 'doctor', populate: { path: 'specialty' } })
+      .populate('patient payment service')
       .sort('-createdAt');
 
     return res.status(200).json({ success: true, count: appointments.length, data: appointments });
@@ -78,7 +82,9 @@ exports.getDoctorAppointments = async (req, res, next) => {
 
 exports.getAppointment = async (req, res, next) => {
   try {
-    const appointment = await Appointment.findById(req.params.id).populate('doctor patient payment');
+    const appointment = await Appointment.findById(req.params.id)
+      .populate({ path: 'doctor', populate: { path: 'specialty' } })
+      .populate('patient payment');
     if (!appointment) {
       return res.status(404).json({ message: 'Appointment not found' });
     }
@@ -257,6 +263,50 @@ exports.updateAppointment = async (req, res, next) => {
       runValidators: true
     });
 
+    // If rejected or cancelled, free the original slot
+    if (updates.status === 'rejected' || updates.status === 'cancelled') {
+      const appointmentDate = new Date(appointment.date);
+      const startOfDay = new Date(appointmentDate.getFullYear(), appointmentDate.getMonth(), appointmentDate.getDate(), 0, 0, 0, 0);
+      const endOfDay = new Date(appointmentDate.getFullYear(), appointmentDate.getMonth(), appointmentDate.getDate(), 23, 59, 59, 999);
+
+      const schedule = await Schedule.findOne({
+        doctor: appointment.doctor,
+        date: { $gte: startOfDay, $lte: endOfDay }
+      });
+
+      if (schedule) {
+        const slot = schedule.timeSlots.find(
+          s => s.startTime.slice(0, 5) === appointment.startTime.slice(0, 5)
+        );
+        if (slot) {
+          slot.isAvailable = true;
+          await schedule.save();
+        }
+      }
+    }
+
+    // If proposal created, book the new slot
+    if (proposedAppointment) {
+      const propDate = new Date(proposedAppointment.date);
+      const startOfDayP = new Date(propDate.getFullYear(), propDate.getMonth(), propDate.getDate(), 0, 0, 0, 0);
+      const endOfDayP = new Date(propDate.getFullYear(), propDate.getMonth(), propDate.getDate(), 23, 59, 59, 999);
+
+      const scheduleP = await Schedule.findOne({
+        doctor: proposedAppointment.doctor,
+        date: { $gte: startOfDayP, $lte: endOfDayP }
+      });
+
+      if (scheduleP) {
+        const slotP = scheduleP.timeSlots.find(
+          s => s.startTime.slice(0, 5) === proposedAppointment.startTime.slice(0, 5)
+        );
+        if (slotP) {
+          slotP.isAvailable = false;
+          await scheduleP.save();
+        }
+      }
+    }
+
     // Send notification email to patient when doctor confirms/rejects
     if (req.user.role === 'doctor' && (updates.status === 'confirmed' || updates.status === 'rejected')) {
       const patient = await Patient.findById(appointment.patient).populate('user');
@@ -275,15 +325,27 @@ exports.updateAppointment = async (req, res, next) => {
             'confirmed'
           );
         } else if (updates.status === 'rejected') {
-          await sendAppointmentStatusEmail(
-            patient.user.email,
-            patient.user.name,
-            doctor.name,
-            appointment.date,
-            appointment.startTime,
-            'rejected',
-            updates.rejectionReason
-          );
+          if (proposedAppointment) {
+            await sendAppointmentStatusEmail(
+              patient.user.email,
+              patient.user.name,
+              doctor.name,
+              proposedAppointment.date,
+              proposedAppointment.startTime,
+              'proposed',
+              updates.rejectionReason
+            );
+          } else {
+            await sendAppointmentStatusEmail(
+              patient.user.email,
+              patient.user.name,
+              doctor.name,
+              appointment.date,
+              appointment.startTime,
+              'rejected',
+              updates.rejectionReason
+            );
+          }
         }
       }
     }

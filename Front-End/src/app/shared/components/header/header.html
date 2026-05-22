@@ -7,26 +7,35 @@
 
     <nav class="nav-menu" [class.active]="menuOpen">
       <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMenu()">
-        Home
+        {{ 'NAV.HOME' | translate }}
       </a>
 
       <a routerLink="/services" routerLinkActive="active" (click)="closeMenu()">
-        Services
+        {{ 'NAV.SERVICES' | translate }}
       </a>
 
       <a routerLink="/doctors" routerLinkActive="active" (click)="closeMenu()">
-        Doctors
+        {{ 'NAV.DOCTORS' | translate }}
       </a>
 
       <a routerLink="/contact" routerLinkActive="active" (click)="closeMenu()">
-        Contact
+        {{ 'NAV.CONTACT' | translate }}
       </a>
 
       <a routerLink="/about" routerLinkActive="active" (click)="closeMenu()">
-        About
+        {{ 'NAV.ABOUT' | translate }}
       </a>
 
-      <div class="nav-actions">
+      <button class="theme-toggle" (click)="toggleTheme()" [title]="isDarkMode() ? ('NAV.LIGHT_MODE' | translate) : ('NAV.DARK_MODE' | translate)">
+        <i class="fa-solid" [class.fa-sun]="isDarkMode()" [class.fa-moon]="!isDarkMode()"></i>
+      </button>
+
+      <button class="lang-toggle" (click)="switchLanguage()" title="Switch Language">
+        <i class="fa-solid fa-globe"></i>
+        <span>{{ currentLang === 'ar' ? 'EN' : 'AR' }}</span>
+      </button>
+
+      <div class="nav-actions"> 
         <button
           *ngIf="currentUser"
           type="button"
@@ -35,7 +44,7 @@
           <span class="profile-avatar">
             <i class="fa-solid fa-user"></i>
           </span>
-          <span>Profile</span>
+          <span>{{ 'NAV.PROFILE' | translate }}</span>
         </button>
 
         <button
@@ -43,16 +52,16 @@
           type="button"
           class="auth-btn auth-btn-secondary"
           (click)="logout()">
-          Logout
+          {{ 'NAV.LOGOUT' | translate }}
         </button>
 
         <ng-container *ngIf="!currentUser">
           <a routerLink="/login" class="auth-btn auth-btn-secondary" (click)="closeMenu()">
-            Login
+            {{ 'NAV.LOGIN' | translate }}
           </a>
 
           <a routerLink="/auth/register" class="auth-btn auth-btn-primary" (click)="closeMenu()">
-            Sign Up
+            {{ 'NAV.SIGNUP' | translate }}
           </a>
         </ng-container>
       </div>

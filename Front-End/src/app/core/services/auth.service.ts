@@ -8,6 +8,8 @@ interface AuthUser {
   role: string;
   email: string;
   name: string;
+  nameAr?: string;
+  nameEn?: string;
 }
 
 interface PendingProfileDraft {
@@ -18,8 +20,10 @@ interface PendingProfileDraft {
     phone: string;
     dateOfBirth?: string | null;
   };
-  doctorProfile?: {
+    doctorProfile?: {
     fullName: string;
+    fullNameAr?: string;
+    fullNameEn?: string;
     specialty: string;
     bio?: string;
     experience?: number;
@@ -34,6 +38,7 @@ interface PendingProfileDraft {
       country?: string;
     };
     profilePicture?: string;
+    certificate?: string;
   };
 }
 
@@ -93,12 +98,16 @@ export class AuthService {
     password: string,
     phone: string,
     role: string,
-    birthDate: string
+    birthDate: string,
+    nameAr: string = '',
+    nameEn: string = ''
   ) {
     try {
       return await firstValueFrom(
         this.http.post(`${this.baseUrl}/auth/register`, {
           name,
+          nameAr,
+          nameEn,
           email,
           password,
           phonePrimary: phone,

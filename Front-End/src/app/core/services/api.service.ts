@@ -13,7 +13,7 @@ export class ApiService {
   private readonly rejectedDoctorsKey = 'rejectedDoctorIds';
   private readonly deactivatedDoctorsKey = 'deactivatedDoctorIds';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getServices(): Observable<Service[]> {
     return this.http
@@ -24,7 +24,9 @@ export class ApiService {
             .map(service => ({
               id: service.id || service._id || '',
               name: service.name || '',
+              nameKey: service.nameKey,
               description: service.description || '',
+              descriptionKey: service.descriptionKey,
               duration: service.duration || '',
               price: service.price ?? 0,
               doctorId: service.doctorId || service.doctor?._id || service.doctor || '',
@@ -38,37 +40,46 @@ export class ApiService {
   }
 
   getDoctors(includeUnapproved = false): Observable<Doctor[]> {
+    let url = `${this.baseUrl}/doctors`;
+    if (includeUnapproved) {
+      url += '?isActive=all&isApproved=all';
+    }
     return this.http
-      .get<{ data: any[] }>(`${this.baseUrl}/doctors`)
+      .get<{ data: any[] }>(url)
       .pipe(
         map(response =>
           (response.data || [])
             .map(doctor => {
               const moderatedStatus = this.getDoctorModerationStatus(doctor._id);
               const isApproved = doctor.isApproved ?? false;
-              const isActive = moderatedStatus !== 'deactivated' && moderatedStatus !== 'rejected';
+              const apiIsActive = doctor.isActive !== false;
+              
               const moderationStatus: 'approved' | 'pending' | 'rejected' | 'deactivated' =
-                moderatedStatus || (isApproved ? 'approved' : 'pending');
+                moderatedStatus || 
+                (apiIsActive ? (isApproved ? 'approved' : 'pending') : 'deactivated');
+              
+              const isActive = apiIsActive && moderatedStatus !== 'deactivated' && moderatedStatus !== 'rejected';
 
               return {
-              id: doctor._id,
-              userId: doctor.user?._id,
-              name: doctor.fullName || doctor.user?.name || doctor.user?.email || 'Doctor',
-              specialty: doctor.specialty?.name || 'General',
-              specialtyId: doctor.specialty?._id,
-              experience: `${doctor.experience ?? doctor.experienceYears ?? 0} years`,
-              rating: doctor.averageRating ?? doctor.rating ?? 0,
-              phone: doctor.user?.phonePrimary || doctor.user?.phone || '',
-              email: doctor.user?.email || '',
-              bio: doctor.bio || '',
-              image: doctor.profilePicture || doctor.user?.image || 'doctor.jpg',
-              isApproved,
-              isActive,
-              moderationStatus,
-              consultationFee: doctor.consultationFee ?? 0,
-              availableDays: doctor.availableDays || [],
-              availableTimes: doctor.availableTimes || []
-            };
+                id: doctor._id,
+                userId: doctor.user?._id,
+                name: doctor.fullName || doctor.user?.name || doctor.user?.email || 'Doctor',
+                specialty: doctor.specialty?.name || 'General',
+                specialtyId: doctor.specialty?._id,
+                experience: `${doctor.experience ?? doctor.experienceYears ?? 0} years`,
+                rating: doctor.averageRating ?? doctor.rating ?? 0,
+                phone: doctor.user?.phonePrimary || doctor.user?.phone || '',
+                email: doctor.user?.email || '',
+                bio: doctor.bio || '',
+                image: doctor.profilePicture || doctor.user?.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(doctor.fullName || 'Doctor')}&background=0D8ABC&color=fff`,
+                isApproved,
+                isActive,
+                moderationStatus,
+                consultationFee: doctor.consultationFee ?? 0,
+                availableDays: doctor.availableDays || [],
+                availableTimes: doctor.availableTimes || [],
+                certificate: doctor.certificate || ''
+              };
             })
             .filter(doctor => {
               if (doctor.moderationStatus === 'rejected' || doctor.moderationStatus === 'deactivated') {
@@ -108,6 +119,28 @@ export class ApiService {
       .pipe(map(response => response.data || []));
   }
 
+  getAdmins(): Observable<any[]> {
+    return this.http
+      .get<{ data: any[] }>(`${this.baseUrl}/admins`)
+      .pipe(map(response => response.data || []));
+  }
+
+  getReviews(): Observable<any[]> {
+    return this.http
+      .get<{ data: any[] }>(`${this.baseUrl}/reviews`)
+      .pipe(map(response => response.data || []));
+  }
+
+  getMyReviews(): Observable<any[]> {
+    return this.http
+      .get<{ data: any[] }>(`${this.baseUrl}/reviews/me`)
+      .pipe(map(response => response.data || []));
+  }
+
+  createReview(reviewData: { appointment: string; doctor: string; rating: number; comment: string }): Observable<any> {
+    return this.http.post(`${this.baseUrl}/reviews`, reviewData);
+  }
+
   getPendingDoctors(): Observable<any[]> {
     return this.http
       .get<{ data: any[] }>(`${this.baseUrl}/admin/doctors/pending`)
@@ -116,6 +149,22 @@ export class ApiService {
 
   approveDoctor(doctorId: string): Observable<any> {
     return this.http.put(`${this.baseUrl}/admin/approve-doctor/${doctorId}`, {});
+  }
+
+  deactivateDoctor(id: string): Observable<any> {
+    return this.http.put(`${this.baseUrl}/admin/deactivate-doctor/${id}`, {});
+  }
+
+  reactivateDoctor(id: string): Observable<any> {
+    return this.http.put(`${this.baseUrl}/admin/reactivate-doctor/${id}`, {});
+  }
+
+  deactivateUser(id: string): Observable<any> {
+    return this.http.put(`${this.baseUrl}/admin/deactivate-user/${id}`, {});
+  }
+
+  reactivateUser(id: string): Observable<any> {
+    return this.http.put(`${this.baseUrl}/admin/reactivate-user/${id}`, {});
   }
 
   getPatients(): Observable<any[]> {
@@ -156,6 +205,20 @@ export class ApiService {
 
   deleteSchedule(scheduleId: string): Observable<any> {
     return this.http.delete(`${this.baseUrl}/schedules/${scheduleId}`);
+  }
+
+  submitContactMessage(messageData: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/contact`, messageData);
+  }
+
+  getContactMessages(): Observable<any[]> {
+    return this.http
+      .get<{ data: any[] }>(`${this.baseUrl}/contact`)
+      .pipe(map(response => response.data || []));
+  }
+
+  markMessageAsRead(messageId: string): Observable<any> {
+    return this.http.put(`${this.baseUrl}/contact/${messageId}/read`, {});
   }
 
   rejectDoctorLocally(doctorId: string): void {

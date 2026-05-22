@@ -44,12 +44,23 @@ exports.getServices = async (req, res, next) => {
         times: new Set()
       };
 
+      // Ensure we get a proper specialty name, not the doctor's name
+      let specialtyName = 'Medical';
+      if (doctor.specialty) {
+        specialtyName = typeof doctor.specialty === 'object' ? (doctor.specialty.name || 'Medical') : doctor.specialty;
+      }
+      
+      // If specialtyName is just the doctor's name, fallback to 'Specialist'
+      if (doctor.fullName && specialtyName.toLowerCase().includes(doctor.fullName.toLowerCase())) {
+        specialtyName = 'Specialist';
+      }
+
       return {
         id: doctor._id.toString(),
-        name: `${doctor.fullName || 'Consultation'} Consultation`,
-        description:
-          doctor.bio ||
-          `Schedule a consultation with ${doctor.fullName || 'our specialist'}`,
+        name: `${specialtyName} Consultation`,
+        nameKey: `SERVICES.${specialtyName.toUpperCase().split(' ').join('_')}_CONSULTATION`,
+        description: doctor.bio && doctor.bio.length > 20 ? doctor.bio : `Professional ${specialtyName.toLowerCase()} consultation with our highly qualified specialist.`,
+        descriptionKey: `SERVICES.${specialtyName.toUpperCase().split(' ').join('_')}_DESC`,
         duration: '30 min',
         price: doctor.consultationFee || 0,
         doctorId: doctor._id.toString(),

@@ -37,7 +37,8 @@ const reviewSchema = new mongoose.Schema(
 reviewSchema.statics.getAverageRating = async function (doctorId) {
   const aggregation = await this.aggregate([
     { $match: { doctor: doctorId } },
-    { $group: { _id: '$doctor', averageRating: { $avg: '$rating' } } }
+    { $group: { _id: '$doctor', averageRating: { $avg: '$rating' } } },
+    { $addFields: { averageRating: { $round: ['$averageRating', 1] } } }
   ]);
 
   try {

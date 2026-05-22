@@ -3,73 +3,77 @@
     <h2>Doc<span>Sphere</span></h2>
 
     <button class="nav-item" [class.active]="activeSection === 'overview'" (click)="setSection('overview')">
-      <span>Overview</span>
+      <span><i class="fas fa-th-large"></i> {{ 'DASHBOARD.DOCTOR.NAV_HOME' | translate }}</span>
     </button>
 
     <button class="nav-item" [class.active]="activeSection === 'appointments'" [disabled]="!isApproved" (click)="setSection('appointments')">
-      <span>Appointments</span>
+      <span><i class="fas fa-calendar-alt"></i> {{ 'DASHBOARD.DOCTOR.NAV_APPOINTMENTS' | translate }}</span>
       <span *ngIf="pendingCount > 0" class="badge">{{ pendingCount }}</span>
     </button>
 
     <button class="nav-item" [class.active]="activeSection === 'schedule'" [disabled]="!isApproved" (click)="setSection('schedule')">
-      <span>Schedule</span>
+      <span><i class="fas fa-clock"></i> {{ 'DASHBOARD.DOCTOR.NAV_SCHEDULE' | translate }}</span>
     </button>
 
     <button class="nav-item" [class.active]="activeSection === 'profile'" (click)="setSection('profile')">
-      <span>Profile</span>
+      <span><i class="fas fa-user-circle"></i> {{ 'NAV.PROFILE' | translate }}</span>
     </button>
 
     <button class="nav-item" [class.active]="activeSection === 'security'" (click)="setSection('security')">
-      <span>Security</span>
+      <span><i class="fas fa-shield-alt"></i> {{ 'AUTH.REGISTER.DOCTOR_PROFILE' | translate }}</span>
     </button>
 
     <button class="nav-item logout" (click)="logout()">
-      <span>Logout</span>
+      <span><i class="fas fa-sign-out-alt"></i> {{ 'NAV.LOGOUT' | translate }}</span>
     </button>
   </aside>
 
   <main class="main-content">
     <div class="top-bar">
       <div>
-        <h2>Welcome, {{ doctor?.name || currentUser?.name || 'Doctor' }}</h2>
-        <p *ngIf="isApproved">Your dashboard is active and ready.</p>
-        <p *ngIf="!isApproved">{{ doctor?.moderationStatus === 'deactivated' ? 'Your account has been deactivated by admin.' : 'Your account is waiting for admin approval.' }}</p>
+        <h2>{{ 'DASHBOARD.DOCTOR.WELCOME' | translate:{name: (doctor?.name || currentUser?.name || 'Doctor')} }}</h2>
+        <p *ngIf="isApproved">{{ 'DASHBOARD.DOCTOR.APPROVED_DESC' | translate }}</p>
+        <p *ngIf="!isApproved">{{ doctor?.moderationStatus === 'deactivated' ? ('DASHBOARD.DOCTOR.DEACTIVATED_DESC' | translate) : ('DASHBOARD.DOCTOR.PENDING_DESC' | translate) }}</p>
       </div>
       <span class="status-chip" [class.approved]="isApproved" [class.pending]="!isApproved">
-        {{ isApproved ? 'Approved' : (doctor?.moderationStatus === 'deactivated' ? 'Deactivated' : 'Pending Approval') }}
+        {{ isApproved ? ('DASHBOARD.DOCTOR.CONFIRMED' | translate) : (doctor?.moderationStatus === 'deactivated' ? ('DASHBOARD.DOCTOR.DEACTIVATED' | translate) : ('DASHBOARD.DOCTOR.PENDING' | translate)) }}
       </span>
     </div>
 
     <section *ngIf="activeSection === 'overview'">
       <div class="pending-banner" *ngIf="!isApproved">
-        {{ doctor?.moderationStatus === 'deactivated' ? 'Your doctor account is currently deactivated by admin.' : 'Your doctor account is created, but it will stay pending until an admin approves it.' }}
+        {{ doctor?.moderationStatus === 'deactivated' ? ('DASHBOARD.DOCTOR.DEACTIVATED_DESC' | translate) : ('DASHBOARD.DOCTOR.PENDING_DESC' | translate) }}
       </div>
 
       <div class="dashboard-grid">
-        <div class="card">
-          <h3>Status</h3>
-          <p>{{ isApproved ? 'Approved' : (doctor?.moderationStatus === 'deactivated' ? 'Deactivated' : 'Pending Approval') }}</p>
+        <div class="card stat-card">
+          <div class="card-icon"><i class="fas fa-check-circle"></i></div>
+          <h3>{{ 'DASHBOARD.PATIENT.STATUS' | translate }}</h3>
+          <p>{{ isApproved ? ('DASHBOARD.DOCTOR.CONFIRMED' | translate) : (doctor?.moderationStatus === 'deactivated' ? ('DASHBOARD.DOCTOR.DEACTIVATED' | translate) : ('DASHBOARD.DOCTOR.PENDING' | translate)) }}</p>
         </div>
-        <div class="card">
-          <h3>Pending Appointments</h3>
+        <div class="card stat-card">
+          <div class="card-icon"><i class="fas fa-hourglass-half"></i></div>
+          <h3>{{ 'DASHBOARD.DOCTOR.PENDING' | translate }}</h3>
           <p>{{ pendingCount }}</p>
         </div>
-        <div class="card">
-          <h3>Confirmed Appointments</h3>
+        <div class="card stat-card">
+          <div class="card-icon"><i class="fas fa-calendar-check"></i></div>
+          <h3>{{ 'DASHBOARD.DOCTOR.CONFIRMED' | translate }}</h3>
           <p>{{ confirmedCount }}</p>
         </div>
-        <div class="card">
-          <h3>Total Appointments</h3>
+        <div class="card stat-card">
+          <div class="card-icon"><i class="fas fa-list-ul"></i></div>
+          <h3>{{ 'DASHBOARD.DOCTOR.TOTAL' | translate }}</h3>
           <p>{{ appointments.length }}</p>
         </div>
       </div>
     </section>
 
     <section class="card" *ngIf="activeSection === 'appointments'">
-      <h3>My Appointments</h3>
+      <h3>{{ 'DASHBOARD.DOCTOR.NAV_APPOINTMENTS' | translate }}</h3>
 
       <div class="empty-state" *ngIf="appointments.length === 0">
-        No appointments available yet.
+        {{ 'DASHBOARD.PATIENT.EMPTY' | translate }}
       </div>
 
       <div *ngFor="let appointment of myAppointments" class="appointment-item">
@@ -80,7 +84,7 @@
             {{ appointment.startTime }} - {{ appointment.endTime }}
           </p>
           <p *ngIf="appointment.reason" class="appointment-reason">
-            Reason: {{ appointment.reason }}
+            {{ 'COMMON.REASON' | translate }}: {{ appointment.reason }}
           </p>
         </div>
         <div class="appointment-actions">
@@ -89,10 +93,10 @@
           </span>
           <div *ngIf="appointment.status === 'pending'" class="action-buttons">
             <button type="button" class="btn-confirm" (click)="confirmAppointment(appointment.id)">
-              Confirm
+              {{ 'DASHBOARD.DOCTOR.ACCEPT' | translate }}
             </button>
             <button type="button" class="btn-reject" (click)="showRejectDialog(appointment)">
-              Reject
+              {{ 'DASHBOARD.DOCTOR.REJECT' | translate }}
             </button>
           </div>
         </div>
@@ -101,57 +105,84 @@
       <!-- Reject Dialog -->
       <div *ngIf="showRejectModal" class="modal-overlay" (click)="closeRejectDialog()">
         <div class="modal-content" (click)="$event.stopPropagation()">
-          <h4>Reject Appointment</h4>
-          <p>Please provide a reason for rejecting this appointment:</p>
-          <textarea [(ngModel)]="rejectReason" placeholder="Enter rejection reason..." rows="4"></textarea>
+          <h4>{{ 'DASHBOARD.DOCTOR.REJECT' | translate }}</h4>
+          <p>{{ 'DASHBOARD.DOCTOR.REJECT_REASON' | translate }}</p>
+          <textarea [(ngModel)]="rejectReason" placeholder="{{ 'DASHBOARD.DOCTOR.REJECT_PLACEHOLDER' | translate }}" rows="3"></textarea>
+          
+          <div class="reschedule-option" style="margin-top: 15px;">
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+              <input type="checkbox" [(ngModel)]="isRescheduling">
+              {{ 'DASHBOARD.DOCTOR.RESCHEDULE_OPTION' | translate }}
+            </label>
+          </div>
+
+          <div *ngIf="isRescheduling" class="reschedule-inputs" style="margin-top: 15px; display: grid; gap: 10px;">
+            <div class="form-group">
+              <label>{{ 'DASHBOARD.DOCTOR.DATE' | translate }}</label>
+              <input type="date" [(ngModel)]="proposedDate">
+            </div>
+            <div style="display: flex; gap: 10px;">
+              <div class="form-group" style="flex: 1;">
+                <label>{{ 'DASHBOARD.DOCTOR.START_TIME' | translate }}</label>
+                <input type="time" [(ngModel)]="proposedStartTime">
+              </div>
+              <div class="form-group" style="flex: 1;">
+                <label>{{ 'DASHBOARD.DOCTOR.END_TIME' | translate }}</label>
+                <input type="time" [(ngModel)]="proposedEndTime">
+              </div>
+            </div>
+          </div>
+
           <div class="modal-actions">
-            <button type="button" class="btn-cancel" (click)="closeRejectDialog()">Cancel</button>
-            <button type="button" class="btn-reject" (click)="submitReject()">Reject</button>
+            <button type="button" class="btn-cancel" (click)="closeRejectDialog()">{{ 'COMMON.CANCEL' | translate }}</button>
+            <button type="button" class="btn-reject" (click)="submitReject()">
+              {{ isRescheduling ? ('DASHBOARD.DOCTOR.SUGGEST_REJECT' | translate) : ('DASHBOARD.DOCTOR.REJECT_FINAL' | translate) }}
+            </button>
           </div>
         </div>
       </div>
     </section>
 
     <section class="card" *ngIf="activeSection === 'schedule'">
-      <h3>Manage Schedule</h3>
+      <h3>{{ 'DASHBOARD.DOCTOR.MANAGE_SCHEDULE' | translate }}</h3>
 
       <div class="message error-message" *ngIf="scheduleError">{{ scheduleError }}</div>
       <div class="message success-message" *ngIf="scheduleSuccess">{{ scheduleSuccess }}</div>
 
       <form class="schedule-form" [formGroup]="scheduleForm" (ngSubmit)="saveSchedule()">
         <div class="form-group">
-          <label for="scheduleDate">Date</label>
-          <input id="scheduleDate" type="date" formControlName="date">
+          <label for="scheduleDate">{{ 'DASHBOARD.DOCTOR.DATE' | translate }}</label>
+          <input id="scheduleDate" type="date" formControlName="date" [min]="todayDate">
         </div>
 
         <div class="slot-list" formArrayName="timeSlots">
           <div class="slot-row" *ngFor="let slot of timeSlots.controls; let i = index; trackBy: trackByIndex" [formGroupName]="i">
             <div class="form-group">
-              <label [for]="'startTime' + i">Start</label>
+              <label [for]="'startTime' + i">{{ 'DASHBOARD.DOCTOR.START' | translate }}</label>
               <input [id]="'startTime' + i" type="time" formControlName="startTime">
             </div>
 
             <div class="form-group">
-              <label [for]="'endTime' + i">End</label>
+              <label [for]="'endTime' + i">{{ 'DASHBOARD.DOCTOR.END' | translate }}</label>
               <input [id]="'endTime' + i" type="time" formControlName="endTime">
             </div>
 
             <button type="button" class="ghost-btn danger-btn" (click)="removeTimeSlot(i)">
-              Remove
+              {{ 'DASHBOARD.DOCTOR.REMOVE' | translate }}
             </button>
           </div>
         </div>
 
         <div class="form-actions">
-          <button type="button" class="ghost-btn" (click)="addTimeSlot()">Add Time Slot</button>
+          <button type="button" class="ghost-btn" (click)="addTimeSlot()">{{ 'DASHBOARD.DOCTOR.ADD_SLOT' | translate }}</button>
           <button type="submit" [disabled]="scheduleSaving">
-            {{ scheduleSaving ? 'Saving...' : 'Save Schedule' }}
+            {{ scheduleSaving ? ('COMMON.LOADING' | translate) : ('DASHBOARD.DOCTOR.SAVE_SCHEDULE' | translate) }}
           </button>
         </div>
       </form>
 
       <div class="empty-state" *ngIf="!scheduleLoading && schedules.length === 0">
-        No schedule added yet.
+        {{ 'DASHBOARD.DOCTOR.NO_SCHEDULE' | translate }}
       </div>
 
       <div class="schedule-card" *ngFor="let schedule of schedules">
@@ -165,72 +196,72 @@
         </div>
 
         <button type="button" class="ghost-btn danger-btn" (click)="deleteSchedule(schedule._id)">
-          Delete
+          {{ 'DASHBOARD.DOCTOR.DELETE' | translate }}
         </button>
       </div>
     </section>
 
     <section class="card profile-card" *ngIf="activeSection === 'profile'">
-      <h3>Doctor Profile</h3>
+      <h3>{{ 'DASHBOARD.DOCTOR.PROFILE_TITLE' | translate }}</h3>
 
       <div class="profile-grid" *ngIf="doctor; else noProfile">
         <div>
-          <span class="profile-label">Name</span>
+          <span class="profile-label">{{ 'DASHBOARD.DOCTOR.NAME' | translate }}</span>
           <p>{{ doctor.name }}</p>
         </div>
         <div>
-          <span class="profile-label">Specialty</span>
-          <p>{{ doctor.specialty }}</p>
+          <span class="profile-label">{{ 'DASHBOARD.DOCTOR.SPECIALTY' | translate }}</span>
+          <p>{{ 'SPECIALTIES.' + doctor.specialty?.toUpperCase() | translate }}</p>
         </div>
         <div>
-          <span class="profile-label">Email</span>
+          <span class="profile-label">{{ 'DASHBOARD.DOCTOR.EMAIL' | translate }}</span>
           <p>{{ doctor.email || 'N/A' }}</p>
         </div>
         <div>
-          <span class="profile-label">Consultation Fee</span>
-          <p>{{ doctor.consultationFee || 0 }} EGP</p>
+          <span class="profile-label">{{ 'DASHBOARD.DOCTOR.FEE' | translate }}</span>
+          <p>{{ doctor.consultationFee || 0 }} {{ 'SERVICES.EGP' | translate }}</p>
         </div>
         <div class="profile-bio">
-          <span class="profile-label">Bio</span>
-          <p>{{ doctor.bio || 'No bio provided yet.' }}</p>
+          <span class="profile-label">{{ 'DASHBOARD.DOCTOR.BIO' | translate }}</span>
+          <p>{{ doctor.bio || ('DASHBOARD.DOCTOR.NO_BIO' | translate) }}</p>
         </div>
       </div>
 
       <ng-template #noProfile>
-        <div class="empty-state">Doctor profile is not available yet.</div>
+        <div class="empty-state">{{ 'DASHBOARD.DOCTOR.NO_PROFILE' | translate }}</div>
       </ng-template>
     </section>
 
     <section class="card" *ngIf="activeSection === 'security'">
-      <h3>Change Password</h3>
+      <h3>{{ 'DASHBOARD.DOCTOR.CHANGE_PASSWORD' | translate }}</h3>
 
       <div class="message error-message" *ngIf="passwordError">{{ passwordError }}</div>
       <div class="message success-message" *ngIf="passwordSuccess">{{ passwordSuccess }}</div>
 
       <form class="schedule-form" [formGroup]="passwordForm" (ngSubmit)="updatePassword()">
         <div class="form-group">
-          <label for="doctorCurrentPassword">Current Password</label>
+          <label for="doctorCurrentPassword">{{ 'DASHBOARD.DOCTOR.CURRENT_PASSWORD' | translate }}</label>
           <input id="doctorCurrentPassword" type="password" formControlName="currentPassword">
         </div>
 
         <div class="security-grid">
           <div class="form-group">
-            <label for="doctorNewPassword">New Password</label>
+            <label for="doctorNewPassword">{{ 'DASHBOARD.DOCTOR.NEW_PASSWORD' | translate }}</label>
             <input id="doctorNewPassword" type="password" formControlName="newPassword">
           </div>
 
           <div class="form-group">
-            <label for="doctorConfirmPassword">Confirm New Password</label>
+            <label for="doctorConfirmPassword">{{ 'DASHBOARD.DOCTOR.CONFIRM_NEW_PASSWORD' | translate }}</label>
             <input id="doctorConfirmPassword" type="password" formControlName="confirmPassword">
           </div>
         </div>
 
         <div class="error-inline" *ngIf="passwordForm.errors?.['passwordMismatch'] && passwordForm.get('confirmPassword')?.touched">
-          Password confirmation does not match.
+          {{ 'AUTH.REGISTER.ERR_MISMATCH' | translate }}
         </div>
 
         <button type="submit" [disabled]="passwordLoading">
-          {{ passwordLoading ? 'Updating...' : 'Update Password' }}
+          {{ passwordLoading ? ('COMMON.LOADING' | translate) : ('AUTH.REGISTER.SUBMIT' | translate) }}
         </button>
       </form>
     </section>

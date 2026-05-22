@@ -1,0 +1,21 @@
+{
+  "REGISTRATION_SUCCESS": "Registration successful. Please verify your email before logging in.",
+  "USER_EXISTS": "User already exists with this email.",
+  "USER_NOT_FOUND": "User not found.",
+  "EMAIL_VERIFIED_ALREADY": "Email has already been verified.",
+  "INVALID_VERIFICATION_CODE": "Invalid verification code.",
+  "EMAIL_VERIFIED_SUCCESS": "Email verified successfully.",
+  "INVALID_CREDENTIALS": "Invalid email or password.",
+  "EMAIL_NOT_VERIFIED": "Email must be verified before login.",
+  "RESET_LINK_SENT": "Password reset link has been sent if the account exists.",
+  "INVALID_RESET_TOKEN": "Invalid or expired password reset token.",
+  "PASSWORD_RESET_SUCCESS": "Password has been reset successfully.",
+  "CURRENT_PASSWORD_INCORRECT": "Current password is incorrect.",
+  "PASSWORD_UPDATED_SUCCESS": "Password updated successfully.",
+  "LOGOUT_SUCCESS": "Logout successful.",
+  "RESET_TOKEN_VALID": "Reset token is valid.",
+  "DOCTOR_NOT_FOUND": "Doctor not found.",
+  "DOCTOR_PROFILE_EXISTS": "Doctor profile already exists for this user.",
+  "SPECIALTY_NOT_FOUND": "Specialty not found.",
+  "NOT_AUTHORIZED": "Not authorized to perform this action."
+}

@@ -1,169 +1,132 @@
-<!-- HEADER -->
-<header class="top-header">
-  <div class="container">
-    <h1>Digital Medical Center</h1>
-    <p>The Region's First Smart Health System | Since 2010</p>
-  </div>
-</header>
-
-<!-- ABOUT -->
-<section class="container">
-  <h2 class="section-title">Who We Are</h2>
-
-  <div class="grid">
-
-    <div class="testimonial-card">
-      <h3>Our Mission</h3>
-      <p>
-        To create an intelligent care environment that respects human dignity
-      </p>
+<div class="about-page">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container" data-aos="fade-down">
+      <h1 class="hero-title">
+        <span class="brand-text">DocSphere</span> {{ 'ABOUT.SUBTITLE' | translate }}
+      </h1>
     </div>
+  </section>
 
-    <div class="testimonial-card">
-      <h3>Our Values</h3>
-      <p>
-        We work with integrity, innovate with passion, and care with our hearts
-      </p>
+  <!-- Features Grid -->
+  <section class="features-section container">
+    <div class="features-grid">
+      <div class="feature-card" data-aos="zoom-in" data-aos-delay="100">
+        <div class="icon-box"><i class="fas fa-user-md"></i></div>
+        <h3>{{ 'ABOUT.FEATURES.STAFF' | translate }}</h3>
+      </div>
+      <div class="feature-card" data-aos="zoom-in" data-aos-delay="200">
+        <div class="icon-box"><i class="fas fa-hand-holding-dollar"></i></div>
+        <h3>{{ 'ABOUT.FEATURES.PRICES' | translate }}</h3>
+      </div>
+      <div class="feature-card" data-aos="zoom-in" data-aos-delay="300">
+        <div class="icon-box"><i class="fas fa-shield-heart"></i></div>
+        <h3>{{ 'ABOUT.FEATURES.INSURANCE' | translate }}</h3>
+      </div>
+      <div class="feature-card" data-aos="zoom-in" data-aos-delay="400">
+        <div class="icon-box"><i class="fas fa-headset"></i></div>
+        <h3>{{ 'ABOUT.FEATURES.SUPPORT' | translate }}</h3>
+      </div>
+      <div class="feature-card" data-aos="zoom-in" data-aos-delay="500">
+        <div class="icon-box"><i class="fas fa-truck-medical"></i></div>
+        <h3>{{ 'ABOUT.FEATURES.EMERGENCY' | translate }}</h3>
+      </div>
+      <div class="feature-card" data-aos="zoom-in" data-aos-delay="600">
+        <div class="icon-box"><i class="fas fa-laptop-medical"></i></div>
+        <h3>{{ 'ABOUT.FEATURES.CONSULTANCY' | translate }}</h3>
+      </div>
     </div>
+  </section>
 
-    <div class="testimonial-card">
-      <h3>Our Vision</h3>
-      <p>
-        To lead the digital health transformation in the region
-      </p>
+  <!-- Split Info Section (Experience & Values) -->
+  <section class="split-section" [style.backgroundImage]="'url(' + bgImage + ')'">
+    <div class="container split-container">
+      <div class="split-box left-box" data-aos="fade-right">
+        <h2>{{ 'ABOUT.EXPERIENCE_TITLE' | translate }}</h2>
+        <div class="divider"></div>
+        <p>{{ 'ABOUT.EXPERIENCE_DESC' | translate }}</p>
+      </div>
+      <div class="split-box right-box" data-aos="fade-left">
+        <div class="info-item">
+          <div class="small-icon"><i class="fas fa-heart"></i></div>
+          <div class="info-text">
+            <h4>{{ 'ABOUT.MISSION_TITLE' | translate }}</h4>
+            <p>{{ 'ABOUT.MISSION_DESC' | translate }}</p>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="small-icon"><i class="fas fa-stethoscope"></i></div>
+          <div class="info-text">
+            <h4>{{ 'ABOUT.VISION_TITLE' | translate }}</h4>
+            <p>{{ 'ABOUT.VISION_DESC' | translate }}</p>
+          </div>
+        </div>
+      </div>
     </div>
+  </section>
 
-  </div>
-</section>
-
-<!-- STAFF -->
-<section class="container">
-
-  <h2 class="section-title">Our Elite Medical Team</h2>
-
-  <div class="filter-buttons">
-
-    <button
-      class="tab-btn"
-      [class.active]="activeFilter === 'all'"
-      (click)="applyFilter('all')">
-      All
-    </button>
-
-    <button
-      class="tab-btn"
-      [class.active]="activeFilter === 'doctor'"
-      (click)="applyFilter('doctor')">
-      Doctors
-    </button>
-
-    <button
-      class="tab-btn"
-      [class.active]="activeFilter === 'nurse'"
-      (click)="applyFilter('nurse')">
-      Nursing
-    </button>
-
-    <button
-      class="tab-btn"
-      [class.active]="activeFilter === 'admin'"
-      (click)="applyFilter('admin')">
-      Administration
-    </button>
-
-  </div>
-
-  <div class="staff-grid">
-
-    <div
-      class="staff-card"
-      *ngFor="let person of filteredStaff">
-
-      <img [src]="person.image">
-
-      <div class="staff-info">
-        <h3>{{ person.name }}</h3>
-        <p>{{ person.specialty }}</p>
+  <!-- Patients Talk About Us Section (Keeping the New Design) -->
+  <section class="patients-talk-section">
+    <div class="container">
+      <div class="section-header-centered" data-aos="fade-up">
+        <h2 class="patients-talk-title">{{ 'HOME.REVIEWS_TITLE' | translate }}</h2>
+        <div class="title-underline">
+          <span class="line-teal"></span>
+          <span class="line-coral"></span>
+        </div>
       </div>
 
-    </div>
-
-  </div>
-
-</section>
-
-<!-- TESTIMONIALS -->
-<section class="container">
-
-  <h2 class="section-title">What Our Patients Say</h2>
-
-  <div class="grid">
-
-    <div
-      class="testimonial-card"
-      *ngFor="let t of testimonials; let i = index">
-
-      <div class="stars">
-        {{ getStars(t.rating) }}
-      </div>
-
-      <p class="testimonial-text">
-        {{ t.text }}
-      </p>
-
-      <div class="patient-info">
-
-        <div class="patient-avatar">
-          {{ t.name.charAt(0) }}
+      <div class="reviews-swiper-container" data-aos="fade-up">
+        <div class="swiper about-reviews-swiper">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide" *ngFor="let review of reviews">
+              <div class="testimonial-content">
+                <div class="patient-avatar-wrapper">
+                  <img [src]="'https://ui-avatars.com/api/?name=' + (review.patient?.firstName || 'User') + '&background=random'" alt="Patient Avatar">
+                  <div class="quote-icon"><i class="fas fa-quote-left"></i></div>
+                </div>
+                <p class="testimonial-text">"{{ review.comment }}"</p>
+                <h3 class="patient-name">{{ review.patient?.firstName }} {{ review.patient?.lastName }}</h3>
+                <p class="patient-role">{{ 'ABOUT.PATIENT_STORY' | translate }}</p>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div>
-          <h4>{{ t.name }}</h4>
-          <small>Center Patient</small>
+        <button class="swiper-button-prev-custom"><i class="fas fa-chevron-left"></i></button>
+        <button class="swiper-button-next-custom"><i class="fas fa-chevron-right"></i></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section (Keeping the Redesign) -->
+  <section class="cta-section-new" data-aos="zoom-in">
+    <div class="container cta-wrapper">
+      <div class="cta-left">
+        <h2 class="cta-headline">{{ 'ABOUT.CTA_TITLE' | translate }}</h2>
+      </div>
+      
+      <div class="cta-right">
+        <div class="cta-info-item">
+          <div class="cta-pill-icon">
+            <i class="fas fa-phone"></i>
+          </div>
+          <div class="cta-info-text">
+            <span>Call us:</span><br>
+            <a href="tel:{{ 'ABOUT.CTA_PHONE' | translate }}">{{ 'ABOUT.CTA_PHONE' | translate }}</a>
+          </div>
         </div>
 
+        <div class="cta-info-item">
+          <div class="cta-pill-icon">
+            <i class="fas fa-envelope"></i>
+          </div>
+          <div class="cta-info-text">
+            <span>Email us:</span><br>
+            <a href="mailto:{{ 'ABOUT.CTA_EMAIL' | translate }}">{{ 'ABOUT.CTA_EMAIL' | translate }}</a>
+          </div>
+        </div>
       </div>
-
-      <button
-        class="delete-btn"
-        (click)="deleteTestimonial(i)">
-        Delete
-      </button>
-
     </div>
-
-    <!-- ADD FORM -->
-
-    <div class="testimonial-card add-form">
-
-      <h3>Add Your Review</h3>
-
-      <input
-        type="text"
-        placeholder="Your Name"
-        [(ngModel)]="newName">
-
-      <input
-        type="text"
-        placeholder="Your comment"
-        [(ngModel)]="newText">
-
-      <select [(ngModel)]="newRating">
-
-        <option [value]="5">⭐⭐⭐⭐⭐</option>
-        <option [value]="4">⭐⭐⭐⭐☆</option>
-        <option [value]="3">⭐⭐⭐☆☆</option>
-        <option [value]="2">⭐⭐☆☆☆</option>
-        <option [value]="1">⭐☆☆☆☆</option>
-
-      </select>
-
-      <button (click)="addTestimonial()">
-        Submit Review
-      </button>
-
-    </div>
-
-  </div>
-
-</section>
+  </section>
+</div>
