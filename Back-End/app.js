@@ -42,7 +42,7 @@ app.use(i18n.init);
 app.use(helmet());
 app.use(
   cors({
-    // origin: process.env.CLIENT_URL,
+    origin: process.env.CLIENT_URL,
     // origin: "https://docsphere-fawn.vercel.app",
     origin: ["http://localhost:4200", "https://docsphere-one.vercel.app"],
     credentials: true,
