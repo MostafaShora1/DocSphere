@@ -52,12 +52,12 @@ exports.register = async (req, res, next) => {
       verificationCode,
     });
 
-    // await sendVerificationEmail(user.email, user.name, verificationCode);
     try {
       await sendVerificationEmail(user.email, user.name, verificationCode);
     } catch (err) {
       console.error("EMAIL ERROR:", err);
-      throw err;
+      // Don't block registration on email failures in production (e.g. ETIMEDOUT).
+      // Consider retrying or queuing the email via a background job in future.
     }
 
     res.status(201).json({
@@ -171,7 +171,12 @@ exports.forgotPassword = async (req, res, next) => {
     // Use frontend URL from environment or default to Angular dev server
     const frontendUrl = process.env.FRONTEND_URL || "http://localhost:4200";
     const resetUrl = `${frontendUrl}/reset-password/${resetToken}`;
-    await sendResetPasswordEmail(user.email, user.name, resetUrl);
+    try {
+      await sendResetPasswordEmail(user.email, user.name, resetUrl);
+    } catch (err) {
+      console.error("EMAIL ERROR:", err);
+      // Do not fail the request just because sending email failed.
+    }
 
     res.status(200).json({ message: res.__("RESET_LINK_SENT") });
   } catch (error) {
