@@ -49,21 +49,6 @@ const sendEmail = async (options) => {
 // 📩 EMAIL TEMPLATES
 // ==========================
 
-exports.sendVerificationEmail = async (to, name, code) => {
-  const html = `
-    <h2>Hello ${name}</h2>
-    <p>Thank you for registering. Use the following code to verify your email address:</p>
-    <h1>${code}</h1>
-    <p>If you did not request this, please ignore this message.</p>
-  `;
-
-  return sendEmail({
-    to,
-    subject: "Verify Your Email Address",
-    html,
-  });
-};
-
 exports.sendResetPasswordEmail = async (to, name, resetUrl) => {
   const html = `
     <h2>Hello ${name}</h2>

@@ -2,13 +2,10 @@ const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const { validationResult } = require("express-validator");
 const User = require("../models/User");
-const {
-  sendVerificationEmail,
-  sendResetPasswordEmail,
-} = require("../services/emailService");
+const { sendResetPasswordEmail } = require("../services/emailService");
 const { generateJwtToken } = require("../services/tokenService");
 
-// Register new user and send verification email
+// Register new user - user can login immediately
 exports.register = async (req, res, next) => {
   try {
     const errors = validationResult(req);
@@ -34,7 +31,6 @@ exports.register = async (req, res, next) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
-    const verificationCode = crypto.randomBytes(3).toString("hex");
 
     // Ensure name is not empty (especially for doctors where it might be nameEn/nameAr)
     const finalName = name || nameEn || nameAr || email.split("@")[0];
@@ -48,17 +44,7 @@ exports.register = async (req, res, next) => {
       phone: phonePrimary || phone,
       birthDate,
       role,
-      isVerified: false,
-      verificationCode,
     });
-
-    try {
-      await sendVerificationEmail(user.email, user.name, verificationCode);
-    } catch (err) {
-      console.error("EMAIL ERROR:", err);
-      // Don't block registration on email failures in production (e.g. ETIMEDOUT).
-      // Consider retrying or queuing the email via a background job in future.
-    }
 
     res.status(201).json({
       message: res.__("REGISTRATION_SUCCESS"),
@@ -66,7 +52,6 @@ exports.register = async (req, res, next) => {
         id: user._id,
         name: user.name,
         email: user.email,
-        isVerified: user.isVerified,
       },
     });
   } catch (error) {
@@ -74,37 +59,7 @@ exports.register = async (req, res, next) => {
   }
 };
 
-// Verify email with code
-exports.verifyEmail = async (req, res, next) => {
-  try {
-    const { email, verificationCode } = req.body;
 
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(404).json({ message: res.__("USER_NOT_FOUND") });
-    }
-
-    if (user.isVerified) {
-      return res
-        .status(200)
-        .json({ message: res.__("EMAIL_VERIFIED_ALREADY") });
-    }
-
-    if (user.verificationCode !== verificationCode) {
-      return res
-        .status(400)
-        .json({ message: res.__("INVALID_VERIFICATION_CODE") });
-    }
-
-    user.isVerified = true;
-    user.verificationCode = null;
-    await user.save();
-
-    res.status(200).json({ message: res.__("EMAIL_VERIFIED_SUCCESS") });
-  } catch (error) {
-    next(error);
-  }
-};
 
 // Login user and return JWT token
 exports.login = async (req, res, next) => {
@@ -132,10 +87,6 @@ exports.login = async (req, res, next) => {
         .json({
           message: "Your account has been deactivated. Please contact support.",
         });
-    }
-
-    if (!user.isVerified) {
-      return res.status(403).json({ message: res.__("EMAIL_NOT_VERIFIED") });
     }
 
     const token = generateJwtToken(user._id);

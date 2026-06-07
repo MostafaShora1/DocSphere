@@ -6,13 +6,11 @@ const {
   registerValidator,
   loginValidator,
   forgotPasswordValidator,
-  resetPasswordValidator,
-  verifyEmailValidator
+  resetPasswordValidator
 } = require('../validators/authValidator');
 
 // Public routes
 router.post('/register', registerValidator, authController.register);
-router.post('/verify-email', verifyEmailValidator, authController.verifyEmail);
 router.post('/login', loginValidator, authController.login);
 router.post('/forgot-password', forgotPasswordValidator, authController.forgotPassword);
 router.get('/verify-reset-token/:token', authController.verifyResetToken);

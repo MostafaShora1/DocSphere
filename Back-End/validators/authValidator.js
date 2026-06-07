@@ -9,13 +9,6 @@ exports.registerValidator = [
   body('role').optional().isIn(['admin', 'doctor', 'patient']).withMessage('Role must be admin, doctor, or patient.')
 ];
 
-exports.verifyEmailValidator = [
-  body('email').isEmail().withMessage('Please provide a valid email.'),
-  body('verificationCode')
-    .notEmpty()
-    .withMessage('Verification code is required.')
-];
-
 exports.loginValidator = [
   body('email').notEmpty().withMessage('Email is required.'),
   body('password').notEmpty().withMessage('Password is required.')
