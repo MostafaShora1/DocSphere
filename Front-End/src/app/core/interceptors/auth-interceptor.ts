@@ -9,7 +9,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const token = localStorage.getItem('authToken');
   const lang = localStorage.getItem('lang') || 'en';
 
-  const isAuthRequest = /\/auth\/(login|register|verify-email|forgot-password|reset-password)/.test(
+  const isAuthRequest = /\/auth\/(login|register|forgot-password|reset-password)/.test(
     req.url
   );
 

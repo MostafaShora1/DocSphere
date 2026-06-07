@@ -305,8 +305,8 @@ export class RegisterComponent implements OnInit {
       }
 
       this.successMsg = this.translate.instant('AUTH.REGISTER.SUCCESS');
-      this.router.navigate(['/verify-email'], {
-        queryParams: { email, registered: 'success' }
+      this.router.navigate(['/login'], {
+        queryParams: { registered: 'success' }
       });
     } catch (error: any) {
       this.errorMsg = error.error?.message || this.translate.instant('AUTH.REGISTER.ERR_FAILED');

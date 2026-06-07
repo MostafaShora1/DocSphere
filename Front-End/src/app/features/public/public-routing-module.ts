@@ -8,7 +8,6 @@ import { ContactComponent } from './contact/contact';
 import { LoginComponent } from '../auth/login/login';
 import { AboutComponent } from './about/about';
 import { ForgotPasswordComponent } from '../auth/forgot-password/forgot-password.component';
-import { VerifyEmailComponent } from '../auth/verify-email/verify-email.component';
 import { ResetPasswordComponent } from '../auth/reset-password/reset-password';
 
 const routes: Routes = [
@@ -46,11 +45,6 @@ const routes: Routes = [
   {
     path: 'forgot-password',
     component: ForgotPasswordComponent
-  },
-
-  {
-    path: 'verify-email',
-    component: VerifyEmailComponent
   },
 
   {

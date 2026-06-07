@@ -156,15 +156,6 @@ export class AuthService {
     );
   }
 
-  async verifyEmail(email: string, otp: string) {
-    return await firstValueFrom(
-      this.http.post(`${this.baseUrl}/auth/verify-email`, {
-        email,
-        verificationCode: otp
-      })
-    );
-  }
-
   storePendingProfileDraft(email: string, draft: PendingProfileDraft): void {
     const drafts = this.readPendingDrafts();
     drafts[email.toLowerCase()] = draft;
