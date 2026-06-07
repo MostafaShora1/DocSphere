@@ -1,53 +1,47 @@
-const { Resend } = require("resend");
+const nodemailer = require("nodemailer");
 
-const RESEND_API_KEY = process.env.RESEND_API_KEY;
+// 🔥 Gmail transporter (production safe)
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
 
-if (!RESEND_API_KEY) {
-  throw new Error("❌ RESEND_API_KEY is missing in environment variables");
-}
+// ✅ تأكد إن الاتصال شغال أول ما السيرفر يقوم
+transporter.verify((error, success) => {
+  if (error) {
+    console.error("❌ SMTP connection error:", error.message);
+  } else {
+    console.log("✅ Gmail SMTP ready");
+  }
+});
 
-const resend = new Resend(RESEND_API_KEY);
-
-// 🔥 استخدم verified domain في production
-const FROM_EMAIL =
-  process.env.RESEND_FROM_EMAIL ||
-  "Auth System <onboarding@resend.dev>";
-
-/**
- * Generic send email function
- */
+// ==========================
+// 📧 Generic send email
+// ==========================
 const sendEmail = async (options) => {
   try {
-    console.log("📧 Sending email...", {
-      to: options.to,
-      subject: options.subject,
-    });
+    console.log("📧 Sending email to:", options.to);
 
-    const response = await resend.emails.send({
-      from: FROM_EMAIL,
+    const mailOptions = {
+      from: `Auth System <${process.env.EMAIL_USER}>`,
       to: options.to,
       subject: options.subject,
       html: options.html,
-    });
+    };
 
-    // ❗ Resend response structure fix
-    if (response?.error) {
-      console.error("❌ Resend API error:", response.error);
-      return null;
-    }
+    const info = await transporter.sendMail(mailOptions);
 
-    console.log("✅ Email sent successfully:", {
-      id: response?.data?.id,
-    });
+    console.log("✅ Email sent successfully:", info.messageId);
 
-    return response;
+    return info;
   } catch (error) {
-    console.error("❌ Failed to send email:", {
-      message: error?.message,
-      stack: error?.stack,
-    });
-
-    return null;
+    console.error("❌ Email failed:", error.message);
+    throw error;
   }
 };
 
@@ -114,7 +108,7 @@ exports.sendAppointmentStatusEmail = async (
       <p>Your appointment with Dr. ${doctorName} has been confirmed.</p>
       <p><strong>Date:</strong> ${formattedDate}</p>
       <p><strong>Time:</strong> ${appointmentTime}</p>
-      <p>Please arrive 15 minutes early.</p>
+      <p>Please arrive 15 minutes before your scheduled time.</p>
     `;
   } 
   
@@ -122,7 +116,7 @@ exports.sendAppointmentStatusEmail = async (
     subject = "Appointment Rejected";
     html = `
       <h2>Hello ${patientName}</h2>
-      <p>Your appointment with Dr. ${doctorName} was rejected.</p>
+      <p>Your appointment with Dr. ${doctorName} has been rejected.</p>
       <p><strong>Date:</strong> ${formattedDate}</p>
       <p><strong>Time:</strong> ${appointmentTime}</p>
       ${
@@ -137,7 +131,7 @@ exports.sendAppointmentStatusEmail = async (
     subject = "Appointment Reschedule Proposal";
     html = `
       <h2>Hello ${patientName}</h2>
-      <p>Dr. ${doctorName} suggested a new time.</p>
+      <p>Dr. ${doctorName} suggested a new time for your appointment.</p>
       <p><strong>Date:</strong> ${formattedDate}</p>
       <p><strong>Time:</strong> ${appointmentTime}</p>
       ${
