@@ -494,3 +494,15 @@ td {
   .reviews-grid { grid-template-columns: 1fr; }
   .info-content { flex-direction: column; gap: 20px; }
 }
+
+/* Mobile-specific tweaks for security/password form */
+@media (max-width: 480px) {
+  /* ensure content fills available width and is not pushed by sidebars */
+  .wrap { padding: 16px; margin: 60px 12px 20px; width: calc(100% - 24px); max-width: 480px; }
+  .card { padding: 18px; border-radius: 12px; }
+  .security-card { max-width: 100%; }
+  .form-grid { grid-template-columns: 1fr; gap: 12px; }
+  .password-form { gap: 16px; }
+  .form-group input { width: 100%; }
+  .btn-update-password { align-self: stretch; width: 100%; padding: 12px; border-radius: 10px; }
+}

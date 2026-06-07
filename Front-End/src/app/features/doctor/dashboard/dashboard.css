@@ -542,6 +542,13 @@ button[type="submit"]:hover:not(:disabled) {
   .top-bar h2 {
     font-size: 1.8rem;
   }
+
+  /* Ensure security/profile forms stack on small screens */
+  .security-grid, .profile-grid { grid-template-columns: 1fr; }
+  .card { padding: 20px; border-radius: 16px; }
+  .form-group input, .form-group textarea { width: 100%; }
+  button[type="submit"] { width: 100%; }
+  .form-actions { flex-direction: column-reverse; gap: 12px; align-items: stretch; }
 }
 
 .nav-item i {
