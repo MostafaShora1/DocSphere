@@ -42,7 +42,7 @@ app.use(i18n.init);
 app.use(helmet());
 app.use(cors(
   {
-    origin: "https://doc-sphere123.vercel.app",
+    origin: process.env.CLIENT_URL,
     credentials: true
   }
 ));

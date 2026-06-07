@@ -366,7 +366,7 @@
 
 .doctor-horizontal-grid {
     display: grid !important;
-    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)) !important;
+    /* grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)) !important; */
     gap: 30px !important;
 }
 
@@ -378,7 +378,7 @@
     box-shadow: 0 5px 25px rgba(0, 0, 0, 0.07) !important;
     transition: transform 0.3s ease !important;
     border: none !important;
-    height: 280px !important;
+    /* height: 280px !important; */
 }
 
 .doctor-card-premium-h:hover {
@@ -528,7 +528,7 @@
     position: relative;
     max-width: 1400px;
     margin: 80px auto 0;
-    padding: 0 150px;
+    /* padding: 0 150px; */
     z-index: 1;
 }
 
@@ -599,7 +599,7 @@
 .swiper-button-prev-custom,
 .swiper-button-next-custom {
     position: absolute;
-    top: 50%;
+    top: 100%;
     transform: translateY(-50%);
     width: 70px;
     height: 45px;
