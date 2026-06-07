@@ -39,7 +39,7 @@ exports.register = async (req, res, next) => {
       verificationCode
     });
 
-    await sendVerificationEmail(user.email, user.name, verificationCode);
+    // await sendVerificationEmail(user.email, user.name, verificationCode);
 
     res.status(201).json({
       message: res.__('REGISTRATION_SUCCESS'),
