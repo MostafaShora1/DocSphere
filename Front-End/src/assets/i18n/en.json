@@ -272,7 +272,7 @@
     "ERR_MSG": "Message must be at least 10 characters"
   },
   "ABOUT": {
-    "TITLE": "About DocSphere",
+    "TITLE": "About docsphere",
     "SUBTITLE": "Always carefully helping patients, to be a trusted healthcare for your family.",
     "FEATURES": {
       "STAFF": "Professional Staff",
@@ -288,7 +288,7 @@
     "MISSION_DESC": "Providing high quality healthcare with efficiency and compassion for every patient.",
     "VISION_TITLE": "Our Vision",
     "VISION_DESC": "To be the first and trusted destination for integrated healthcare in the region.",
-    "CTA_TITLE": "Book an Appointment with DocSphere Experts",
+    "CTA_TITLE": "Book an Appointment with docsphere Experts",
     "CTA_SUBTITLE": "You can contact us for appointments, consultations, or any medical inquiries. Our team is here for you 24/7.",
     "CTA_PHONE": "+20 123 456 789",
     "CTA_EMAIL": "info@docsphere.com",
@@ -302,7 +302,7 @@
     "DAYS": "Saturday - Friday",
     "AVAILABLE": "24/7 Available",
     "LOCATION": "Cairo, Egypt",
-    "COPYRIGHT": "© 2026 DocSphere | All Rights Reserved"
+    "COPYRIGHT": "© 2026 docsphere | All Rights Reserved"
   },
   "ERRORS": {
     "SERVER_UNREACHABLE": "Unable to reach the server. Please check your connection and try again.",

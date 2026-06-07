@@ -255,7 +255,7 @@
     "DAYS": "Saturday - Friday",
     "AVAILABLE": "24/7 Available",
     "LOCATION": "Cairo, Egypt",
-    "COPYRIGHT": "© 2026 DocSphere | All Rights Reserved"
+    "COPYRIGHT": "© 2026 docsphere | All Rights Reserved"
   },
   "ERRORS": {
     "SERVER_UNREACHABLE": "Unable to reach the server. Please check your connection and try again.",

@@ -7,7 +7,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "DocSphere": {
+    "docsphere": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -62,10 +62,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "DocSphere:build:production"
+              "buildTarget": "docsphere:build:production"
             },
             "development": {
-              "buildTarget": "DocSphere:build:development"
+              "buildTarget": "docsphere:build:development"
             }
           },
           "defaultConfiguration": "development"

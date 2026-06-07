@@ -22,7 +22,7 @@ import { TranslateService, TranslateModule } from '@ngx-translate/core';
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('DocSphere');
+  protected readonly title = signal('docsphere');
 
   constructor(
     private themeService: ThemeService,
