@@ -3,12 +3,12 @@ const { Resend } = require("resend");
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 
 if (!RESEND_API_KEY) {
-  console.error("❌ RESEND_API_KEY is missing in environment variables");
+  throw new Error("❌ RESEND_API_KEY is missing in environment variables");
 }
 
 const resend = new Resend(RESEND_API_KEY);
 
-// 🔥 لازم تستخدم email verified أو onboarding
+// 🔥 استخدم verified domain في production
 const FROM_EMAIL =
   process.env.RESEND_FROM_EMAIL ||
   "Auth System <onboarding@resend.dev>";
@@ -17,14 +17,6 @@ const FROM_EMAIL =
  * Generic send email function
  */
 const sendEmail = async (options) => {
-  if (!RESEND_API_KEY) {
-    console.error("❌ Cannot send email: RESEND_API_KEY not configured", {
-      to: options.to,
-      subject: options.subject,
-    });
-    return null;
-  }
-
   try {
     console.log("📧 Sending email...", {
       to: options.to,
@@ -38,8 +30,14 @@ const sendEmail = async (options) => {
       html: options.html,
     });
 
+    // ❗ Resend response structure fix
+    if (response?.error) {
+      console.error("❌ Resend API error:", response.error);
+      return null;
+    }
+
     console.log("✅ Email sent successfully:", {
-      id: response?.id,
+      id: response?.data?.id,
     });
 
     return response;
@@ -118,7 +116,9 @@ exports.sendAppointmentStatusEmail = async (
       <p><strong>Time:</strong> ${appointmentTime}</p>
       <p>Please arrive 15 minutes early.</p>
     `;
-  } else if (status === "rejected") {
+  } 
+  
+  else if (status === "rejected") {
     subject = "Appointment Rejected";
     html = `
       <h2>Hello ${patientName}</h2>
@@ -131,7 +131,9 @@ exports.sendAppointmentStatusEmail = async (
           : ""
       }
     `;
-  } else if (status === "proposed") {
+  } 
+  
+  else if (status === "proposed") {
     subject = "Appointment Reschedule Proposal";
     html = `
       <h2>Hello ${patientName}</h2>
