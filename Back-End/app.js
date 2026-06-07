@@ -22,6 +22,7 @@ const i18n = require('i18n');
 const path = require('path');
 
 const app = express();
+app.set('trust proxy', 1);
 
 // i18n configuration
 i18n.configure({
