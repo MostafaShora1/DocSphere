@@ -7,7 +7,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "medical-project3": {
+    "DocSphere": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -62,10 +62,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "medical-project3:build:production"
+              "buildTarget": "DocSphere:build:production"
             },
             "development": {
-              "buildTarget": "medical-project3:build:development"
+              "buildTarget": "DocSphere:build:development"
             }
           },
           "defaultConfiguration": "development"
