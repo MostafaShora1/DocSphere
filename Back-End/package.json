@@ -22,7 +22,7 @@
     "i18n": "^0.15.3",
     "jsonwebtoken": "^9.0.1",
     "mongoose": "^7.5.2",
-    "nodemailer": "^6.9.4",
+    "resend": "^6.12.4",
     "stripe": "^22.0.1",
     "xss-clean": "^0.1.4"
   },
