@@ -270,7 +270,83 @@
   color: white !important;
 }
 
-@media (max-width: 1024px) {
+/* =============== DARK MODE =============== */
+:host-context(body.dark-mode) .page-header {
+  background: linear-gradient(135deg, #0B1F3A 0%, #071529 100%);
+}
+
+:host-context(body.dark-mode) .header-content h1 {
+  color: white;
+}
+
+:host-context(body.dark-mode) .header-content p {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+:host-context(body.dark-mode) .controls {
+  background: transparent;
+}
+
+:host-context(body.dark-mode) .search-input-wrapper,
+:host-context(body.dark-mode) .select-wrapper {
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+:host-context(body.dark-mode) .controls input,
+:host-context(body.dark-mode) .controls select {
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+:host-context(body.dark-mode) .controls input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+:host-context(body.dark-mode) .section-title p {
+  background: rgba(255, 127, 80, 0.2);
+  color: var(--coral);
+}
+
+:host-context(body.dark-mode) .doctor-card-premium-h {
+  background: rgba(12, 28, 56, 0.8);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+:host-context(body.dark-mode) .doc-h-content {
+  background: rgba(26, 39, 62, 0.95);
+}
+
+:host-context(body.dark-mode) .doc-h-content h3 {
+  color: white;
+}
+
+:host-context(body.dark-mode) .doc-h-specialty {
+  color: var(--coral);
+}
+
+:host-context(body.dark-mode) .doc-h-bio {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+:host-context(body.dark-mode) .doc-h-rating {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+:host-context(body.dark-mode) .doctor-card-premium-h:hover {
+  box-shadow: 0 15px 35px rgba(247, 150, 116, 0.2);
+}
+
+:host-context(body.dark-mode) .doctor-card-premium-h:hover .doc-h-content {
+  background: var(--coral);
+}
+
+:host-context(body.dark-mode) .doctor-card-premium-h:hover h3,
+:host-context(body.dark-mode) .doctor-card-premium-h:hover .doc-h-specialty,
+:host-context(body.dark-mode) .doctor-card-premium-h:hover .doc-h-bio,
+:host-context(body.dark-mode) .doctor-card-premium-h:hover .doc-h-rating {
+  color: white !important;
+}
   .page-header {
     padding: 100px 20px 60px;
   }
