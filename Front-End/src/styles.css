@@ -5,6 +5,9 @@
   --text-primary: #001910;
   --text-secondary: #475569;
   --border-color: #f1f5f9;
+  --input-bg: #f4f7fb;
+  --input-text: #001910;
+  --input-border: #e8eef5;
 
   --dark-bg: #02302c;
   --coral: #f79674;
@@ -39,6 +42,9 @@ body.dark-mode {
   --coral: #FF7A50;
   /* أزرار الـ CTA */
   --coral-dark: #e66e48;
+  --input-bg: rgba(255, 255, 255, 0.12);
+  --input-text: #ffffff;
+  --input-border: rgba(255, 255, 255, 0.15);
 }
 
 * {
