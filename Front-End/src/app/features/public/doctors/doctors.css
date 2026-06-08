@@ -171,21 +171,23 @@
 
 .doctor-horizontal-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 25px;
   margin-top: 30px;
+  padding: 0 20px;
 }
 
 .doctor-card-premium-h {
   display: flex;
   background: var(--bg-card);
-  border-radius: 0 !important;
+  border-radius: 12px !important;
   overflow: hidden;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
   border: none;
   height: 280px;
   cursor: pointer;
+  min-height: 280px;
 }
 
 .doctor-card-premium-h:hover {
@@ -207,13 +209,14 @@
 
 .doc-h-content {
   flex: 1;
-  padding: 40px;
+  padding: 30px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   background: #fff2f0;
   text-align: left;
   transition: background 0.3s ease, color 0.3s ease;
+  overflow: hidden;
 }
 
 [dir="rtl"] .doc-h-content {
@@ -267,24 +270,221 @@
   color: white !important;
 }
 
-@media (max-width: 992px) {
-  .doctor-horizontal-grid {
-    grid-template-columns: 1fr;
+@media (max-width: 1024px) {
+  .page-header {
+    padding: 100px 20px 60px;
   }
-}
 
-@media (max-width: 600px) {
+  .header-content h1 {
+    font-size: 2.8rem;
+  }
+
+  .header-content p {
+    font-size: 1.1rem;
+  }
+
+  .controls {
+    margin: -30px auto 40px;
+    max-width: 700px;
+  }
+
+  .doctor-horizontal-grid {
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  }
+
   .doctor-card-premium-h {
-    flex-direction: column;
-    height: auto;
+    height: 250px;
   }
 
   .doc-h-image {
-    height: 250px;
-    flex: 0 0 100%;
+    flex: 0 0 35%;
   }
 
   .doc-h-content {
     padding: 25px;
+  }
+
+  .doc-h-content h3 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    padding: 80px 15px 50px;
+  }
+
+  .header-content h1 {
+    font-size: 2.2rem;
+  }
+
+  .header-content p {
+    font-size: 1rem;
+  }
+
+  .controls {
+    flex-direction: column;
+    margin: -20px auto 30px;
+    gap: 0;
+  }
+
+  .search-input-wrapper,
+  .select-wrapper {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #eee;
+  }
+
+  .search-input-wrapper:last-child {
+    border-bottom: none;
+  }
+
+  .controls input,
+  .controls select {
+    padding: 14px 15px;
+  }
+
+  .section-title p {
+    font-size: 0.8rem;
+  }
+
+  .doctor-horizontal-grid {
+    grid-template-columns: 1fr;
+    padding: 0 15px;
+  }
+
+  .doctor-card-premium-h {
+    flex-direction: row;
+    height: auto;
+    min-height: 220px;
+  }
+
+  .doc-h-image {
+    height: 220px;
+    flex: 0 0 30%;
+  }
+
+  .doc-h-content {
+    padding: 20px 20px;
+  }
+
+  .doc-h-content h3 {
+    font-size: 1.4rem;
+    margin-bottom: 5px;
+  }
+
+  .doc-h-bio {
+    font-size: 0.85rem;
+    -webkit-line-clamp: 2;
+    margin-bottom: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header {
+    padding: 60px 12px 40px;
+  }
+
+  .header-content h1 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+  }
+
+  .header-content p {
+    font-size: 0.9rem;
+    max-width: 100%;
+  }
+
+  .controls {
+    flex-direction: column;
+    margin: -15px auto 20px;
+    padding: 8px;
+    gap: 0;
+  }
+
+  .search-input-wrapper,
+  .select-wrapper {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #eee;
+  }
+
+  .search-input-wrapper:last-child {
+    border-bottom: none;
+  }
+
+  .controls input,
+  .controls select {
+    padding: 12px 12px;
+    font-size: 1rem;
+  }
+
+  .search-icon {
+    margin-left: 10px;
+    font-size: 1rem;
+  }
+
+  .select-icon {
+    right: 15px;
+    font-size: 0.8rem;
+  }
+
+  [dir="rtl"] .select-icon {
+    left: 15px;
+  }
+
+  .section-title {
+    margin-bottom: 25px;
+  }
+
+  .section-title p {
+    font-size: 0.75rem;
+    padding: 6px 15px;
+  }
+
+  .doctors-premium-section {
+    padding: 25px 0;
+  }
+
+  .doctor-horizontal-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 0 10px;
+  }
+
+  .doctor-card-premium-h {
+    flex-direction: column;
+    height: auto;
+    min-height: auto;
+  }
+
+  .doc-h-image {
+    height: 180px;
+    flex: 0 0 auto;
+  }
+
+  .doc-h-content {
+    padding: 12px;
+  }
+
+  .doc-h-content h3 {
+    font-size: 1.2rem;
+    margin-bottom: 4px;
+  }
+
+  .doc-h-specialty {
+    font-size: 0.75rem;
+    margin-bottom: 8px;
+  }
+
+  .doc-h-bio {
+    font-size: 0.75rem;
+    -webkit-line-clamp: 2;
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+
+  .doc-h-rating {
+    font-size: 0.85rem;
   }
 }

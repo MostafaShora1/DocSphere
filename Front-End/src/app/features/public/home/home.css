@@ -360,66 +360,63 @@
 /* ================= DOCTORS - FORCED PREMIUM MATCH ================= */
 .doctors-section {
     background: #fff2f0 !important;
-    /* Peach background from image */
     padding: 120px 0 !important;
 }
 
 .doctor-horizontal-grid {
     display: grid !important;
-    /* grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)) !important; */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
     gap: 30px !important;
+    align-items: stretch !important;
 }
 
 .doctor-card-premium-h {
     display: flex !important;
+    flex-direction: row !important;
     background: #ffffff !important;
-    border-radius: 0 !important;
+    border-radius: 24px !important;
     overflow: hidden !important;
-    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.07) !important;
-    transition: transform 0.3s ease !important;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08) !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
     border: none !important;
-    /* height: 280px !important; */
 }
 
 .doctor-card-premium-h:hover {
-    transform: none !important;
-    /* Card stays fixed on hover */
+    transform: translateY(-3px) !important;
+    box-shadow: 0 24px 50px rgba(0, 0, 0, 0.12) !important;
 }
 
 .doc-h-image {
-    flex: 0 0 40% !important;
-    height: 100% !important;
+    flex: 0 0 42% !important;
+    min-height: 260px !important;
+    overflow: hidden !important;
 }
 
 .doc-h-image img {
     width: 100% !important;
     height: 100% !important;
     object-fit: cover !important;
-    border-radius: 0 !important;
 }
 
 .doc-h-content {
     flex: 1 !important;
-    padding: 40px !important;
+    padding: 36px !important;
     display: flex !important;
     flex-direction: column !important;
     justify-content: center !important;
     background: #FFF5F1 !important;
-    /* Requested background color */
     text-align: left !important;
     transition: background 0.4s ease !important;
 }
 
 .doctor-card-premium-h:hover .doc-h-content {
     background: #F7A582 !important;
-    /* Requested hover color */
 }
 
 .doctor-card-premium-h:hover .doc-h-content h3,
 .doctor-card-premium-h:hover .doc-h-content .doc-h-bio,
 .doctor-card-premium-h:hover .doc-h-content .doc-h-specialty {
     color: #fff !important;
-    /* All text becomes white for maximum contrast on hover */
 }
 
 [dir="rtl"] .doc-h-content {
@@ -427,30 +424,73 @@
 }
 
 .doc-h-content h3 {
-    font-size: 1.8rem !important;
+    font-size: 2rem !important;
     color: #001910 !important;
-    margin-bottom: 8px !important;
-    font-weight: 700 !important;
+    margin-bottom: 10px !important;
+    font-weight: 800 !important;
     font-family: var(--font-heading);
 }
 
 .doc-h-specialty {
     color: var(--coral) !important;
-    font-size: 0.9rem !important;
-    font-weight: 600 !important;
-    margin-bottom: 20px !important;
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+    margin-bottom: 18px !important;
     text-transform: capitalize !important;
 }
 
 .doc-h-bio {
-    font-size: 0.95rem !important;
-    color: #555 !important;
-    line-height: 1.8 !important;
+    font-size: 0.98rem !important;
+    color: #333 !important;
+    line-height: 1.85 !important;
     margin: 0 !important;
     display: -webkit-box !important;
-    -webkit-line-clamp: 3 !important;
+    -webkit-line-clamp: 4 !important;
     -webkit-box-orient: vertical !important;
     overflow: hidden !important;
+}
+
+@media (max-width: 992px) {
+    .doctor-card-premium-h {
+        flex-direction: column !important;
+    }
+
+    .doc-h-image {
+        flex: 0 0 auto !important;
+        min-height: 220px !important;
+        width: 100% !important;
+    }
+
+    .doc-h-content {
+        padding: 24px !important;
+    }
+}
+
+@media (max-width: 680px) {
+    .doctors-section {
+        padding: 80px 0 !important;
+    }
+
+    .doctor-horizontal-grid {
+        gap: 20px !important;
+    }
+
+    .doc-h-content {
+        padding: 22px !important;
+    }
+
+    .doc-h-content h3 {
+        font-size: 1.7rem !important;
+    }
+
+    .doc-h-specialty {
+        font-size: 0.95rem !important;
+    }
+
+    .doc-h-bio {
+        font-size: 0.92rem !important;
+        -webkit-line-clamp: 5 !important;
+    }
 }
 
 /* ================= STATS ================= */

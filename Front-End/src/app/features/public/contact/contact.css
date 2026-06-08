@@ -15,17 +15,19 @@
 
 .info-cards-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 0 15px;
 }
 
 .info-card {
   background: #fdf6f4;
-  padding: 40px 30px;
+  padding: 30px 20px;
   text-align: center;
-  border-radius: 4px;
+  border-radius: 12px;
   transition: all 0.3s ease;
   border: 1px solid transparent;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 :host-context(body.dark-mode) .info-card {
@@ -72,8 +74,7 @@
 /* Form Section */
 .contact-form-section {
   padding: 80px 0;
-  background: #fdf1ec;
-  /* Light Peach Background */
+  background: #f7ece4;
   transition: background-color 0.3s;
 }
 
@@ -84,18 +85,26 @@
 .form-wrapper {
   max-width: 1000px;
   margin: 0 auto;
+  background: white;
+  border-radius: 24px;
+  padding: 40px 30px;
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.09);
+}
+
+:host-context(body.dark-mode) .form-wrapper {
+  background: rgba(12, 28, 56, 0.95);
 }
 
 .section-header {
   text-align: center;
-  margin-bottom: 50px;
+  margin-bottom: 40px;
 }
 
 .contact-title {
-  font-size: 3.5rem;
+  font-size: 2.8rem;
   color: #1b2d29;
   font-family: var(--font-heading);
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 :host-context(body.dark-mode) .contact-title {
@@ -104,7 +113,7 @@
 
 .contact-subtitle {
   color: var(--coral);
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   font-weight: 600;
 }
 
@@ -116,7 +125,8 @@
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 40px;
+  gap: 30px;
+  padding: 0 15px;
 }
 
 .form-group {
@@ -139,27 +149,28 @@ input,
 textarea {
   width: 100%;
   padding: 16px 20px;
-  border-radius: 8px;
-  border: none;
+  border-radius: 12px;
+  border: 1px solid rgba(31, 41, 55, 0.12);
   background: #ffffff;
   color: var(--text-primary);
   font-size: 1rem;
-  transition: all 0.3s;
+  transition: all 0.25s ease;
   font-family: inherit;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
 }
 
 :host-context(body.dark-mode) input,
 :host-context(body.dark-mode) textarea {
   background: var(--bg-card);
   color: white;
-  border: 1px solid var(--border-color);
+  border: 1px solid rgba(255, 255, 255, 0.14);
 }
 
 input:focus,
 textarea:focus {
   outline: none;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+  border-color: var(--coral);
+  box-shadow: 0 0 0 4px rgba(255, 127, 80, 0.12);
 }
 
 textarea {
@@ -189,64 +200,34 @@ textarea {
 /* Submit Button */
 .form-footer {
   text-align: center;
-  margin-top: 50px;
+  margin-top: 40px;
   display: flex;
   justify-content: center;
 }
 
 .btn-submit-premium {
-  padding: 20px 60px;
+  padding: 16px 42px;
   background: var(--coral);
   border: none;
   color: white;
-  border-radius: 50px 50px 0 0;
-  /* Semi-circular bottom shape as in image or just rounded top */
-  /* Re-evaluating the image, it looks like a button on a semi-circular background */
+  border-radius: 999px;
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 1rem;
   cursor: pointer;
-  transition: all 0.3s;
-  display: flex;
+  transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+  display: inline-flex;
   align-items: center;
-  gap: 15px;
+  gap: 10px;
+  box-shadow: 0 12px 24px rgba(247, 150, 116, 0.25);
 }
 
 .btn-submit-premium i {
-  font-size: 0.9rem;
+  font-size: 0.95rem;
 }
 
 .btn-submit-premium:hover {
   background: var(--coral-dark);
-  transform: translateY(-5px);
-}
-
-/* To match the image's semi-circle background under the button */
-.form-footer {
-  position: relative;
-  padding-bottom: 40px;
-}
-
-.form-footer::before {
-  content: '';
-  position: absolute;
-  bottom: -80px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 250px;
-  height: 250px;
-  background: var(--coral);
-  border-radius: 50%;
-  z-index: 0;
-  opacity: 0.6;
-}
-
-.btn-submit-premium {
-  position: relative;
-  z-index: 1;
-  border-radius: 40px;
-  padding: 18px 45px;
-  background: var(--coral);
-  box-shadow: 0 10px 20px rgba(247, 150, 116, 0.3);
+  transform: translateY(-3px);
 }
 
 /* RESPONSIVE */
@@ -275,13 +256,102 @@ textarea {
 @media (max-width: 768px) {
   .info-cards-grid {
     grid-template-columns: 1fr;
+    gap: 15px;
   }
 
   .contact-header-section {
-    padding-top: 80px;
+    padding-top: 60px;
+    padding-bottom: 40px;
   }
 
   .form-wrapper {
     padding: 0 15px;
+  }
+
+  .contact-title {
+    font-size: 2.2rem;
+  }
+
+  .form-group label {
+    font-size: 0.95rem;
+  }
+
+  input,
+  textarea {
+    padding: 12px 15px;
+    font-size: 0.95rem;
+  }
+
+  .btn-submit-premium {
+    padding: 15px 40px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .contact-header-section {
+    padding: 40px 15px;
+  }
+
+  .info-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 0 10px;
+  }
+
+  .info-card {
+    padding: 20px 15px;
+    border-radius: 10px;
+  }
+
+  .info-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 1.3rem;
+  }
+
+  .info-content p {
+    font-size: 0.95rem;
+  }
+
+  .contact-form-section {
+    padding: 40px 0;
+  }
+
+  .form-wrapper {
+    padding: 0 10px;
+  }
+
+  .contact-title {
+    font-size: 1.8rem;
+  }
+
+  .contact-subtitle {
+    font-size: 1rem;
+  }
+
+  .form-grid {
+    gap: 20px;
+    padding: 0 10px;
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+  }
+
+  input,
+  textarea {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+  }
+
+  textarea {
+    min-height: 150px;
+  }
+
+  .btn-submit-premium {
+    padding: 12px 30px;
+    font-size: 0.95rem;
+    border-radius: 30px;
   }
 }
